@@ -1,0 +1,47 @@
+﻿2020.10.31 Sa (Lockdown day 5 in AT)
+===================================
+
+- clean up solution
+- commit it to SVN (do this from beginning on, didn't thought that this get this big...)
+- migrate to github (as traininig, didn't this before)
+
+
+2020.10.19 Th (Lockdown day 3 in AT)
+===================================
+
+resume WordWrap			paused
+
+
+
+2020.10.18 We (Lockdown day 2 in AT)
+===================================
+
+Search for the next kata
+
+start WordWrap			
+
+Kata ToDictionary() DONE
+
+
+
+CleanUp
+-------
+
+- cleaning up the project
+	why? look at the metrics
+- split up tests and productive code
+	now it's easier to analyze the metrics
+
+	DONE
+
+
+Last week
+=========
+
+Bowling								DONE
+RomanNumerals						DONE
+CsvTableizer						DONE
+HappyNumbers						DONE
+Rot13								DONE
+RussianPeasantMutliplication		DONE
+

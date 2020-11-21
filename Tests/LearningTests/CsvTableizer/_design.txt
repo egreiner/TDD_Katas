@@ -1,0 +1,54 @@
+﻿Function Kata “CSV Table-izer” Design
+-------------------------------------
+
+1/3 Feature
+1/3 ErrorHandling
+1/3 Architecture
+
+
+IEnumerable<string> ToTable(IEnumerable<string> CSV_lines)
+	
+No validation of csv lines is necessary
+
+Input:
+
+Name;Street;City;Age
+Peter Pan;Am Hang 5;12345 Einsam;42
+Maria Schmitz;Kölner Straße 45;50123 Köln;43
+Paul Meier;Münchener Weg 1;87654 München;65
+
+Output:
+
+Name         |Street          |City         |Age|
+-------------+----------------+-------------+---+
+Peter Pan    |Am Hang 5       |12345 Einsam |42 |
+Maria Schmitz|Kölner Straße 45|50123 Köln   |43 |
+Paul Meier   |Münchener Weg 1 |87654 München|65 |
+
+
+Maybe methods:
+
+CreateTitle(csv_title_line, columnWidthInformation)
+CreateTitleSeparator(columnWidthInformation)
+CreateDataLine(csv_data_line, columnWidthInformation)
+
+Way:
+foreach line
+	split csv_line -> collection (4 items)
+
+create new collection
+	ColumnsMaxLength (4 items) -> columnWidthInformation
+	
+
+Intention:
+0, blank page ------------------------------> Target
+
+Reality:
+0, blank page --\_____/--~~~~~---~~~~~----______---------------------------------> Target
+
+Better:
+0, blank page ---> [SubTarget1] ---> [SubTarget2] ---> [SubTarget3] ---> [Target]
+
+More Better:
+0, blank page <--- [SubTarget1] <--- [SubTarget2] <--- [SubTarget3] <--- [Target]
+

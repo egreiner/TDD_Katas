@@ -1,0 +1,39 @@
+﻿
+
+“”	{}
+	create empty Dictionary												DONE
+
+a=1
+	add key value pair													DONE
+
+“=1”	
+	if begins with "=" throw Exception									DONE
+
+“a=”	
+	split with "=" -> 1 Item -> create key with empty value {{“a”, “”}}	DONE
+
+“a==1”	
+	split with "=" -> 3 Items -> create key {{“a”, “=1”}}				DONE
+
+“a===1”	
+	split with "=" -> 3 Items -> create key {{“a”, “==1”}}	???			DONE
+
+“a=1;b=2;c=3”	{{“a”, “1”}, {“b”, “2”},{“c”, “3”}}
+	split with ";" continoue with single-pair-parsing					DONE
+
+“a=1;;b=2”	{{“a”, “1”}, {“b”, “2”}}
+	if empty entry, just ignore it										DONE
+
+“a=1;a=2”	{{“a”, “2”}}
+	If exists, update key												DONE
+
+
+
+	work inside out
+	start with simple things!
+	do not try to solve all problems at once
+
+DONE
+
+
+

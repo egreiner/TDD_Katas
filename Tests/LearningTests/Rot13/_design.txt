@@ -1,0 +1,16 @@
+﻿
+ExtensionMethod string.ReplaceUmlauts()			DONE
+
+Ascii char ???									DONE
+doesn't work anymore
+use block ABCDEFGH…XYZ or 0123456789ABCDEFGH…XYZ	DONE
+
+,.;:	????									DONE
+
+calculate overflow								DONE
+
+
+
+Sometimes a small change in the requirements can lead to an complete different implementation!
+
+Thanks for watching!!

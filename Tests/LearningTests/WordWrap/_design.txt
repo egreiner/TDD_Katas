@@ -1,0 +1,22 @@
+﻿
+WinForms App as pictured in the description
+
+Service that handles the WordWrap
+change from cuting text to decomposing text and reconstruct it...
+
+split text into words
+
+take first word
+loop
+	if its longer then the limit add it to builder
+	else
+	take next word
+	add it to line
+	loop
+		take next word
+		add length
+		if length > then limit add line to builder
+		else
+		add word to line
+
+Tests as usual
