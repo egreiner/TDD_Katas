@@ -2,8 +2,14 @@
 ===================================
 
 - clean up solution
-- commit it to SVN (do this from beginning on, didn't thought that this get this big...)
-- migrate to github (as traininig, didn't this before)
+- commit to github (do this from beginning on, didn't thought that this get this big...)
+
+- Kata ChristmasTree	current
+
+
+i need glasses...
+
+
 
 
 2020.10.19 Th (Lockdown day 3 in AT)

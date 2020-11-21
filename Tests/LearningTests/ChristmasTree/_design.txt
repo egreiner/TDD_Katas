@@ -1,0 +1,9 @@
+﻿
+Christmastree.Draw(5)
+       X        1   1   0*2+1
+      XXX       2   3   1*2+1
+     XXXXX      3   5   2*2+1
+    XXXXXXX     4   7   3*2+1
+   XXXXXXXXX    5   9   4*2+1
+       X
+    

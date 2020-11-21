@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kata.Services", "Services\K
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{868D5999-F86E-49CA-8673-9749C8E4ADFA}"
 	ProjectSection(SolutionItems) = preProject
-		LearningTests\_done.txt = LearningTests\_done.txt
+		SolutionItems\_done.txt = SolutionItems\_done.txt
 	EndProjectSection
 EndProject
 Global
