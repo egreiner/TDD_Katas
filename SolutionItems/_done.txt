@@ -5,7 +5,7 @@
 - commit to github (do this from beginning on, didn't thought that this get this big...)
 
 - Kata ChristmasTree	current
-
+	better tests, find errors
 
 i need glasses...
 

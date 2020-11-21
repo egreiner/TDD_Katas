@@ -5,31 +5,37 @@
 
     public class ChristmasTreeTests
     {
-        [Fact]
-        public void Test_Create_ChristmasTree()
+        [Theory]
+        [InlineData(2)]
+        [InlineData(5)]
+        [InlineData(10)]
+        public void Test_Create_ChristmasTree(int height)
         {
             var cut = new ChristmasTree();
 
-            var actual = cut.Draw(5);
+            var actual = cut.Draw(height);
 
-            Assert.Equal(6, actual.Count);
+            Assert.Equal(height + 1, actual.Count);
             Assert.Contains(" X ", actual[0]);
-            Assert.Equal("XXXXXXXXX", actual[4]);
-            Assert.Contains(" X ", actual[5]);
+            Assert.Equal(new string('X', (height - 1) * 2 + 1), actual[height - 1]);
+            Assert.Contains(" X ", actual[height]);
         }
 
-        [Fact]
-        public void Test_Create_ChristmasTreeWithStar()
+        [Theory]
+        [InlineData(2)]
+        [InlineData(5)]
+        [InlineData(10)]
+        public void Test_Create_ChristmasTreeWithStar(int height)
         {
             var cut = new ChristmasTree();
 
-            var actual = cut.Draw(5, true);
+            var actual = cut.Draw(height, true);
 
-            Assert.Equal(7, actual.Count);
+            Assert.Equal(height + 2, actual.Count);
             Assert.Contains(" * ", actual[0]);
             Assert.Contains(" X ", actual[1]);
-            Assert.Equal("XXXXXXXXX", actual[5]);
-            Assert.Contains(" X ", actual[6]);
+            Assert.Equal(new string('X', (height - 1) * 2 + 1), actual[height]);
+            Assert.Contains(" X ", actual[height + 1]);
         }
     }
 }

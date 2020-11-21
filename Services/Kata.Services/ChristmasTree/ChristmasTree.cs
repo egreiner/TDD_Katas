@@ -25,7 +25,7 @@
         {
             for (var i = 0; i < height; i++)
             {
-                var spaces = new string(' ', 4 - i);
+                var spaces = new string(' ', height -1 - i);
                 var x      = new string('X', i * 2 + 1);
                 this.tree.Add(spaces + x + spaces);
             }
