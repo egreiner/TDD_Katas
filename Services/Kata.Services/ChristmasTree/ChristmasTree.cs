@@ -4,32 +4,34 @@
 
     public class ChristmasTree
     {
+        private readonly List<string> tree = new List<string>();
+
+
         public List<string> Draw(int height, bool withStarOnTop = false)
         {
-            var result = DrawBranches(height);
-            
-            // add trunk
-            result.Add(result[0]);
-
-            // add star
-            if (withStarOnTop)
-                result.Insert(0, result[0].Replace("X","*"));
-
-            return result;
+            this.AddBranches(height);
+            this.AddTrunk();
+            this.AddStar(withStarOnTop);
+            return this.tree;
         }
 
-        private static List<string> DrawBranches(int height)
+        private void AddStar(bool withStarOnTop)
         {
-            var result = new List<string>();
+            if (withStarOnTop)
+                this.tree.Insert(0, this.tree[0].Replace("X", "*"));
+        }
 
+        private void AddBranches(int height)
+        {
             for (var i = 0; i < height; i++)
             {
                 var spaces = new string(' ', 4 - i);
-                var x = new string('X', i * 2 + 1);
-                result.Add(spaces + x + spaces);
+                var x      = new string('X', i * 2 + 1);
+                this.tree.Add(spaces + x + spaces);
             }
-
-            return result;
         }
+
+        private void AddTrunk() =>
+            this.tree.Add(this.tree[0]);
     }
 }

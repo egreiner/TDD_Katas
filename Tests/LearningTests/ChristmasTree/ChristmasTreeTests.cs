@@ -13,6 +13,9 @@
             var actual = cut.Draw(5);
 
             Assert.Equal(6, actual.Count);
+            Assert.Contains(" X ", actual[0]);
+            Assert.Equal("XXXXXXXXX", actual[4]);
+            Assert.Contains(" X ", actual[5]);
         }
 
         [Fact]
@@ -23,6 +26,10 @@
             var actual = cut.Draw(5, true);
 
             Assert.Equal(7, actual.Count);
+            Assert.Contains(" * ", actual[0]);
+            Assert.Contains(" X ", actual[1]);
+            Assert.Equal("XXXXXXXXX", actual[5]);
+            Assert.Contains(" X ", actual[6]);
         }
     }
 }
