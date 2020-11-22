@@ -1,4 +1,13 @@
-﻿2020.10.31 Sa (Lockdown day 5 in AT)
+﻿2020.11.22 So (Lockdown day 6 in AT)
+===================================
+
+- search a new kata
+
+- Count Characters Kata
+
+
+
+2020.11.21 Sa (Lockdown day 5 in AT)
 ===================================
 
 - clean up solution
@@ -12,14 +21,14 @@ i need glasses...
 
 
 
-2020.10.19 Th (Lockdown day 3 in AT)
+2020.11.19 Th (Lockdown day 3 in AT)
 ===================================
 
 resume WordWrap			paused
 
 
 
-2020.10.18 We (Lockdown day 2 in AT)
+2020.11.18 We (Lockdown day 2 in AT)
 ===================================
 
 Search for the next kata
