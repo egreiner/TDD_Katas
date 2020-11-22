@@ -29,20 +29,21 @@
         private void UpdateDictionaryOrdinal(char key)
         {
             if (this.dict.ContainsKey(key))
-                this.dict[key] += 1;
+                this.dict[key]++;
             else
                 this.dict.Add(key, 1);
         }
 
         // not a beauty but it works as expected...
+        // just leave it this way, it expresses all what is needed to know
         private void UpdateDictionaryOrdinalIgnoreCase(char key)
         {
             if (this.dict.ContainsKey(key))
-                this.dict[key] += 1;
-            else if (this.dict.ContainsKey(key.ToString().ToLower()[0]))
-                this.dict[key.ToString().ToLower()[0]] += 1;
-            else if (this.dict.ContainsKey(key.ToString().ToUpper()[0]))
-                this.dict[key.ToString().ToUpper()[0]] += 1;
+                this.dict[key]++;
+            else if (this.dict.ContainsKey(char.ToLower(key)))
+                this.dict[char.ToLower(key)]++;
+            else if (this.dict.ContainsKey(char.ToUpper(key)))
+                this.dict[char.ToUpper(key)]++;
             else
                 this.dict.Add(key, 1);
         }
