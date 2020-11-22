@@ -1,5 +1,6 @@
 ﻿namespace LearningTests.CountCharacters
 {
+    using System;
     using System.Collections.Generic;
     using Kata.Services.CountCharacters;
     using Xunit;
@@ -41,6 +42,18 @@
             var cut = new CountCharactersService();
 
             var dict = cut.CountCharacters(text);
+            var actual = dict.GetValueOrDefault(search);
+
+            Assert.Equal(expected, actual);
+        }
+        [Theory]
+        [InlineData("AA", 'A', 2)]
+        [InlineData("Aa", 'A', 2)]
+        public void Test_count_ignoring_case(string text, char search, int expected)
+        {
+            var cut = new CountCharactersService();
+
+            var dict = cut.CountCharacters(text, StringComparison.OrdinalIgnoreCase);
             var actual = dict.GetValueOrDefault(search);
 
             Assert.Equal(expected, actual);
