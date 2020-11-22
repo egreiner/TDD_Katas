@@ -19,30 +19,13 @@
 
         private void UpdateDictionary(char key, StringComparison stringComparison)
         {
-            if (stringComparison == StringComparison.OrdinalIgnoreCase)
-                this.UpdateDictionaryOrdinalIgnoreCase(key);
-            else
-                this.UpdateDictionaryOrdinal(key);
-        }
+            var ignoreCase = stringComparison == StringComparison.OrdinalIgnoreCase;
 
-
-        private void UpdateDictionaryOrdinal(char key)
-        {
             if (this.dict.ContainsKey(key))
                 this.dict[key]++;
-            else
-                this.dict.Add(key, 1);
-        }
-
-        // not a beauty but it works as expected...
-        // just leave it this way, it expresses all what is needed to know
-        private void UpdateDictionaryOrdinalIgnoreCase(char key)
-        {
-            if (this.dict.ContainsKey(key))
-                this.dict[key]++;
-            else if (this.dict.ContainsKey(char.ToLower(key)))
+            else if (ignoreCase && this.dict.ContainsKey(char.ToLower(key)))
                 this.dict[char.ToLower(key)]++;
-            else if (this.dict.ContainsKey(char.ToUpper(key)))
+            else if (ignoreCase && this.dict.ContainsKey(char.ToUpper(key)))
                 this.dict[char.ToUpper(key)]++;
             else
                 this.dict.Add(key, 1);
