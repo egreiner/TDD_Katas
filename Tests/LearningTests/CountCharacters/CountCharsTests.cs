@@ -1,6 +1,5 @@
 ﻿namespace LearningTests.CountCharacters
 {
-    using System;
     using System.Collections.Generic;
     using Kata.Services.CountCharacters;
     using Xunit;
@@ -64,7 +63,7 @@
         {
             var cut = new CountCharactersService();
 
-            var dict = cut.CountCharacters(text, StringComparison.OrdinalIgnoreCase);
+            var dict = cut.CountCharacters(text, true);
             var actual = dict.GetValueOrDefault(search);
 
             Assert.Equal(expected, actual);

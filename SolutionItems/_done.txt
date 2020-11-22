@@ -3,8 +3,8 @@
 
 - search a new kata
 
-- Count Characters Kata
-
+- Count Characters Kata				DONE
+improve this kata
 
 
 2020.11.21 Sa (Lockdown day 5 in AT)
