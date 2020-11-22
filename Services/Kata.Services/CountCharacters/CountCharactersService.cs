@@ -8,19 +8,19 @@
     {
         private readonly Dictionary<char, int> dict = new Dictionary<char, int>();
 
-
+        // sorry but i like this version most, even the metrics are worse...
         public Dictionary<char, int> CountCharacters(string text, StringComparison stringComparison = StringComparison.Ordinal)
         {
+            var ignoreCase = stringComparison == StringComparison.OrdinalIgnoreCase;
+
             text?.Replace(" ", "_").ToCharArray().ToList()
-                .ForEach(c => this.UpdateDictionary(c, stringComparison));
+                .ForEach(c => this.UpdateDictionary(c, ignoreCase));
 
             return this.dict;
         }
 
-        private void UpdateDictionary(char key, StringComparison stringComparison)
+        private void UpdateDictionary(char key, bool ignoreCase)
         {
-            var ignoreCase = stringComparison == StringComparison.OrdinalIgnoreCase;
-
             if (this.dict.ContainsKey(key))
                 this.dict[key]++;
             else if (ignoreCase && this.dict.ContainsKey(char.ToLower(key)))
