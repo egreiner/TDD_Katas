@@ -34,6 +34,7 @@
                 this.dict.Add(key, 1);
         }
 
+        // not a beauty but it works as expected...
         private void UpdateDictionaryOrdinalIgnoreCase(char key)
         {
             if (this.dict.ContainsKey(key))

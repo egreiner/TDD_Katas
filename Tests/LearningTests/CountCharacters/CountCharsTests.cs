@@ -37,7 +37,7 @@
         [InlineData("HelLo wOrld", 'r', 1)]
         [InlineData("HelLo wOrld", 'd', 1)]
         [InlineData("HelLo wOrld", '_', 1)]
-        public void Test_simple_count(string text, char search, int expected)
+        public void Test_count_not_ignoring_case(string text, char search, int expected)
         {
             var cut = new CountCharactersService();
 
@@ -46,9 +46,20 @@
 
             Assert.Equal(expected, actual);
         }
+
         [Theory]
         [InlineData("AA", 'A', 2)]
         [InlineData("Aa", 'A', 2)]
+        [InlineData("Aa", 'a', 0)]  // that's ok but not logical
+        [InlineData("HelLo wOrld", 'H', 1)]
+        [InlineData("HelLo wOrld", 'h', 0)]
+        [InlineData("HelLo wOrld", 'e', 1)]
+        [InlineData("HelLo wOrld", 'l', 3)]
+        [InlineData("HelLo wOrld", 'o', 2)]
+        [InlineData("HelLo wOrld", 'w', 1)]
+        [InlineData("HelLo wOrld", 'r', 1)]
+        [InlineData("HelLo wOrld", 'd', 1)]
+        [InlineData("HelLo wOrld", '_', 1)]
         public void Test_count_ignoring_case(string text, char search, int expected)
         {
             var cut = new CountCharactersService();
