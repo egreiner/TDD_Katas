@@ -1,4 +1,14 @@
-﻿2020.11.22 So (Lockdown day 6 in AT)
+﻿2020.11.23 Mo (Lockdown day 7 in AT)
+===================================
+
+resume WordWrap			paused
+
+you can download all of this from github
+https://github.com/egreiner/TDD_Katas
+
+
+
+2020.11.22 Su (Lockdown day 6 in AT)
 ===================================
 
 - search a new kata
