@@ -40,6 +40,11 @@
             // numericUpDownWordWrapLimit
             // 
             this.numericUpDownWordWrapLimit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.numericUpDownWordWrapLimit.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             this.numericUpDownWordWrapLimit.Location = new System.Drawing.Point(40, 668);
             this.numericUpDownWordWrapLimit.Name = "numericUpDownWordWrapLimit";
             this.numericUpDownWordWrapLimit.Size = new System.Drawing.Size(150, 27);
@@ -62,6 +67,7 @@
             this.textBoxOrig.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxOrig.Size = new System.Drawing.Size(481, 218);
             this.textBoxOrig.TabIndex = 1;
+            this.textBoxOrig.KeyUp += new System.Windows.Forms.KeyEventHandler(this.OnTextBoxOrig_KeyUp);
             // 
             // textBoxWrapped
             // 

@@ -2,6 +2,8 @@
 ===================================
 
 resume WordWrap			paused
+theory meets reality...
+
 
 you can download all of this from github
 https://github.com/egreiner/TDD_Katas
