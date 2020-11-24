@@ -6,9 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearningTests", "Tests\LearningTests\LearningTests.csproj", "{910940FD-2AD4-4024-9335-EB500CCADDC3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{620F5F25-B558-4C4E-9008-F47952EC26BC}"
-	ProjectSection(SolutionItems) = preProject
-		LearningTests\_done.txt = LearningTests\_done.txt
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{1E477654-1CDE-42DE-AE65-CD47CCCFFB8A}"
 EndProject
@@ -21,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Executables", "Executables", "{70AAA9EB-6669-48A6-BAEE-4856A616EDC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kata.UI.WinForms", "Executables\Kata.UI.WinForms\Kata.UI.WinForms.csproj", "{B5ECB07B-7A8E-45FA-9DE5-50AB79087984}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kata.UI.WinForms", "Executables\Kata.UI.WinForms\Kata.UI.WinForms.csproj", "{B5ECB07B-7A8E-45FA-9DE5-50AB79087984}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

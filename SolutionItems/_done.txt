@@ -1,7 +1,37 @@
-﻿2020.11.23 Mo (Lockdown day 7 in AT)
-===================================
+﻿2020.11.24 Tu (Lockdown day 8 in AT)
+====================================
 
-resume WordWrap			paused
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2020.11.23 Mo (Lockdown day 7 in AT)
+====================================
+
+resume WordWrap			paused again
 theory meets reality...
 
 
@@ -11,7 +41,7 @@ https://github.com/egreiner/TDD_Katas
 
 
 2020.11.22 Su (Lockdown day 6 in AT)
-===================================
+====================================
 
 - search a new kata
 
@@ -20,7 +50,7 @@ improve this kata
 
 
 2020.11.21 Sa (Lockdown day 5 in AT)
-===================================
+====================================
 
 - clean up solution
 - commit to github (do this from beginning on, didn't thought that this get this big...)
@@ -34,14 +64,14 @@ i need glasses...
 
 
 2020.11.19 Th (Lockdown day 3 in AT)
-===================================
+====================================
 
 resume WordWrap			paused
 
 
 
 2020.11.18 We (Lockdown day 2 in AT)
-===================================
+====================================
 
 Search for the next kata
 

@@ -8,13 +8,21 @@
 
     public class WordWrapService
     {
+        private const string LineFeedReplacer = " .~-{LiNeFeeEd}-~. ";
+
         private readonly StringBuilder builder = new StringBuilder();
         
+
         public string WordWrap(string text, int lineLengthLimit)
         {
+            text = ReplaceLineFeeds(text);
             var words = text.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList();
             return this.WordWrap(words, lineLengthLimit);
         }
+
+
+        private static string ReplaceLineFeeds(string text) =>
+            text.Replace(System.Environment.NewLine, LineFeedReplacer);
 
 
         private string WordWrap(IReadOnlyList<string> words, int limit)
@@ -29,20 +37,28 @@
         private static string ConcatenateWords(IReadOnlyList<string> words, int limit, ref int i)
         {
             var line = words[i];
-            if (line.IsLonger(limit)) return line;
+            if (line.IsLonger(limit) || wordIsLineFeed(i + 1)) return line;
 
-            while (words.CanAccess(i + 1) && lineWithWordAdded(i + 1).FitsInto(limit))
+            while (words.CanAccess(i + 1) && 
+                   lineWithWordAdded(i + 1).FitsInto(limit) && 
+                   !wordIsLineFeed(i + 1))
                 line = lineWithWordAdded(++i);
 
-            return line;
+            line = line.Replace(LineFeedReplacer.Trim(), "");
 
-            string lineWithWordAdded(int index) => $"{line} {words[index]}";
+            return line.Trim();
+
+            string lineWithWordAdded(int index) => $"{line} {words[index].Trim()}";
+            bool wordIsLineFeed(int index) => words.CanAccess(index) && words[index].Trim() == LineFeedReplacer.Trim();
         }
 
-        private static string FinalizeText(string result) =>
-            result.EndsWith("\r\n") 
+        private static string FinalizeText(string result)
+        {
+            result = result.Replace(LineFeedReplacer.Trim(), "");
+            return result.EndsWith("\r\n")
                 ? result[..^2]
                 : result;
+        }
     }
 
 
@@ -52,6 +68,8 @@
     {
         /// <summary>
         /// The text length is shorter or equal than the specified length limit + offset.
+        /// Linefeed breaks correct wrapping...
+        /// Have to take a break...
         /// </summary>
         /// <param name="text">The text that should be verified.</param>
         /// <param name="lengthLimit">The length limit.</param>

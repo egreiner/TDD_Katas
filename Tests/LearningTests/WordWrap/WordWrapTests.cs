@@ -27,6 +27,7 @@
         [InlineData("bla blub bla blub", 5, "bla\r\nblub\r\nbla\r\nblub")]
         [InlineData("bla blub bla blub", 8, "bla blub\r\nbla blub")]
         [InlineData("012 4567 901 3lub", 12, "012 4567 901\r\n3lub")]
+        [InlineData("per line.\r\n\r\nThe example shows", 20, "per line.\r\n\r\nThe example shows")]
         public void Test_insert_linefeed_if_line_is_longer_than(string text, int lineLength, string expected)
         {
             var cut = new WordWrapService();
