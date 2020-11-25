@@ -26,47 +26,61 @@
         IEnumerator IEnumerable.GetEnumerator() =>
             this.GetEnumerator();
 
+        
+        
+        public void Clear() =>
+            this.internalList.Clear();
+
+        public bool Contains(T item) =>
+            this.internalList.Contains(CreateElement(item));
+
+
+
         public void Add(T item)
         {
             var element = CreateElement(item);
-            ////this.lastAddedElement?.Next = element;
+
+            if (this.lastAddedElement != null)
+                this.lastAddedElement.Next = element;
 
             this.lastAddedElement = element;
             this.internalList.Add(element);
         }
 
-        public void Clear() =>
-            this.internalList.Clear();
-
-        public bool Contains(T item)
-        {
-            throw new System.NotImplementedException();
-        }
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            throw new System.NotImplementedException();
+            // catch fails arrayIndex
+            var length = this.internalList.Count;
+            Element<T>[] x = new Element<T>[length];
+            this.internalList.CopyTo(x, 0);
+
+            for (int i = 0; i < length; i++)
+            {
+                array[i + arrayIndex] = x[i].Item;
+            }
         }
 
+        public int IndexOf(T item) =>
+            this.internalList.IndexOf(CreateElement(item));
+
+        // TODO check Element.Next
+        public void Insert(int index, T item) =>
+            this.internalList.Insert(index, CreateElement(item));
+
+
+        // TODO check Element.Next
         public bool Remove(T item)
         {
-            throw new System.NotImplementedException();
+            return this.internalList.Remove(CreateElement(item));
         }
 
-        public int IndexOf(T item)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Insert(int index, T item)
-        {
-            throw new System.NotImplementedException();
-        }
-
+        // TODO check Element.Next
         public void RemoveAt(int index)
         {
-            throw new System.NotImplementedException();
+            this.internalList.RemoveAt(index);
         }
+
 
         public T this[int index]
         {
@@ -74,6 +88,8 @@
             set => this.internalList[index] = CreateElement(value);
         }
 
+        public Element<T> GetItem(int index) =>
+            this.internalList[index];
 
 
         private static Element<T> CreateElement(T item) =>
