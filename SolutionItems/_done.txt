@@ -1,5 +1,39 @@
-﻿2020.11.24 Tu (Lockdown day 8 in AT)
+﻿2020.11.25 We (Lockdown day 9 in AT)
 ====================================
+
+- Class Kata „Linked List“ resumed
+	the description is kind of missleading 
+	i think i will adapt it...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2020.11.24 Tu (Lockdown day 8 in AT)
+====================================
+
+- Class Kata „Linked List“ paused
 
 
 

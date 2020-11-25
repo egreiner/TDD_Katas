@@ -1,0 +1,4 @@
+﻿Class Kata „Linked List“
+
+start with implementing the given elements and look what we have to do and how to continue
+There is a need to publish the Element<T> otherwise this makes no sense.
