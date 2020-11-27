@@ -7,13 +7,15 @@
             this.Item = item;
         }
 
-        public T Item { get;  }
+        public int Index => this.Next?.Index + 1 ?? 0;
+
+        public T Item { get; set; }
 
         public Element<T> Next { get; set; }
 
 
         public override string ToString() =>
-            this.Item?.ToString();
+            $"{this.Item?.ToString()} ({this.Index})";
 
         public override bool Equals(object? obj) =>
             obj is Element<T> x && (x.Item?.Equals(this.Item) ?? false);

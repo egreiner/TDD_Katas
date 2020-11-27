@@ -1,4 +1,35 @@
-﻿2020.11.25 We (Lockdown day 9 in AT)
+﻿2020.11.27 Fr (Lockdown day 11 in AT)
+====================================
+
+- Class Kata „Linked List“ ...
+
+I was completly biased at this topic!
+After reading wikipedia about linked lists, i know what i have to do...
+so sorry 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2020.11.25 We (Lockdown day 9 in AT)
 ====================================
 
 - Class Kata „Linked List“ resumed
