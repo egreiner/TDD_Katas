@@ -13,10 +13,8 @@
         private Element<T> lastElement;
         
 
-        public MyLinkedList()
-        {
+        public MyLinkedList() =>
             this.enumerator = new Enumerator(this);
-        }
 
 
         public int Count { get; private set; }
@@ -80,9 +78,47 @@
             ////}
         }
 
-        // TODO check Element.Next
-        public void Insert(int index, T item) =>
-            throw new NotImplementedException();
+        /// <summary>
+        /// (0)->(1)->(insert here)->(2)->(3)->
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="item"></param>
+        public void Insert(int index, T item)
+        {
+            this.ValidateIndex(index);
+
+            if (this.Count == 0)
+            {
+                this.Add(item);
+                return;
+            }
+
+            var newElement = CreateElement(item);
+            this.Count++;
+
+            if (index == 0)
+            {
+                newElement.Next  = this.rootElement;
+                this.rootElement = newElement;
+            }
+            else
+            {
+                var elements = this.EnumerateAllItems()
+                                .Where(x => x.Index >= index-1)
+                                .Take(2).ToList();
+
+                elements[0].Next = newElement;
+                
+                if (elements.Count == 2)
+                    newElement.Next = elements[1];
+            }
+        }
+
+        private void ValidateIndex(int index)
+        {
+            if (this.Count < index || index < 0)
+                throw new IndexOutOfRangeException();
+        }
 
 
         // TODO check Element.Next
@@ -114,7 +150,7 @@
         }
 
 
-        private IEnumerable<Element<T>> EnumerateAllItems()
+        public IEnumerable<Element<T>> EnumerateAllItems()
         {
             var element = this.rootElement;
             yield return element;

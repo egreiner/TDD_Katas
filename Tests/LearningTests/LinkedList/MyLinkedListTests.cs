@@ -1,5 +1,6 @@
 ﻿namespace LearningTests.LinkedList
 {
+    using System;
     using Xunit;
 
     public class MyLinkedListTests
@@ -102,18 +103,48 @@
         }
 
 
-        ////[Theory]
-        ////[InlineData(2, 3, 3)]
-        ////[InlineData(0, 1, 1)]
-        ////public void Test_Insert(int insertAt, int indexOfValue, int expected)
-        ////{
-        ////    var cut = new MyLinkedList<int> { 1, 2, 3 };
+        [Fact]
+        public void Test_Insert_on_empty_linkedList()
+        {
+            var cut = new MyLinkedList<int>();
 
-        ////    cut.Insert(insertAt, 4);
-        ////    var actual = cut.IndexOf(indexOfValue);
+            cut.Insert(0, 4);
+            var actual = cut.IndexOf(4);
 
-        ////    Assert.Equal(expected, actual);
-        ////}
+            Assert.Equal(0, actual);
+            Assert.Single(cut);
+        }
+
+        [Theory]
+        [InlineData(0, 1, 1)]
+        [InlineData(1, 1, 0)]
+        [InlineData(1, 2, 2)]
+        [InlineData(2, 3, 3)]
+        [InlineData(3, 4, 3)]
+        public void Test_Insert(int insertAt, int indexOfValue, int expected)
+        {
+            var cut = new MyLinkedList<int> { 1, 2, 3 };
+
+            cut.Insert(insertAt, 4);
+            var actual = cut.IndexOf(indexOfValue);
+
+            var bla = cut.EnumerateAllItems();
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(-100)]
+        [InlineData(4)]
+        [InlineData(4000)]
+        public void Test_Insert_throw_exception(int insertAt)
+        {
+            var cut = new MyLinkedList<int> { 1, 2, 3 };
+
+            Assert.Throws<IndexOutOfRangeException>(() => 
+                cut.Insert(insertAt, 4));
+        }
 
         ////[Theory]
         ////[InlineData(1, 3, 1)]
