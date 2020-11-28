@@ -110,10 +110,13 @@
             }
         }
 
-        // TODO check Element.Next
         public bool Remove(T item)
         {
-            return false;
+            var index = this.IndexOf(item);
+            var found = index != -1;
+            
+            if (found) this.RemoveAt(index);
+            return found;
         }
 
         public void RemoveAt(int index)

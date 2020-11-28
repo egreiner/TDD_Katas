@@ -139,7 +139,8 @@
 
             cut.Insert(insertAt, 4);
 
-            var actual = cut.EnumerateAllItems().Select(x => x.Item).ToList();
+            var elements = cut.EnumerateAllItems().ToList();
+            var actual = elements.Select(x => x.Item).ToList();
 
             Assert.Equal(expected.ToList(), actual);
         }
@@ -168,22 +169,32 @@
             var cut = new MyLinkedList<int> { 1, 2, 3, 4 };
 
             cut.RemoveAt(removeAt);
-            var actual = cut.EnumerateAllItems().Select(x => x.Item).ToList();
+
+            var elements = cut.EnumerateAllItems().ToList();
+            var actual = elements.Select(x => x.Item).ToList();
 
             Assert.Equal(expected.ToList(), actual);
         }
 
-        ////[Theory]
-        ////[InlineData(1)]
-        ////public void Test_Remove(int remove)
-        ////{
-        ////    var cut = new MyLinkedList<int> { 1, 2, 3 };
+        [Theory]
+        [InlineData(-1, 1, 2, 3, 4)]
+        [InlineData(0, 1, 2, 3, 4)]
+        [InlineData(9, 1, 2, 3, 4)]
+        [InlineData(1, 2, 3, 4)]
+        [InlineData(2, 1, 3, 4)]
+        [InlineData(3, 1, 2, 4)]
+        [InlineData(4, 1, 2, 3)]
+        public void Test_Remove(int remove, params int[] expected)
+        {
+            var cut = new MyLinkedList<int> { 1, 2, 3, 4 };
 
-        ////    cut.Remove(remove);
-        ////    var actual = cut.IndexOf(remove);
+            cut.Remove(remove);
 
-        ////    Assert.Equal(-1, actual);
-        ////}
+            var elements = cut.EnumerateAllItems().ToList();
+            var actual = elements.Select(x => x.Item).ToList();
+
+            Assert.Equal(expected.ToList(), actual);
+        }
 
 
         ////[Theory]

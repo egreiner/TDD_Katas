@@ -18,7 +18,7 @@
         {
             var item = this.Item?.ToString();
             var nextItem = this.Next?.Item?.ToString() ?? "end";
-            return $"{item} -> {nextItem} (invIdx: {this.InvertedIndex})";
+            return $"[{this.InvertedIndex}] {item} -> {nextItem}";
         }
 
         public override bool Equals(object? obj) =>
