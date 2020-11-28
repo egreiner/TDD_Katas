@@ -1,4 +1,4 @@
-﻿namespace LearningTests.LinkedList
+﻿namespace Kata.Services.LinkedList
 {
     using System;
     using System.Collections;

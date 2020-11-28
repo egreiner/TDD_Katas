@@ -1,4 +1,4 @@
-﻿namespace LearningTests.LinkedList
+﻿namespace Kata.Services.LinkedList
 {
     public class Element<T>
     {
