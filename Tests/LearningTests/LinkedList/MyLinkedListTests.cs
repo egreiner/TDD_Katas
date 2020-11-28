@@ -1,6 +1,7 @@
 ﻿namespace LearningTests.LinkedList
 {
     using System;
+    using System.Linq;
     using Xunit;
 
     public class MyLinkedListTests
@@ -116,48 +117,61 @@
         }
 
         [Theory]
-        [InlineData(0, 1, 1)]
-        [InlineData(1, 1, 0)]
-        [InlineData(1, 2, 2)]
-        [InlineData(2, 3, 3)]
-        [InlineData(3, 4, 3)]
-        public void Test_Insert(int insertAt, int indexOfValue, int expected)
-        {
-            var cut = new MyLinkedList<int> { 1, 2, 3 };
-
-            cut.Insert(insertAt, 4);
-            var actual = cut.IndexOf(indexOfValue);
-
-            var bla = cut.EnumerateAllItems();
-
-            Assert.Equal(expected, actual);
-        }
-
-        [Theory]
         [InlineData(-1)]
         [InlineData(-100)]
         [InlineData(4)]
-        [InlineData(4000)]
+        [InlineData(400)]
         public void Test_Insert_throw_exception(int insertAt)
         {
             var cut = new MyLinkedList<int> { 1, 2, 3 };
 
-            Assert.Throws<IndexOutOfRangeException>(() => 
+            Assert.Throws<IndexOutOfRangeException>(() =>
                 cut.Insert(insertAt, 4));
         }
 
-        ////[Theory]
-        ////[InlineData(1, 3, 1)]
-        ////[InlineData(0, 1, -1)]
-        ////public void Test_RemoveAt(int removeAt, int indexOfValue, int expected)
-        ////{
-        ////    var cut = new MyLinkedList<int> { 1, 2, 3 };
+        [Theory]
+        [InlineData(0, 4, 1, 2, 3)]
+        [InlineData(1, 1, 4, 2, 3)]
+        [InlineData(2, 1, 2, 4, 3)]
+        public void Test_Insert(int insertAt, params int[] expected)
+        {
+            var cut = new MyLinkedList<int> { 1, 2, 3 };
 
-        ////    cut.RemoveAt(removeAt);
-        ////    var actual = cut.IndexOf(indexOfValue);
+            cut.Insert(insertAt, 4);
 
-        ////    Assert.Equal(expected, actual);
-        ////}
+            var actual = cut.EnumerateAllItems().Select(x => x.Item).ToList();
+
+            Assert.Equal(expected.ToList(), actual);
+        }
+
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(-100)]
+        [InlineData(5)]
+        [InlineData(500)]
+        public void Test_RemoveAt_throw_exception(int removeAt)
+        {
+            var cut = new MyLinkedList<int> { 1, 2, 3, 4 };
+
+            Assert.Throws<IndexOutOfRangeException>(() =>
+                cut.RemoveAt(removeAt));
+        }
+
+        [Theory]
+        [InlineData(0, 2, 3, 4)]
+        [InlineData(1, 1, 3, 4)]
+        [InlineData(2, 1, 2, 4)]
+        [InlineData(3, 1, 2, 3)]
+        public void Test_RemoveAt(int removeAt, params int[] expected)
+        {
+            var cut = new MyLinkedList<int> { 1, 2, 3, 4 };
+
+            cut.RemoveAt(removeAt);
+            var actual = cut.EnumerateAllItems().Select(x => x.Item).ToList();
+
+            Assert.Equal(expected.ToList(), actual);
+        }
 
         ////[Theory]
         ////[InlineData(1)]

@@ -7,15 +7,19 @@
             this.Item = item;
         }
 
-        public int Index => this.Next?.Index + 1 ?? 0;
+        public int InvertedIndex => this.Next?.InvertedIndex + 1 ?? 1;
 
         public T Item { get; set; }
 
         public Element<T> Next { get; set; }
 
 
-        public override string ToString() =>
-            $"{this.Item?.ToString()} ({this.Index})";
+        public override string ToString()
+        {
+            var item = this.Item?.ToString();
+            var nextItem = this.Next?.Item?.ToString() ?? "end";
+            return $"{item} -> {nextItem} (invIdx: {this.InvertedIndex})";
+        }
 
         public override bool Equals(object? obj) =>
             obj is Element<T> x && (x.Item?.Equals(this.Item) ?? false);

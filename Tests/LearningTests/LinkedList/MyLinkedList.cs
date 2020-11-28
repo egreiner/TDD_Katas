@@ -42,9 +42,7 @@
         public int IndexOf(T item)
         {
             var element = this.EnumerateAllItems().FirstOrDefault(x => x.Item.Equals(item));
-            if (element == null) return -1;
-
-            return this.Count - 1 - element.Index;
+            return this.GetElementIndex(element);
         }
 
 
@@ -103,9 +101,7 @@
             }
             else
             {
-                var elements = this.EnumerateAllItems()
-                                .Where(x => x.Index >= index-1)
-                                .Take(2).ToList();
+                var elements = this.GetElementsAt(index, 2);
 
                 elements[0].Next = newElement;
                 
@@ -114,23 +110,33 @@
             }
         }
 
-        private void ValidateIndex(int index)
-        {
-            if (this.Count < index || index < 0)
-                throw new IndexOutOfRangeException();
-        }
-
-
         // TODO check Element.Next
         public bool Remove(T item)
         {
             return false;
         }
 
-        // TODO check Element.Next
         public void RemoveAt(int index)
         {
-            throw new NotImplementedException();
+            this.ValidateIndex(index);
+
+            if (index == 0)
+            {
+                this.rootElement = this.rootElement.Next;
+            }
+            else
+            {
+                var elements = this.GetElementsAt(index - 1, 3);
+
+                if (elements.Count == 3)
+                {
+                    elements[0].Next = elements[2];
+                }
+                else
+                {
+                    elements[0].Next = null;
+                }
+            }
         }
 
         public T this[int index]
@@ -161,10 +167,27 @@
                 yield return element;
             }
         }
+        
+        private void ValidateIndex(int index)
+        {
+            if (this.Count < index || index < 0)
+                throw new IndexOutOfRangeException();
+        }
+
+        private int GetElementIndex(Element<T> element) =>
+            element == null 
+                ? -1 
+                : this.Count - element.InvertedIndex;
+
 
         private Element<T> GetElementAt(int index) =>
             this.EnumerateAllItems()
-                .SingleOrDefault(x => index == this.Count - 1 - x.Index);
+                .SingleOrDefault(x => this.GetElementIndex(x) == index);
+
+        private List<Element<T>> GetElementsAt(int index, int numberOfElements) =>
+            this.EnumerateAllItems()
+                .Where(x => this.GetElementIndex(x) >= index)
+                .Take(numberOfElements).ToList();
 
         private static Element<T> CreateElement(T item) =>
             new Element<T>(item);
