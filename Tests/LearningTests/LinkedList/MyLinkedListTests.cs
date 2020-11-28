@@ -154,10 +154,10 @@
 
             cut.Insert(insertAt, 4);
 
-            var elements = cut.EnumerateAllItems().ToList();
-            var actual = elements.Select(x => x.Item).ToList();
+            var actual = cut.Items().ToList();
 
             Assert.Equal(expected.ToList(), actual);
+            Assert.Equal(4, cut.Count);
         }
 
 
@@ -187,16 +187,30 @@
 
             cut.RemoveAt(removeAt);
 
-            var elements = cut.EnumerateAllItems().ToList();
-            var actual = elements.Select(x => x.Item).ToList();
+            var actual = cut.Items().ToList();
 
             Assert.Equal(expected.ToList(), actual);
+            Assert.Equal(3, cut.Count);
         }
 
         [Theory]
-        [InlineData(-1, 1, 2, 3, 4)]
-        [InlineData(0, 1, 2, 3, 4)]
-        [InlineData(9, 1, 2, 3, 4)]
+        [InlineData(0, 2, 3, 4, 5)]
+        [InlineData(2, 1, 2, 4, 5)]
+        [InlineData(3, 1, 2, 3, 5)]
+        public void Test_RemoveLast_add_another(int removeAt, params int[] expected)
+        {
+            var cut = new MyLinkedList<int> { 1, 2, 3, 4 };
+
+            cut.RemoveAt(removeAt);
+            cut.Add(5);
+
+            var actual = cut.Items().ToList();
+
+            Assert.Equal(expected.ToList(), actual);
+            Assert.Equal(4, cut.Count);
+        }
+
+        [Theory]
         [InlineData(1, 2, 3, 4)]
         [InlineData(2, 1, 3, 4)]
         [InlineData(3, 1, 2, 4)]
@@ -207,10 +221,26 @@
 
             cut.Remove(remove);
 
-            var elements = cut.EnumerateAllItems().ToList();
-            var actual = elements.Select(x => x.Item).ToList();
+            var actual = cut.Items().ToList();
 
             Assert.Equal(expected.ToList(), actual);
+            Assert.Equal(3, cut.Count);
+        }
+
+        [Theory]
+        [InlineData(-1, 1, 2, 3, 4)]
+        [InlineData(0, 1, 2, 3, 4)]
+        [InlineData(9, 1, 2, 3, 4)]
+        public void Test_Remove_not_existing_items(int remove, params int[] expected)
+        {
+            var cut = new MyLinkedList<int> { 1, 2, 3, 4 };
+
+            cut.Remove(remove);
+
+            var actual = cut.Items().ToList();
+
+            Assert.Equal(expected.ToList(), actual);
+            Assert.Equal(4, cut.Count);
         }
 
         [Theory]
@@ -226,6 +256,7 @@
             cut.CopyTo(array, arrayIndex);
 
             Assert.Equal(expected, array);
+            Assert.Equal(3, cut.Count);
         }
 
         [Theory]

@@ -28,7 +28,10 @@
         IEnumerator IEnumerable.GetEnumerator() =>
             this.enumerator;
 
-        
+
+        public IEnumerable<T> Items() =>
+            this.GetElements().Select(x => x.Item);
+
         public void Clear()
         {
             this.rootElement = null;
@@ -37,14 +40,13 @@
         }
 
         public bool Contains(T item) =>
-            this.EnumerateAllItems().Any(x => x.Item.Equals(item));
+            this.GetElements().Any(x => x.Item.Equals(item));
 
         public int IndexOf(T item)
         {
-            var element = this.EnumerateAllItems().FirstOrDefault(x => x.Item.Equals(item));
+            var element = this.GetElements().FirstOrDefault(x => x.Item.Equals(item));
             return this.GetElementIndex(element);
         }
-
 
         public void Add(T item)
         {
@@ -61,7 +63,6 @@
             this.Count++;
         }
 
-
         public void CopyTo(T[] array, int arrayIndex)
         {
             if (arrayIndex < 0)
@@ -70,11 +71,9 @@
             if (this.Count + arrayIndex > array.Length)
                 throw new ArgumentOutOfRangeException(nameof(array), "This LinkedList doesn't fir into the given array...");
             
-            var list = this.EnumerateAllItems().ToList();
-            for (int i = 0; i < this.Count; i++)
-            {
+            var list = this.GetElements().ToList();
+            for (int i = 0; i < this.Count; i++) 
                 array[i + arrayIndex] = list[i].Item;
-            }
         }
 
         /// <summary>
@@ -139,8 +138,11 @@
                 else
                 {
                     elements[0].Next = null;
+                    this.lastElement = elements[0];
                 }
             }
+
+            this.Count--;
         }
 
         public T this[int index]
@@ -159,19 +161,6 @@
                 element.Item = value;
             }
         }
-
-
-        public IEnumerable<Element<T>> EnumerateAllItems()
-        {
-            var element = this.rootElement;
-            yield return element;
-
-            while (element.Next != null)
-            {
-                element = element.Next;
-                yield return element;
-            }
-        }
         
         private void ValidateIndex(int index)
         {
@@ -186,13 +175,25 @@
 
 
         private Element<T> GetElementAt(int index) =>
-            this.EnumerateAllItems()
+            this.GetElements()
                 .SingleOrDefault(x => this.GetElementIndex(x) == index);
 
         private List<Element<T>> GetElementsAt(int index, int numberOfElements) =>
-            this.EnumerateAllItems()
+            this.GetElements()
                 .Where(x => this.GetElementIndex(x) >= index)
                 .Take(numberOfElements).ToList();
+
+        private IEnumerable<Element<T>> GetElements()
+        {
+            var element = this.rootElement;
+            yield return element;
+
+            while (element.Next != null)
+            {
+                element = element.Next;
+                yield return element;
+            }
+        }
 
         private static Element<T> CreateElement(T item) =>
             new Element<T>(item);

@@ -2,6 +2,7 @@
 =====================================
 
 - Class Kata „Linked List“ ...
+	clean up
 
 
 
