@@ -77,6 +77,18 @@
         }
 
         [Theory]
+        [InlineData(-1)]
+        [InlineData(3)]
+        public void Test_Set_with_indexer_throw_exception_on_not_existing_index(int index)
+        {
+            var cut = new MyLinkedList<int> { 1, 2 };
+
+            var actual = Assert.Throws<ArgumentOutOfRangeException>(() => cut[index] = 3);
+
+            Assert.Equal(nameof(index), actual.ParamName);
+        }
+
+        [Theory]
         [InlineData(1, 0)]
         [InlineData(2, 1)]
         [InlineData(3, 2)]
@@ -122,12 +134,14 @@
         [InlineData(-100)]
         [InlineData(4)]
         [InlineData(400)]
-        public void Test_Insert_throw_exception(int insertAt)
+        public void Test_Insert_throw_exception(int index)
         {
             var cut = new MyLinkedList<int> { 1, 2, 3 };
 
-            Assert.Throws<IndexOutOfRangeException>(() =>
-                cut.Insert(insertAt, 4));
+            var actual = Assert.Throws<ArgumentOutOfRangeException>(() =>
+                cut.Insert(index, 4));
+
+            Assert.Equal(nameof(index), actual.ParamName);
         }
 
         [Theory]
@@ -152,12 +166,14 @@
         [InlineData(-100)]
         [InlineData(5)]
         [InlineData(500)]
-        public void Test_RemoveAt_throw_exception(int removeAt)
+        public void Test_RemoveAt_throw_exception(int index)
         {
             var cut = new MyLinkedList<int> { 1, 2, 3, 4 };
 
-            Assert.Throws<IndexOutOfRangeException>(() =>
-                cut.RemoveAt(removeAt));
+            var actual = Assert.Throws<ArgumentOutOfRangeException>(() =>
+                cut.RemoveAt(index));
+
+            Assert.Equal(nameof(index), actual.ParamName);
         }
 
         [Theory]
@@ -197,28 +213,48 @@
             Assert.Equal(expected.ToList(), actual);
         }
 
+        [Theory]
+        [InlineData(0, 1, 2, 3)]
+        [InlineData(1, 0, 1, 2, 3)]
+        [InlineData(4, 0, 0, 0, 0, 1, 2, 3)]
+        public void Test_CopyTo(int arrayIndex, params int[] expected)
+        {
+            var cut = new MyLinkedList<int> { 1, 2, 3 };
 
-        ////[Theory]
-        ////[InlineData(0, 1, 2, 3)]
-        ////[InlineData(1, 0, 1, 2, 3)]
-        ////public void Test_CopyTo(int arrayIndex, params int[] expected)
-        ////{
-        ////    var cut = new MyLinkedList<int> { 1, 2, 3 };
+            int[] array = new int[expected.Length];
 
-        ////    int[] array = new int[expected.Length];
+            cut.CopyTo(array, arrayIndex);
 
-        ////    // what a bad interface...
-        ////    cut.CopyTo(array, arrayIndex);
+            Assert.Equal(expected, array);
+        }
 
-        ////    Assert.Equal(expected, array);
-        ////}
+        [Theory]
+        [InlineData(0, 2)]
+        [InlineData(1, 3)]
+        public void Test_CopyTo_array_to_short_throws_exception(int arrayIndex, int arrayLength)
+        {
+            var cut = new MyLinkedList<int> { 1, 2, 3 };
 
-        ////[Fact]
-        ////public void Test_Set_with_indexer_throw_exception_on_not_existing_index()
-        ////{
-        ////    var cut = new MyLinkedList<int> { 1, 2 };
+            int[] array = new int[arrayLength];
 
-        ////    Assert.Throws<ArgumentOutOfRangeException>(() => cut[3] = 3);
-        ////}
+            var actual = Assert.Throws<ArgumentOutOfRangeException>(() =>
+                cut.CopyTo(array, arrayIndex));
+
+            Assert.Equal(nameof(array), actual.ParamName);
+        }
+
+        [Theory]
+        [InlineData(-1, 200)]
+        public void Test_CopyTo_wrong_index_throws_exception(int arrayIndex, int arrayLength)
+        {
+            var cut = new MyLinkedList<int> { 1, 2, 3 };
+
+            int[] array = new int[arrayLength];
+
+            var actual = Assert.Throws<ArgumentOutOfRangeException>(() =>
+                cut.CopyTo(array, arrayIndex));
+
+            Assert.Equal(nameof(arrayIndex), actual.ParamName);
+        }
     }
 }

@@ -64,16 +64,17 @@
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
-            ////// catch fails arrayIndex
-            ////var length = this.internalList.Count;
-            ////Element<T>[] x = new Element<T>[length];
-            ////this.internalList.CopyTo(x, 0);
+            if (arrayIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(arrayIndex), "The arrayIndex must be >= 0");
 
-            ////for (int i = 0; i < length; i++)
-            ////{
-            ////    array[i + arrayIndex] = x[i].Item;
-            ////}
+            if (this.Count + arrayIndex > array.Length)
+                throw new ArgumentOutOfRangeException(nameof(array), "This LinkedList doesn't fir into the given array...");
+            
+            var list = this.EnumerateAllItems().ToList();
+            for (int i = 0; i < this.Count; i++)
+            {
+                array[i + arrayIndex] = list[i].Item;
+            }
         }
 
         /// <summary>
@@ -152,7 +153,8 @@
             set
             {
                 var element = this.GetElementAt(index);
-                if (element == null) throw new IndexOutOfRangeException();
+                if (element == null) 
+                    throw new ArgumentOutOfRangeException(nameof(index), $"Index '{index}' could not be found.");
 
                 element.Item = value;
             }
@@ -174,7 +176,7 @@
         private void ValidateIndex(int index)
         {
             if (this.Count < index || index < 0)
-                throw new IndexOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(index), $"Index '{index}' could not be found.");
         }
 
         private int GetElementIndex(Element<T> element) =>
