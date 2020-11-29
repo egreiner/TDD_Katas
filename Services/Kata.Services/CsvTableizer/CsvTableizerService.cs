@@ -8,21 +8,10 @@
         public IEnumerable<string> ToTable(IList<string> csvLines) =>
             this.ToTable(csvLines, 1, csvLines.Count);
 
-        public IEnumerable<string> ToTableFirstPage(IList<string> csvLines, int length) =>
-            this.ToTable(csvLines, 1, length - 2);
-
-        public IEnumerable<string> ToTableLastPage(IList<string> csvLines, int length)
-        {
-            var rowsOnPage = length - 2;
-            var pages = csvLines.Count / rowsOnPage;
-
-            return this.ToTable(csvLines, pages * rowsOnPage, csvLines.Count);
-        }
-
         public IEnumerable<string> ToTablePage(IList<string> csvLines, int page, int length)
         {
             var rowsOnPage = length - 2;
-            var start = page * rowsOnPage;
+            var start = page * rowsOnPage +1;
             return this.ToTable(csvLines, start, start + rowsOnPage);
         }
 
@@ -33,10 +22,8 @@
             yield return this.CreateTableRow(this.SplitCsvLine(csvLines[0]), widths);
             yield return this.CreateTitleSeparator(widths);
 
-            for (int i = start; i < end; i++)
-            {
+            for (var i = start; i < end && i < csvLines.Count; i++)
                 yield return this.CreateTableRow(this.SplitCsvLine(csvLines[i]), widths);
-            }
         }
 
 
@@ -60,7 +47,7 @@
             var splitLines = this.SplitCsvLines(csvLines);
             var columnsQuantity = splitLines[0].Count;
 
-            for (int i = 0; i < columnsQuantity; i++) 
+            for (var i = 0; i < columnsQuantity; i++) 
                 result.Add(splitLines.Max(x => x[i].Length));
 
             return result;
