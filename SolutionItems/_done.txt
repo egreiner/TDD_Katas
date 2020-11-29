@@ -3,6 +3,17 @@
 
 - Class Kata „Linked List“ ...
 	clean up
+	done
+
+
+	next kata???
+
+	Agility Kata “Viewing CSV Files I” ???
+	https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-i/
+
+	but...
+	tomorrow!!!
+
 
 
 
