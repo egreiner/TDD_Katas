@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Executables", "Executables"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kata.UI.WinForms", "Executables\Kata.UI.WinForms\Kata.UI.WinForms.csproj", "{B5ECB07B-7A8E-45FA-9DE5-50AB79087984}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kata.UI.Console", "Executables\Kata.UI.Console\Kata.UI.Console.csproj", "{4B432326-05ED-4697-8A49-BA16C3F82F57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{B5ECB07B-7A8E-45FA-9DE5-50AB79087984}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5ECB07B-7A8E-45FA-9DE5-50AB79087984}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5ECB07B-7A8E-45FA-9DE5-50AB79087984}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B432326-05ED-4697-8A49-BA16C3F82F57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B432326-05ED-4697-8A49-BA16C3F82F57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B432326-05ED-4697-8A49-BA16C3F82F57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B432326-05ED-4697-8A49-BA16C3F82F57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{910940FD-2AD4-4024-9335-EB500CCADDC3} = {620F5F25-B558-4C4E-9008-F47952EC26BC}
 		{3096561C-C3F4-4630-B89C-9C0839A9F5D2} = {1E477654-1CDE-42DE-AE65-CD47CCCFFB8A}
 		{B5ECB07B-7A8E-45FA-9DE5-50AB79087984} = {70AAA9EB-6669-48A6-BAEE-4856A616EDC5}
+		{4B432326-05ED-4697-8A49-BA16C3F82F57} = {70AAA9EB-6669-48A6-BAEE-4856A616EDC5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D17F9B27-9700-4197-9B8F-7CC8F20A0EFF}
