@@ -19,6 +19,13 @@
             return this.ToTable(csvLines, pages * rowsOnPage, csvLines.Count);
         }
 
+        public IEnumerable<string> ToTablePage(IList<string> csvLines, int page, int length)
+        {
+            var rowsOnPage = length - 2;
+            var start = page * rowsOnPage;
+            return this.ToTable(csvLines, start, start + rowsOnPage);
+        }
+
         private IEnumerable<string> ToTable(IList<string> csvLines, int start, int end)
         {
             var widths = this.GetMaxColumnWidths(csvLines).ToList();
