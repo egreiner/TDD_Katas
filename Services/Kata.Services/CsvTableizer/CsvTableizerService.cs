@@ -11,7 +11,7 @@
         public IEnumerable<string> ToTablePage(IList<string> csvLines, int page, int length)
         {
             var rowsOnPage = length - 2;
-            var start = page * rowsOnPage +1;
+            var start = page * rowsOnPage + 1;
             return this.ToTable(csvLines, start, start + rowsOnPage);
         }
 
