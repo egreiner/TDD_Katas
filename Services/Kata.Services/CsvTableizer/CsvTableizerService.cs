@@ -19,14 +19,28 @@
         }
 
 
-        public IEnumerable<string> ToTableFirstPage(List<string> csvLines, int argumentsPageLength)
+        public IEnumerable<string> ToTableFirstPage(List<string> csvLines, int length)
         {
             var widths = this.GetMaxColumnWidths(csvLines).ToList();
 
             yield return this.CreateTableRow(this.SplitCsvLine(csvLines[0]), widths);
             yield return this.CreateTitleSeparator(widths);
 
-            for (int i = 1; i < csvLines.Count && i < argumentsPageLength - 2; i++)
+            for (int i = 1; i < csvLines.Count && i < length - 2; i++)
+            {
+                yield return this.CreateTableRow(this.SplitCsvLine(csvLines[i]), widths);
+            }
+        }
+
+        public IEnumerable<string> ToTableLastPage(List<string> csvLines, int length)
+        {
+            var widths = this.GetMaxColumnWidths(csvLines).ToList();
+            var pages = csvLines.Count / (length -2);
+
+            yield return this.CreateTableRow(this.SplitCsvLine(csvLines[0]), widths);
+            yield return this.CreateTitleSeparator(widths);
+
+            for (int i = pages * length; i < csvLines.Count; i++)
             {
                 yield return this.CreateTableRow(this.SplitCsvLine(csvLines[i]), widths);
             }
