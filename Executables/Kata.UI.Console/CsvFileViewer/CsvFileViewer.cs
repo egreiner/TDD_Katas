@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Services.CsvTableizer;
 
     public class CsvFileViewer
     {
@@ -23,11 +24,14 @@
 
             var csvLines = ReadCsvFile(this.arguments.fileName);
             var csvService = new Kata.Services.CsvTableizer.CsvTableizerService();
+
             var key = new ConsoleKeyInfo();
             while (key.Key != ConsoleKey.X)
             {
+                // TODO paging...
+
                 var lineCount = 0;
-                var table     = csvService.ToTable(csvLines).ToList();
+                var table = this.GetTable(csvService, csvLines);
 
                 foreach (var line in table)
                 {
@@ -40,6 +44,15 @@
                 key = Console.ReadKey();
                 Console.Clear();
             }
+        }
+
+        private List<string> GetTable(CsvTableizerService csvService, List<string> csvLines)
+        {
+            var length = this.arguments.pageLength - 2;
+            ////var table = csvService.ToTable(csvLines).ToList();
+            var table = csvService.ToTableFirstPage(csvLines, length).ToList();
+            ////var table = csvService.ToTableLastPage(csvLines, length).ToList();
+            return table;
         }
 
         private static List<string> ReadCsvFile(string fileName)
@@ -77,13 +90,43 @@
 
         private static IEnumerable<string> GetCsvLines()
         {
+            var line = 0;
+
             yield return "Name;Street;City;Age";
-            yield return "Peter Pan;Am Hang 5;12345 Einsam;42";
-            yield return "Maria Müller;Kölner Straße 45;50123 Köln;43";
-            yield return "Paul Meier;Münchener Weg 1;87654 München;65";
-            yield return "Peter Pan;Am Hang 5;12345 Einsam;42";
-            yield return "Maria Müller;Kölner Straße 45;50123 Köln;43";
-            yield return "Paul Meier;Münchener Weg 1;87654 München;65";
+            yield return $"{line++} Peter Pan;Am Hang 5;12345 Einsam;42";
+            yield return $"{line++} Maria Müller;Kölner Straße 45;50123 Köln;43";
+            yield return $"{line++} Paul Meier;Münchener Weg 1;87654 München;65";
+            yield return $"{line++} Peter Pan;Am Hang 5;12345 Einsam;42";
+            yield return $"{line++} Maria Müller;Kölner Straße 45;50123 Köln;43";
+            yield return $"{line++} Paul Meier;Münchener Weg 1;87654 München;65";
+            yield return $"{line++} Name;Street;City;Age";
+            yield return $"{line++} Peter Pan;Am Hang 5;12345 Einsam;42";
+            yield return $"{line++} Maria Müller;Kölner Straße 45;50123 Köln;43";
+            yield return $"{line++} Paul Meier;Münchener Weg 1;87654 München;65";
+            yield return $"{line++} Peter Pan;Am Hang 5;12345 Einsam;42";
+            yield return $"{line++} Maria Müller;Kölner Straße 45;50123 Köln;43";
+            yield return $"{line++} Paul Meier;Münchener Weg 1;87654 München;65";
+            yield return $"{line++} Name;Street;City;Age";
+            yield return $"{line++} Peter Pan;Am Hang 5;12345 Einsam;42";
+            yield return $"{line++} Maria Müller;Kölner Straße 45;50123 Köln;43";
+            yield return $"{line++} Paul Meier;Münchener Weg 1;87654 München;65";
+            yield return $"{line++} Peter Pan;Am Hang 5;12345 Einsam;42";
+            yield return $"{line++} Maria Müller;Kölner Straße 45;50123 Köln;43";
+            yield return $"{line++} Paul Meier;Münchener Weg 1;87654 München;65";
+            yield return $"{line++} Name;Street;City;Age";
+            yield return $"{line++} Peter Pan;Am Hang 5;12345 Einsam;42";
+            yield return $"{line++} Maria Müller;Kölner Straße 45;50123 Köln;43";
+            yield return $"{line++} Paul Meier;Münchener Weg 1;87654 München;65";
+            yield return $"{line++} Peter Pan;Am Hang 5;12345 Einsam;42";
+            yield return $"{line++} Maria Müller;Kölner Straße 45;50123 Köln;43";
+            yield return $"{line++} Paul Meier;Münchener Weg 1;87654 München;65";
+            yield return $"{line++} Name;Street;City;Age";
+            yield return $"{line++} Peter Pan;Am Hang 5;12345 Einsam;42";
+            yield return $"{line++} Maria Müller;Kölner Straße 45;50123 Köln;43";
+            yield return $"{line++} Paul Meier;Münchener Weg 1;87654 München;65";
+            yield return $"{line++} Peter Pan;Am Hang 5;12345 Einsam;42";
+            yield return $"{line++} Maria Müller;Kölner Straße 45;50123 Köln;43";
+            yield return $"{line++} Paul Meier;Münchener Weg 1;87654 München;65";
         }
     }
 }
