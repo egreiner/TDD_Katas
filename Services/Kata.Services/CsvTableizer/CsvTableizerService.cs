@@ -5,47 +5,32 @@
 
     public class CsvTableizerService
     {
-        public IEnumerable<string> ToTable(IList<string> csvLines)
+        public IEnumerable<string> ToTable(IList<string> csvLines) =>
+            this.ToTable(csvLines, 1, csvLines.Count);
+
+        public IEnumerable<string> ToTableFirstPage(IList<string> csvLines, int length) =>
+            this.ToTable(csvLines, 1, length - 2);
+
+        public IEnumerable<string> ToTableLastPage(IList<string> csvLines, int length)
+        {
+            var rowsOnPage = length - 2;
+            var pages = csvLines.Count / rowsOnPage;
+
+            return this.ToTable(csvLines, pages * rowsOnPage, csvLines.Count);
+        }
+
+        private IEnumerable<string> ToTable(IList<string> csvLines, int start, int end)
         {
             var widths = this.GetMaxColumnWidths(csvLines).ToList();
 
             yield return this.CreateTableRow(this.SplitCsvLine(csvLines[0]), widths);
             yield return this.CreateTitleSeparator(widths);
 
-            for (int i = 1; i < csvLines.Count; i++)
+            for (int i = start; i < end; i++)
             {
                 yield return this.CreateTableRow(this.SplitCsvLine(csvLines[i]), widths);
             }
         }
-
-
-        public IEnumerable<string> ToTableFirstPage(List<string> csvLines, int length)
-        {
-            var widths = this.GetMaxColumnWidths(csvLines).ToList();
-
-            yield return this.CreateTableRow(this.SplitCsvLine(csvLines[0]), widths);
-            yield return this.CreateTitleSeparator(widths);
-
-            for (int i = 1; i < csvLines.Count && i < length - 2; i++)
-            {
-                yield return this.CreateTableRow(this.SplitCsvLine(csvLines[i]), widths);
-            }
-        }
-
-        public IEnumerable<string> ToTableLastPage(List<string> csvLines, int length)
-        {
-            var widths = this.GetMaxColumnWidths(csvLines).ToList();
-            var pages = csvLines.Count / (length -2);
-
-            yield return this.CreateTableRow(this.SplitCsvLine(csvLines[0]), widths);
-            yield return this.CreateTitleSeparator(widths);
-
-            for (int i = pages * length; i < csvLines.Count; i++)
-            {
-                yield return this.CreateTableRow(this.SplitCsvLine(csvLines[i]), widths);
-            }
-        }
-
 
 
         public List<List<string>> SplitCsvLines(IEnumerable<string> csvLines)

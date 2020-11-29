@@ -10,7 +10,7 @@
         private const int DefaultPageLength = 24;
 
         private readonly CsvTableizerService csvService = new CsvTableizerService();
-        private readonly ConsoleKey[] allowedKeys = new[] { ConsoleKey.X, ConsoleKey.F, ConsoleKey.L, ConsoleKey.N, ConsoleKey.P };
+        private readonly ConsoleKey[] allowedKeys = new[] { ConsoleKey.A, ConsoleKey.X, ConsoleKey.F, ConsoleKey.L, ConsoleKey.N, ConsoleKey.P };
         private readonly string footer = "[N]ext page, [P]revious page, [F]irst page, [L]ast page, e[X]it";
 
         // FEX use record from .Net 5...
