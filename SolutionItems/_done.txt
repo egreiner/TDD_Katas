@@ -1,4 +1,33 @@
-﻿2020.11.28 Sa (Lockdown day 12 in AT)
+﻿2020.11.29 Su (Lockdown day 13 in AT)
+=====================================
+
+- Agility Kata “Viewing CSV Files I” ???
+	https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-i/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2020.11.28 Sa (Lockdown day 12 in AT)
 =====================================
 
 - Class Kata „Linked List“ ...
