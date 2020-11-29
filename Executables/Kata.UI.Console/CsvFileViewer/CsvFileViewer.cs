@@ -10,6 +10,7 @@
         private const int DefaultPageLength = 24;
 
         private readonly CsvTableizerService csvService = new CsvTableizerService();
+        private readonly ConsoleKey[] allowedKeys = new[] { ConsoleKey.X, ConsoleKey.F, ConsoleKey.L, ConsoleKey.N, ConsoleKey.P };
         private readonly string footer = "[N]ext page, [P]revious page, [F]irst page, [L]ast page, e[X]it";
 
         // FEX use record from .Net 5...
@@ -25,13 +26,9 @@
             var csvLines = ReadCsvFile(this.arguments.fileName);
 
             var key = new ConsoleKeyInfo('F', ConsoleKey.F, false, false, false);
-            ConsoleKey[] keys = new[] {ConsoleKey.X, ConsoleKey.F, ConsoleKey.L};
-            while (keys.Contains(key.Key))
+            ////var key = new ConsoleKeyInfo();
+            while (key.Key != ConsoleKey.X)
             {
-                // TODO paging...
-
-                if (key.Key == ConsoleKey.X) break;
-
                 var lineCount = 0;
                 var table = this.GetTable(csvLines, key.Key);
 
@@ -43,9 +40,19 @@
 
                 this.PrintFootLine(lineCount);
 
-                key = Console.ReadKey();
+                key = this.ReadKey(key);
+
                 Console.Clear();
             }
+        }
+
+        private ConsoleKeyInfo ReadKey(ConsoleKeyInfo key)
+        {
+            var lastKey = key;
+            key = Console.ReadKey();
+            if (!this.allowedKeys.Contains(key.Key))
+                key = lastKey;
+            return key;
         }
 
         private List<string> GetTable(List<string> csvLines, ConsoleKey key)
