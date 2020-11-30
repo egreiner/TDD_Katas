@@ -5,6 +5,29 @@
 
     public class CsvTableizerService
     {
+        public IEnumerable<string> ToTable(IList<string> csvLines) =>
+            this.ToTable(csvLines, 1, csvLines.Count);
+
+        public IEnumerable<string> ToTablePage(IList<string> csvLines, int page, int length)
+        {
+            var rowsOnPage = length - 2;
+            var start = page * rowsOnPage + 1;
+            return this.ToTable(csvLines, start, start + rowsOnPage);
+        }
+
+        private IEnumerable<string> ToTable(IList<string> csvLines, int start, int end)
+        {
+            var widths = this.GetMaxColumnWidths(csvLines).ToList();
+            if (widths.Count == 0) yield break;
+
+            yield return this.CreateTableRow(this.SplitCsvLine(csvLines[0]), widths);
+            yield return this.CreateTitleSeparator(widths);
+
+            for (var i = start; i < end && i < csvLines.Count; i++)
+                yield return this.CreateTableRow(this.SplitCsvLine(csvLines[i]), widths);
+        }
+
+
         public List<List<string>> SplitCsvLines(IEnumerable<string> csvLines)
         {
             var result = new List<List<string>>();
@@ -23,9 +46,11 @@
             var result = new List<int>();
 
             var splitLines = this.SplitCsvLines(csvLines);
+            if (splitLines?.Count == 0) return result;
+
             var columnsQuantity = splitLines[0].Count;
 
-            for (int i = 0; i < columnsQuantity; i++) 
+            for (var i = 0; i < columnsQuantity; i++) 
                 result.Add(splitLines.Max(x => x[i].Length));
 
             return result;
@@ -53,19 +78,6 @@
             }
 
             return result;
-        }
-
-        public IEnumerable<string> ToTable(IList<string> csvLines)
-        {
-            var widths = this.GetMaxColumnWidths(csvLines).ToList();
-
-            yield return this.CreateTableRow(this.SplitCsvLine(csvLines[0]), widths);
-            yield return this.CreateTitleSeparator(widths);
-
-            for (int i = 1; i < csvLines.Count; i++)
-            {
-                yield return this.CreateTableRow(this.SplitCsvLine(csvLines[i]), widths);
-            }
         }
     }
 }
