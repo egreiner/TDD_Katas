@@ -7,12 +7,14 @@
 
     public class CsvFileViewer
     {
+        private readonly ConsoleKey[] allowedKeys = new[] { ConsoleKey.A, ConsoleKey.F, ConsoleKey.L, ConsoleKey.N, ConsoleKey.P, ConsoleKey.X };
+        private readonly string footer = "[A]ll, [N]ext, [P]revious, [F]irst, [L]ast, [J]ump to page, e[X]it";
+
         // FEX use record from .Net 5...
         // or... extract this to an ArgumentDto
         private readonly (string FileName, int PageLength) settings;
+        
         private readonly CsvTableizerService csvService = new CsvTableizerService();
-        private readonly ConsoleKey[] allowedKeys = new[] { ConsoleKey.A, ConsoleKey.X, ConsoleKey.F, ConsoleKey.L, ConsoleKey.N, ConsoleKey.P };
-        private readonly string footer = "[N]ext page, [P]revious page, [F]irst page, [L]ast page, e[X]it";
         private  readonly CsvFileService csvFileService = new CsvFileService();
 
         private PageController pageController;
@@ -51,6 +53,8 @@
             {
                 while (lineCount <= this.settings.PageLength) 
                     writeLine(string.Empty);
+                
+                writeLine(this.pageController.PageInfo);
                 writeLine(this.footer);
             }
 
@@ -81,6 +85,7 @@
                 ConsoleKey.P => this.csvService.ToTablePage(csvLines, this.pageController.GetPrevPage(), length).ToList(),
                 ConsoleKey.N => this.csvService.ToTablePage(csvLines, this.pageController.GetNextPage(), length).ToList(),
                 ConsoleKey.L => this.csvService.ToTablePage(csvLines, this.pageController.GetLastPage(), length).ToList(),
+                ConsoleKey.J => this.csvService.ToTablePage(csvLines, this.pageController.GetPage(3), length).ToList(),
                 _ => this.csvService.ToTable(csvLines).ToList()
             };
         }
