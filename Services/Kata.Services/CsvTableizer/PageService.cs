@@ -2,10 +2,10 @@
 {
     using Extensions;
 
-    public class PageController
+    public class PageService
     {
-        public PageController(int rowCount, int rowsOnPage) =>
-            this.MaxPage = rowCount / rowsOnPage + 1;
+        public PageService(int rowCount, int rowsOnPage) =>
+            this.MaxPage = (int)System.Math.Ceiling((decimal)rowCount / rowsOnPage);
 
         public int MinPage { get; }
 

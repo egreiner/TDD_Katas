@@ -17,7 +17,7 @@
         private readonly CsvTableizerService csvService = new CsvTableizerService();
         private  readonly CsvFileService csvFileService = new CsvFileService();
 
-        private PageController pageController;
+        private PageService pageController;
 
 
         public CsvFileViewer((string fileName, int pageLength) settings) =>
@@ -28,7 +28,7 @@
         {
             int lineCount;
             var csvLines = this.csvFileService.ReadFile(this.settings.FileName);
-            this.pageController = new PageController(csvLines.Count, this.settings.PageLength -2);
+            this.pageController = new PageService(csvLines.Count, this.settings.PageLength -2);
 
             var key = new ConsoleKeyInfo('F', ConsoleKey.F, false, false, false);
             while (key.Key != ConsoleKey.X)
