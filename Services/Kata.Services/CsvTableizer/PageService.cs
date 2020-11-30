@@ -4,39 +4,40 @@
 
     public class PageService
     {
-        public PageService(int rowCount, int rowsOnPage) =>
-            this.MaxPage = (int)System.Math.Ceiling((decimal)rowCount / rowsOnPage);
+        public PageService(int rowCount, int rowsOnPage)
+        {
+            var max = System.Math.Ceiling((decimal) rowCount / rowsOnPage);
+            this.PageRange = (1, (int)max);
+        }
 
-        public int MinPage { get; }
+        public (int Min, int Max) PageRange { get; }
 
-        public int MaxPage { get; }
-
-        public int CurrentPage { get; set; }
+        public int CurrentPage { get; private set; }
 
         
-        public string PageInfo => $"Page {this.CurrentPage} of {this.MaxPage}";
+        public string PageInfo => $"Page {this.CurrentPage} of {this.PageRange.Max}";
 
         
         public override string ToString() => this.PageInfo;
 
 
-        public int GetFirstPage() => this.GetPage(0);
+        public int GetFirstPage() => this.GetPage(this.PageRange.Min);
 
-        public int GetLastPage() => this.GetPage(this.MaxPage);
+        public int GetLastPage() => this.GetPage(this.PageRange.Max);
 
-        public int GetPage(int page) => this.CurrentPage = page.LimitTo(this.MinPage, this.MaxPage);
+        public int GetPage(int page) => this.CurrentPage = page.LimitTo(this.PageRange.Min, this.PageRange.Max);
 
 
         public int GetPrevPage()
         {
             this.CurrentPage--;
-            return this.CurrentPage = this.CurrentPage.LimitTo(this.MinPage, this.MaxPage);
+            return this.CurrentPage = this.CurrentPage.LimitTo(this.PageRange.Min, this.PageRange.Max);
         }
 
         public int GetNextPage()
         {
             this.CurrentPage++;
-            return this.CurrentPage = this.CurrentPage.LimitTo(this.MinPage, this.MaxPage);
+            return this.CurrentPage = this.CurrentPage.LimitTo(this.PageRange.Min, this.PageRange.Max);
         }
     }
 }

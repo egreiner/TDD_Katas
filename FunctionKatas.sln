@@ -14,13 +14,16 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{868D5999-F86E-49CA-8673-9749C8E4ADFA}"
 	ProjectSection(SolutionItems) = preProject
 		SolutionItems\_done.txt = SolutionItems\_done.txt
+		SolutionItems\CSVViewer\besucher.csv = SolutionItems\CSVViewer\besucher.csv
+		SolutionItems\CSVViewer\leer.csv = SolutionItems\CSVViewer\leer.csv
+		SolutionItems\CSVViewer\personen.csv = SolutionItems\CSVViewer\personen.csv
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Executables", "Executables", "{70AAA9EB-6669-48A6-BAEE-4856A616EDC5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kata.UI.WinForms", "Executables\Kata.UI.WinForms\Kata.UI.WinForms.csproj", "{B5ECB07B-7A8E-45FA-9DE5-50AB79087984}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kata.UI.Console", "Executables\Kata.UI.Console\Kata.UI.Console.csproj", "{4B432326-05ED-4697-8A49-BA16C3F82F57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kata.UI.Console", "Executables\Kata.UI.Console\Kata.UI.Console.csproj", "{4B432326-05ED-4697-8A49-BA16C3F82F57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -7,7 +7,6 @@
 
     public class CsvFileViewer
     {
-        private readonly ConsoleKey[] allowedKeys = new[] { ConsoleKey.A, ConsoleKey.F, ConsoleKey.L, ConsoleKey.N, ConsoleKey.P, ConsoleKey.X };
         private readonly string footer = "[A]ll, [N]ext, [P]revious, [F]irst, [L]ast, [J]ump to page, e[X]it";
 
         // FEX use record from .Net 5...
@@ -31,15 +30,12 @@
             this.pageController = new PageService(csvLines.Count, this.settings.PageLength -2);
 
             var key = new ConsoleKeyInfo('F', ConsoleKey.F, false, false, false);
-            while (key.Key != ConsoleKey.X)
+            while (key.Key != ConsoleKey.X && key.Key != ConsoleKey.Escape)
             {
                 Console.Clear();
 
                 lineCount = 0;
                 var table = this.GetTable(csvLines, key.Key);
-
-                writeLine($"Last key pressed: {key.Key}");
-                writeLine(string.Empty);
 
                 foreach (var line in table) 
                     writeLine(line);
@@ -51,11 +47,12 @@
 
             void printFootLine()
             {
-                while (lineCount <= this.settings.PageLength) 
+                while (lineCount < this.settings.PageLength-1) 
                     writeLine(string.Empty);
                 
                 writeLine(this.pageController.PageInfo);
                 writeLine(this.footer);
+                writeLine($"Last key pressed: {key.Key}");
             }
 
             void writeLine(string line)
@@ -70,7 +67,7 @@
         {
             var lastKey = key;
             key = Console.ReadKey();
-            if (!this.allowedKeys.Contains(key.Key))
+            if (!GetAllowedKeys().Contains(key.Key))
                 key = lastKey;
             return key;
         }
@@ -89,5 +86,17 @@
                 _ => this.csvService.ToTable(csvLines).ToList()
             };
         }
+        
+        private static ConsoleKey[] GetAllowedKeys() =>
+            new[]
+            {
+                ConsoleKey.A,
+                ConsoleKey.F,
+                ConsoleKey.L,
+                ConsoleKey.N,
+                ConsoleKey.P,
+                ConsoleKey.J,
+                ConsoleKey.X, ConsoleKey.Escape
+            };
     }
 }

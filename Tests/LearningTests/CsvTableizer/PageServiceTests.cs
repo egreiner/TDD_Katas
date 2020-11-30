@@ -13,9 +13,10 @@
         {
             var cut = new PageService(records, recordsPerPage);
 
-            var actual = cut.MaxPage;
+            var actual = cut.PageRange.Max;
 
             Assert.Equal(expected, actual);
+            Assert.Equal(1, cut.PageRange.Min);
         }
     }
 }
