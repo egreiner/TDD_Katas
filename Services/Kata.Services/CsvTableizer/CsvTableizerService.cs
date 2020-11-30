@@ -18,6 +18,7 @@
         private IEnumerable<string> ToTable(IList<string> csvLines, int start, int end)
         {
             var widths = this.GetMaxColumnWidths(csvLines).ToList();
+            if (widths.Count == 0) yield break;
 
             yield return this.CreateTableRow(this.SplitCsvLine(csvLines[0]), widths);
             yield return this.CreateTitleSeparator(widths);
@@ -45,6 +46,8 @@
             var result = new List<int>();
 
             var splitLines = this.SplitCsvLines(csvLines);
+            if (splitLines?.Count == 0) return result;
+
             var columnsQuantity = splitLines[0].Count;
 
             for (var i = 0; i < columnsQuantity; i++) 

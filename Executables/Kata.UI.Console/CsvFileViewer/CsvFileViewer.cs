@@ -13,6 +13,7 @@
         private readonly CsvTableizerService csvService = new CsvTableizerService();
         private readonly ConsoleKey[] allowedKeys = new[] { ConsoleKey.A, ConsoleKey.X, ConsoleKey.F, ConsoleKey.L, ConsoleKey.N, ConsoleKey.P };
         private readonly string footer = "[N]ext page, [P]revious page, [F]irst page, [L]ast page, e[X]it";
+        private  readonly CsvFileService csvFileService = new CsvFileService();
 
         private PageController pageController;
 
@@ -24,7 +25,7 @@
         public void Execute()
         {
             int lineCount;
-            var csvLines = ReadCsvFile(this.settings.FileName);
+            var csvLines = this.csvFileService.ReadFile(this.settings.FileName);
             this.pageController = new PageController(csvLines.Count, this.settings.PageLength -2);
 
             var key = new ConsoleKeyInfo('F', ConsoleKey.F, false, false, false);
@@ -82,11 +83,6 @@
                 ConsoleKey.L => this.csvService.ToTablePage(csvLines, this.pageController.GetLastPage(), length).ToList(),
                 _ => this.csvService.ToTable(csvLines).ToList()
             };
-        }
-
-        private static List<string> ReadCsvFile(string fileName)
-        {
-            return FakeCsvLines.GetLines().ToList();
         }
     }
 }
