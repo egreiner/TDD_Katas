@@ -11,7 +11,7 @@
         [InlineData(1, 10, 1)]
         public void Test_SplitCsvLine(int records, int recordsPerPage, int expected)
         {
-            var cut = new PageService(records, recordsPerPage);
+            var cut = new PaginationService(records, recordsPerPage);
 
             var actual = cut.PageRange.Max;
 

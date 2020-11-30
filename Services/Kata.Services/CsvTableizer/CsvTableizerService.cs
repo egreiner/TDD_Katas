@@ -2,16 +2,33 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Extensions;
 
     public class CsvTableizerService
     {
-        public IEnumerable<string> ToTable(IList<string> csvLines) =>
-            this.ToTable(csvLines, 1, csvLines.Count);
+        public const string LabelNameForRecordNumber = "No.";
+
+        private readonly bool enableRecordNumbers;
+        private int recordNumber;
+
+
+        public CsvTableizerService(bool addRecordNumbers = false)
+        {
+            this.enableRecordNumbers = addRecordNumbers;
+        }
+
+
+        public IEnumerable<string> ToTable(IList<string> csvLines)
+        {
+            this.recordNumber = 0;
+            return this.ToTable(csvLines, 1, csvLines.Count);
+        }
 
         public IEnumerable<string> ToTablePage(IList<string> csvLines, int page, int length)
         {
-            var rowsOnPage = length - 2;
-            var start = (page - 1) * rowsOnPage + 1;
+            var rowsOnPage    = length - 2;
+            this.recordNumber = (page - 1) * rowsOnPage;
+            var start         = this.recordNumber + 1;
             return this.ToTable(csvLines, start, start + rowsOnPage);
         }
 
@@ -20,13 +37,56 @@
             var widths = this.GetMaxColumnWidths(csvLines).ToList();
             if (widths.Count == 0) yield break;
 
-            yield return this.CreateTableRow(this.SplitCsvLine(csvLines[0]), widths);
+            yield return this.CreateTitleLine(this.SplitCsvLine(csvLines[0]), widths);
             yield return this.CreateTitleSeparator(widths);
 
             for (var i = start; i < end && i < csvLines.Count; i++)
                 yield return this.CreateTableRow(this.SplitCsvLine(csvLines[i]), widths);
         }
 
+        public string CreateTitleLine(IList<string> csvLine, List<int> widths)
+        {
+            var result = string.Empty;
+            
+            if (this.enableRecordNumbers)
+                csvLine.Insert(0, LabelNameForRecordNumber);
+
+            for (int i = 0; i < widths.Count; i++)
+            {
+                var text = csvLine[i];
+                var spaces = new string(' ', widths[i] - text.Length);
+                result += $"{text}{spaces}|";
+            }
+
+            return result;
+        }
+
+        public string CreateTitleSeparator(IEnumerable<int> widths)
+        {
+            var result = string.Empty;
+
+            foreach (var width in widths)
+                result += new string('-', width) + "+";
+
+            return result;
+        }
+        public string CreateTableRow(IList<string> csvColumns, List<int> widths)
+        {
+            var result = string.Empty;
+            this.recordNumber++;
+
+            if (this.enableRecordNumbers)
+                csvColumns.Insert(0, $"{this.recordNumber}.");
+
+            for (int i = 0; i < widths.Count; i++)
+            {
+                var text = csvColumns[i];
+                var spaces = new string(' ', widths[i] - text.Length);
+                result += $"{text}{spaces}|";
+            }
+
+            return result;
+        }
 
         public List<List<string>> SplitCsvLines(IEnumerable<string> csvLines)
         {
@@ -53,28 +113,10 @@
             for (var i = 0; i < columnsQuantity; i++) 
                 result.Add(splitLines.Max(x => x[i].Length));
 
-            return result;
-        }
-
-        public string CreateTitleSeparator(IEnumerable<int> widths)
-        {
-            var result = string.Empty;
-
-            foreach (var width in widths) 
-                result += new string('-', width) + "+";
-
-            return result;
-        }
-
-        public string CreateTableRow(IList<string> csvLine, List<int> widths)
-        {
-            var result = string.Empty;
-
-            for (int i = 0; i < widths.Count; i++)
+            if (this.enableRecordNumbers)
             {
-                var text = csvLine[i];
-                var spaces = new string(' ', widths[i] - text.Length);
-                result += $"{text}{spaces}|";
+                var digitsRecordNumber = csvLines.Count().ToString().Length + 1;
+                result.Insert(0, digitsRecordNumber.LimitToMin(LabelNameForRecordNumber.Length));
             }
 
             return result;

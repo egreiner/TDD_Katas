@@ -45,6 +45,19 @@
         }
 
         [Fact]
+        public void Test_MaxColumnWidthCalculation_with_record_numbers()
+        {
+            var cut = new CsvTableizerService(true);
+            var csvLines = GetSimpleCsvLines();
+
+            List<int> widths = cut.GetMaxColumnWidths(csvLines);
+
+            var actual = widths[0];
+
+            Assert.Equal(3, actual);
+        }
+
+        [Fact]
         public void Test_CreateTitleSeparator()
         {
             var cut = new CsvTableizerService();
@@ -78,6 +91,32 @@
             var actual = cut.ToTable(csvLines).ToList();
 
             Assert.Equal(5, actual.Count);
+        }
+
+        [Fact]
+        public void Test_ToTable_with_record_number_titleLine()
+        {
+            var cut = new CsvTableizerService(true);
+            var csvLines = GetCsvLines().ToList();
+
+            var list = cut.ToTable(csvLines).ToList();
+            var actual = list.First();
+
+            var expected = CsvTableizerService.LabelNameForRecordNumber;
+            Assert.StartsWith(expected, actual);
+        }
+
+
+        [Fact]
+        public void Test_ToTable_with_record_number_last_record()
+        {
+            var cut = new CsvTableizerService(true);
+            var csvLines = GetCsvLines().ToList();
+
+            var list = cut.ToTable(csvLines).ToList();
+            var actual = list.Last();
+
+            Assert.StartsWith("3.", actual);
         }
 
 

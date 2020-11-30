@@ -13,10 +13,10 @@
         // or... extract this to an ArgumentDto
         private readonly (string FileName, int PageLength) settings;
         
-        private readonly CsvTableizerService csvService = new CsvTableizerService();
-        private  readonly CsvFileService csvFileService = new CsvFileService();
+        private readonly CsvTableizerService csvService = new CsvTableizerService(true);
+        private readonly CsvFileService csvFileService = new CsvFileService();
 
-        private PageService pageController;
+        private PaginationService pagination;
 
 
         public CsvFileViewer((string fileName, int pageLength) settings) =>
@@ -27,7 +27,7 @@
         {
             int lineCount;
             var csvLines = this.csvFileService.ReadFile(this.settings.FileName);
-            this.pageController = new PageService(csvLines.Count, this.settings.PageLength -2);
+            this.pagination = new PaginationService(csvLines.Count, this.settings.PageLength -2);
 
             var key = new ConsoleKeyInfo('F', ConsoleKey.F, false, false, false);
             while (key.Key != ConsoleKey.X && key.Key != ConsoleKey.Escape)
@@ -50,7 +50,7 @@
                 while (lineCount < this.settings.PageLength-1) 
                     writeLine(string.Empty);
                 
-                writeLine(this.pageController.PageInfo);
+                writeLine(this.pagination.PageInfo);
                 writeLine(this.footer);
                 writeLine($"Last key pressed: {key.Key}");
             }
@@ -78,11 +78,11 @@
 
             return key switch
             {
-                ConsoleKey.F => this.csvService.ToTablePage(csvLines, this.pageController.GetFirstPage(), length).ToList(),
-                ConsoleKey.P => this.csvService.ToTablePage(csvLines, this.pageController.GetPrevPage(), length).ToList(),
-                ConsoleKey.N => this.csvService.ToTablePage(csvLines, this.pageController.GetNextPage(), length).ToList(),
-                ConsoleKey.L => this.csvService.ToTablePage(csvLines, this.pageController.GetLastPage(), length).ToList(),
-                ConsoleKey.J => this.csvService.ToTablePage(csvLines, this.pageController.GetPage(3), length).ToList(),
+                ConsoleKey.F => this.csvService.ToTablePage(csvLines, this.pagination.GetFirstPage(), length).ToList(),
+                ConsoleKey.P => this.csvService.ToTablePage(csvLines, this.pagination.GetPrevPage(), length).ToList(),
+                ConsoleKey.N => this.csvService.ToTablePage(csvLines, this.pagination.GetNextPage(), length).ToList(),
+                ConsoleKey.L => this.csvService.ToTablePage(csvLines, this.pagination.GetLastPage(), length).ToList(),
+                ConsoleKey.J => this.csvService.ToTablePage(csvLines, this.pagination.GetPage(3), length).ToList(),
                 _ => this.csvService.ToTable(csvLines).ToList()
             };
         }

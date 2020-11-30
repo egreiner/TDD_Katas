@@ -2,9 +2,9 @@
 {
     using Extensions;
 
-    public class PageService
+    public class PaginationService
     {
-        public PageService(int rowCount, int rowsOnPage)
+        public PaginationService(int rowCount, int rowsOnPage)
         {
             var max = System.Math.Ceiling((decimal) rowCount / rowsOnPage);
             this.PageRange = (1, (int)max);
