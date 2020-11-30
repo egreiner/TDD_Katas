@@ -2,11 +2,14 @@
 {
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
 
     public class CsvFileService
     {
         public List<string> ReadFile(string fileName)
         {
+            return FakeCsvLines.GetLines().ToList();
+
             var list = new List<string>();
             var reader = new StreamReader(File.OpenRead(fileName));
             while (!reader.EndOfStream)
@@ -16,7 +19,6 @@
             }
 
             return list;
-            ////return FakeCsvLines.GetLines().ToList();
         }
 
         // TODO WriteFile(string fileName, List<string> csvLines)

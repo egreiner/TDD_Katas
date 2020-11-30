@@ -1,6 +1,6 @@
-﻿namespace Kata.UI.Console.CsvFileViewer
+﻿namespace Kata.Services.CsvTableizer
 {
-    using Services.Extensions;
+    using Extensions;
 
     public class PageController
     {
