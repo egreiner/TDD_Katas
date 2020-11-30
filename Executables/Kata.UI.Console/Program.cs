@@ -8,7 +8,9 @@
 
         static void Main(string[] args)
         {
-            args = new[] { "bla" };
+            args = new[] { @"C:\DataServer\Developer\In523EasySteps\TDD_Katas\SolutionItems\CSVViewer\leer.csv" };
+            ////args = new[] { @"C:\DataServer\Developer\In523EasySteps\TDD_Katas\SolutionItems\CSVViewer\personen.csv" };
+            ////args = new[] { @"C:\DataServer\Developer\In523EasySteps\TDD_Katas\SolutionItems\CSVViewer\besucher.csv" };
             ////args = new[] { "bla", "20" };
 
             var csvFileViewer = new CsvFileViewer.CsvFileViewer(CsvFileViewerSettings(args));

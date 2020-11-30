@@ -5,9 +5,21 @@
 	https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-i/
 
 	what is still missing?
-	read the csv file
-	clean up
-	improvements
+	read the csv file		DONE
+	clean up				DONE
+	improvements			DONE
+
+	lets read iteration 2
+
+
+	i want [page/of pages] printed
+	i want a possibility to sort data
+	i want a no data available message
+	i want a file not found message
+	i want to write my fake csv lines to a file...
+	
+	i follow the recomendation to _NOT_ read the future iterations...
+
 
 
 
@@ -44,25 +56,6 @@ done for today
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 2020.11.28 Sa (Lockdown day 12 in AT)
 =====================================
 
@@ -84,27 +77,6 @@ done for today
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 2020.11.27 Fr (Lockdown day 11 in AT)
 =====================================
 
@@ -113,24 +85,6 @@ done for today
 I was completly biased at this topic!
 After reading wikipedia about linked lists, i know what i have to do...
 so sorry 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -147,54 +101,10 @@ so sorry
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 2020.11.24 Tu (Lockdown day 8 in AT)
 ====================================
 
 - Class Kata „Linked List“ paused
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
