@@ -18,8 +18,7 @@
         private int gotoPage;
 
         
-        public CsvFileViewerSettings Settings { get; set; }
-        
+        public CsvFileViewerSettings Settings { get; set; }        
 
         public void Execute()
         {
@@ -61,7 +60,6 @@
                 lineCount++;
             }
         }
-
 
         private ConsoleKeyInfo ReadConsoleInput(ConsoleKeyInfo key)
         {
@@ -118,5 +116,6 @@
 
         private static IEnumerable<ConsoleKey> GetExitKeys() =>
             new[] { ConsoleKey.X, ConsoleKey.Escape };
+
     }
 }

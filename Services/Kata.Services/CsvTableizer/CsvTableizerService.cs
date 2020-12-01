@@ -55,6 +55,7 @@
                 result += $"{text}{spaces}|";
             }
 
+
             return result;
         }
 
