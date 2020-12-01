@@ -21,23 +21,19 @@
         public override string ToString() => this.PageInfo;
 
 
-        public int GetFirstPage() => this.GetPage(this.PageRange.Min);
+        public int GetFirstPage() =>
+            this.GetPage(this.PageRange.Min);
 
-        public int GetLastPage() => this.GetPage(this.PageRange.Max);
+        public int GetLastPage() =>
+            this.GetPage(this.PageRange.Max);
 
-        public int GetPage(int page) => this.CurrentPage = page.LimitTo(this.PageRange.Min, this.PageRange.Max);
+        public int GetPrevPage() =>
+            this.GetPage(--this.CurrentPage);
 
+        public int GetNextPage() =>
+            this.GetPage(++this.CurrentPage);
 
-        public int GetPrevPage()
-        {
-            this.CurrentPage--;
-            return this.CurrentPage = this.CurrentPage.LimitTo(this.PageRange.Min, this.PageRange.Max);
-        }
-
-        public int GetNextPage()
-        {
-            this.CurrentPage++;
-            return this.CurrentPage = this.CurrentPage.LimitTo(this.PageRange.Min, this.PageRange.Max);
-        }
+        public int GetPage(int page) =>
+            this.CurrentPage = page.LimitTo(this.PageRange.Min, this.PageRange.Max);
     }
 }
