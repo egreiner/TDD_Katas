@@ -21,8 +21,48 @@
     -> sync all                 DONE
     -> check both sides         DONE
     -> create new branch        DONE
-    -> check on server side
+    -> check on server side     DONE
     -> delete old branches on git after a couple of days...
+
+
+
+- Agility Kata “Viewing CSV Files III” 
+    https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-iii/
+
+    planning:
+        - do not read large files at once ( > 10 MB)
+        - two strategies to get to the file infos
+        - get number of lines (i don't like the "iterate through the file method"...)
+            - what possibilities do we have?
+            - background process to determine the number of lines -> async/await (love it)
+                async file reader?
+
+
+    todos:
+        - find large(r) logfile for testing 
+        - or just blew up a existing csv file -> write a software for this...
+            - add record numbers for easier record recognition
+
+        - make IntegrationTests project for such testings, these tests take to long for UnitTests   DONE
+        - move existing ServiceTests to a ServiceTests project
+        - leave the LearningTest project almost empty
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

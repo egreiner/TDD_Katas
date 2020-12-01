@@ -25,6 +25,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kata.UI.WinForms", "Executa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kata.UI.Console", "Executables\Kata.UI.Console\Kata.UI.Console.csproj", "{4B432326-05ED-4697-8A49-BA16C3F82F57}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CsvFiles", "CsvFiles", "{8A2B3D2E-A9EC-4DF9-ACA8-4E81923A1794}"
+	ProjectSection(SolutionItems) = preProject
+		SolutionItems\CSVViewer\besucher.csv = SolutionItems\CSVViewer\besucher.csv
+		SolutionItems\CSVViewer\leer.csv = SolutionItems\CSVViewer\leer.csv
+		SolutionItems\CSVViewer\personen.csv = SolutionItems\CSVViewer\personen.csv
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests.Services", "Tests\IntegrationTests.Services\IntegrationTests.Services.csproj", "{454916B3-6771-4BF2-932C-DA053DAC8067}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.Services", "Tests\UnitTests.Services\UnitTests.Services.csproj", "{706538CD-DB54-410C-9949-0928C74D4300}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +58,14 @@ Global
 		{4B432326-05ED-4697-8A49-BA16C3F82F57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B432326-05ED-4697-8A49-BA16C3F82F57}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B432326-05ED-4697-8A49-BA16C3F82F57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{454916B3-6771-4BF2-932C-DA053DAC8067}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{454916B3-6771-4BF2-932C-DA053DAC8067}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{454916B3-6771-4BF2-932C-DA053DAC8067}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{454916B3-6771-4BF2-932C-DA053DAC8067}.Release|Any CPU.Build.0 = Release|Any CPU
+		{706538CD-DB54-410C-9949-0928C74D4300}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{706538CD-DB54-410C-9949-0928C74D4300}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{706538CD-DB54-410C-9949-0928C74D4300}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{706538CD-DB54-410C-9949-0928C74D4300}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +75,9 @@ Global
 		{3096561C-C3F4-4630-B89C-9C0839A9F5D2} = {1E477654-1CDE-42DE-AE65-CD47CCCFFB8A}
 		{B5ECB07B-7A8E-45FA-9DE5-50AB79087984} = {70AAA9EB-6669-48A6-BAEE-4856A616EDC5}
 		{4B432326-05ED-4697-8A49-BA16C3F82F57} = {70AAA9EB-6669-48A6-BAEE-4856A616EDC5}
+		{8A2B3D2E-A9EC-4DF9-ACA8-4E81923A1794} = {868D5999-F86E-49CA-8673-9749C8E4ADFA}
+		{454916B3-6771-4BF2-932C-DA053DAC8067} = {620F5F25-B558-4C4E-9008-F47952EC26BC}
+		{706538CD-DB54-410C-9949-0928C74D4300} = {620F5F25-B558-4C4E-9008-F47952EC26BC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D17F9B27-9700-4197-9B8F-7CC8F20A0EFF}
