@@ -1,4 +1,4 @@
-﻿namespace Kata.UI.Console.CsvFileViewer
+﻿namespace Kata.Services.CsvFileViewer
 {
     public class CsvFileViewerSettings
     {

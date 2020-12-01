@@ -1,4 +1,4 @@
-﻿namespace Kata.Services.CsvTableizer
+﻿namespace Kata.Services.CsvFileViewer
 {
     using Extensions;
 

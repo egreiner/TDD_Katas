@@ -1,6 +1,6 @@
 ﻿namespace LearningTests.CsvTableizer
 {
-    using Kata.Services.CsvTableizer;
+    using Kata.Services.CsvFileViewer;
     using Xunit;
 
     public class PaginationServiceTests

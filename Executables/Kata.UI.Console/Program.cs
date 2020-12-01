@@ -1,6 +1,6 @@
 ﻿namespace Kata.UI.Console
 {
-    using CsvFileViewer;
+    using Services.CsvFileViewer;
 
     public class Program
     {
