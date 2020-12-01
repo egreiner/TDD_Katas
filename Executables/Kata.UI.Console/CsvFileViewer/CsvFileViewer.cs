@@ -5,30 +5,26 @@
     using System.Linq;
     using Services.CsvTableizer;
 
+
     public class CsvFileViewer
     {
         private readonly string footer = "[A]ll, [N]ext, [P]revious, [F]irst, [L]ast, [J]ump to page, e[X]it";
 
-        // FEX use record from .Net 5...
-        // or... extract this to an ArgumentDto
-        private readonly (string FileName, int PageLength) settings;
-        
         private readonly CsvTableizerService csvService = new CsvTableizerService(true);
         private readonly CsvFileService csvFileService = new CsvFileService();
 
         private PaginationService pagination;
         private int gotoPage;
 
-
-        public CsvFileViewer((string fileName, int pageLength) settings) =>
-            this.settings = settings;
-
+        
+        public CsvFileViewerSettings Settings { get; set; }
+        
 
         public void Execute()
         {
             int lineCount;
-            var csvLines = this.csvFileService.ReadFile(this.settings.FileName);
-            this.pagination = new PaginationService(csvLines.Count, this.settings.PageLength -2);
+            var csvLines = this.csvFileService.ReadFile(this.Settings.FileName);
+            this.pagination = new PaginationService(csvLines.Count, this.Settings.RecordsPerPage);
 
             var key = new ConsoleKeyInfo('F', ConsoleKey.F, false, false, false);
             while (key.Key != ConsoleKey.X && key.Key != ConsoleKey.Escape)
@@ -48,7 +44,7 @@
 
             void printFootLine()
             {
-                while (lineCount < this.settings.PageLength-1) 
+                while (lineCount < this.Settings.PageLength-1) 
                     writeLine(string.Empty);
                 
                 writeLine(this.pagination.PageInfo);
@@ -87,7 +83,7 @@
 
         private IEnumerable<string> GetTable(IList<string> csvLines, ConsoleKey key)
         {
-            var length = this.settings.PageLength - 2;
+            var length = this.Settings.PageLength - 2;
 
             var page = key switch
             {
@@ -103,7 +99,7 @@
                 ? this.csvService.ToTablePage(csvLines, page, length).ToList() 
                 : this.csvService.ToTable(csvLines).ToList();
         }
-        
+
         private static ConsoleKey[] GetAllowedKeys() =>
             new[]
             {

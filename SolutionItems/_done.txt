@@ -9,7 +9,7 @@
     clean up				DONE
     improvements			DONE
 
-    all of this was teste manualy
+    all of this was tested manualy
     lets switch back to TDD!
 
     i want [page/of pages] printed				Iteration 2, done
