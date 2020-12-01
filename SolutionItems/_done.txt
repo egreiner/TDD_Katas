@@ -4,11 +4,25 @@
 - Agility Kata “Viewing CSV Files II” 
     https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-ii/
 
-
     clean up before starting with part 3
 
     when the core parts of the software are done, TDD goes in the background naturally
     so try to do at least Test-After!
+
+
+    so there went something terrible wrong ...
+    maybe it was a kind of chaotic creation of the branch
+    -> this leads to merge conflicts
+    -> so never delete your old files to fast!
+    -> no chaotic branch creation any more!
+
+    TODO:
+    -> check in all
+    -> sync all
+    -> check both sides
+    -> create new branch
+    -> delete old branches on git after a couple of days...
+
 
 
 2020.11.30 Mo (Lockdown day 14 in AT)
@@ -43,49 +57,28 @@
     Show which page is displayed out of how many in total below the table.	DONE
     Let the user jump to a page by entering its number.						DONE
 
-2020.11.29 Su (Lockdown day 13 in AT)
-=====================================
-
-- Agility Kata “Viewing CSV Files I” ???
-	https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-i/
-
-lunch break!
-Finish!
-done for today
-
-
-
-
-
-2020.11.28 Sa (Lockdown day 12 in AT)
-=====================================
-
-- Class Kata „Linked List“ ...
-	clean up
-	done
-
-
-	next kata???
-
-	Agility Kata “Viewing CSV Files I” ???
-	https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-i/
-
-	but...
-	tomorrow!!!
 
 
 
 
 
 
-2020.11.27 Fr (Lockdown day 11 in AT)
-=====================================
 
-- Class Kata „Linked List“ ...
 
-I was completly biased at this topic!
-After reading wikipedia about linked lists, i know what i have to do...
-so sorry 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 2020.11.29 Su (Lockdown day 13 in AT)
 =====================================
@@ -108,6 +101,7 @@ done for today
     clean up
     done
 
+
     next kata???
 
     Agility Kata “Viewing CSV Files I” ???
@@ -115,6 +109,10 @@ done for today
 
     but...
     tomorrow!!!
+
+
+
+
 
 
 2020.11.27 Fr (Lockdown day 11 in AT)
@@ -136,6 +134,9 @@ so sorry
 - Class Kata „Linked List“ resumed
     the description is kind of missleading 
     i think i will adapt it...
+
+
+
 
 
 2020.11.24 Tu (Lockdown day 8 in AT)

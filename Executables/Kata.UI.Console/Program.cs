@@ -25,7 +25,6 @@
                 : CsvFileViewerSettings.DefaultPageLength;
 
             return result;
-
         }
 
         private static int GetPageLength(string pageLength)
