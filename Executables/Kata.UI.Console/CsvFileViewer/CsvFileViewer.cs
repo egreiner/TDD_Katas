@@ -3,55 +3,55 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Services.CsvFileViewer;
     using Services.CsvTableizer;
+
 
     public class CsvFileViewer
     {
-        // FEX use record from .Net 5...
-        // or... extract this to an ArgumentDto
-        private readonly (string FileName, int PageLength) settings;
-        private readonly CsvTableizerService csvService = new CsvTableizerService();
-        private readonly ConsoleKey[] allowedKeys = new[] { ConsoleKey.A, ConsoleKey.X, ConsoleKey.F, ConsoleKey.L, ConsoleKey.N, ConsoleKey.P };
-        private readonly string footer = "[N]ext page, [P]revious page, [F]irst page, [L]ast page, e[X]it";
-        private  readonly CsvFileService csvFileService = new CsvFileService();
+        private const string Footer = "[A]ll, [N]ext, [P]revious, [F]irst, [L]ast, [J]ump to page, e[X]it";
 
-        private PageController pageController;
+        private readonly CsvTableizerService csvService = new CsvTableizerService(true);
+        private readonly CsvFileService csvFileService = new CsvFileService();
 
+        private PaginationService pagination;
+        private int gotoPage;
 
-        public CsvFileViewer((string fileName, int pageLength) settings) =>
-            this.settings = settings;
-
+        
+        public CsvFileViewerSettings Settings { get; set; }        
 
         public void Execute()
         {
             int lineCount;
-            var csvLines = this.csvFileService.ReadFile(this.settings.FileName);
-            this.pageController = new PageController(csvLines.Count, this.settings.PageLength -2);
+            var csvLines = this.csvFileService.ReadFile(this.Settings.FileName);
+
+            // assume that the first line is the column-labels
+            this.pagination = new PaginationService(csvLines.Count - 1, this.Settings.RecordsPerPage);
 
             var key = new ConsoleKeyInfo('F', ConsoleKey.F, false, false, false);
-            while (key.Key != ConsoleKey.X)
+            while (!GetExitKeys().Contains(key.Key))
             {
                 Console.Clear();
 
                 lineCount = 0;
                 var table = this.GetTable(csvLines, key.Key);
 
-                writeLine($"Last key pressed: {key.Key}");
-                writeLine(string.Empty);
-
                 foreach (var line in table) 
                     writeLine(line);
 
                 printFootLine();
 
-                key = this.ReadKey(key);
+                key = this.ReadConsoleInput(key);
             }
 
             void printFootLine()
             {
-                while (lineCount <= this.settings.PageLength) 
+                while (lineCount < this.Settings.PageLength-1) 
                     writeLine(string.Empty);
-                writeLine(this.footer);
+                
+                writeLine(this.pagination.PageInfo);
+                writeLine(Footer);
+                writeLine($"Last key pressed: {key.Key}");
             }
 
             void writeLine(string line)
@@ -61,28 +61,61 @@
             }
         }
 
-
-        private ConsoleKeyInfo ReadKey(ConsoleKeyInfo key)
+        private ConsoleKeyInfo ReadConsoleInput(ConsoleKeyInfo key)
         {
             var lastKey = key;
             key = Console.ReadKey();
-            if (!this.allowedKeys.Contains(key.Key))
+
+            if (key.Key == ConsoleKey.J)
+                this.gotoPage = this.GetGotoPage(Console.ReadLine());
+
+            if (!GetAllowedKeys().Contains(key.Key))
                 key = lastKey;
+            
             return key;
         }
 
+        private int GetGotoPage(string page)
+        {
+            var parsed = int.TryParse(page, out var result);
+            return parsed ? result : this.pagination.CurrentPage;
+        }
+
+
         private IEnumerable<string> GetTable(IList<string> csvLines, ConsoleKey key)
         {
-            var length = this.settings.PageLength - 2;
-
-            return key switch
+            var page = key switch
             {
-                ConsoleKey.F => this.csvService.ToTablePage(csvLines, this.pageController.GetFirstPage(), length).ToList(),
-                ConsoleKey.P => this.csvService.ToTablePage(csvLines, this.pageController.GetPrevPage(), length).ToList(),
-                ConsoleKey.N => this.csvService.ToTablePage(csvLines, this.pageController.GetNextPage(), length).ToList(),
-                ConsoleKey.L => this.csvService.ToTablePage(csvLines, this.pageController.GetLastPage(), length).ToList(),
-                _ => this.csvService.ToTable(csvLines).ToList()
+                ConsoleKey.F => this.pagination.GetFirstPage(),
+                ConsoleKey.P => this.pagination.GetPrevPage(),
+                ConsoleKey.N => this.pagination.GetNextPage(),
+                ConsoleKey.L => this.pagination.GetLastPage(),
+                ConsoleKey.J => this.pagination.GetPage(this.gotoPage),
+                _ => -1
             };
+
+            return page > 0 
+                ? this.csvService.ToTablePage(csvLines, page, this.Settings.RecordsPerPage).ToList() 
+                : this.csvService.ToTable(csvLines).ToList();
         }
+
+        private static IEnumerable<ConsoleKey> GetAllowedKeys()
+        {
+            var result = new List<ConsoleKey>
+            {
+                ConsoleKey.A,
+                ConsoleKey.F,
+                ConsoleKey.L,
+                ConsoleKey.N,
+                ConsoleKey.P,
+                ConsoleKey.J,
+            };
+            result.AddRange(GetExitKeys());
+            return result;
+        }
+
+        private static IEnumerable<ConsoleKey> GetExitKeys() =>
+            new[] { ConsoleKey.X, ConsoleKey.Escape };
+
     }
 }
