@@ -17,10 +17,11 @@
     -> no chaotic branch creation any more!
 
     TODO:
-    -> check in all
-    -> sync all
-    -> check both sides
-    -> create new branch
+    -> check in all             DONE
+    -> sync all                 DONE
+    -> check both sides         DONE
+    -> create new branch        DONE
+    -> check on server side
     -> delete old branches on git after a couple of days...
 
 
