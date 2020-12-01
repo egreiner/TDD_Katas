@@ -9,7 +9,7 @@
 
     public class CsvFileViewer
     {
-        private readonly string footer = "[A]ll, [N]ext, [P]revious, [F]irst, [L]ast, [J]ump to page, e[X]it";
+        private const string Footer = "[A]ll, [N]ext, [P]revious, [F]irst, [L]ast, [J]ump to page, e[X]it";
 
         private readonly CsvTableizerService csvService = new CsvTableizerService(true);
         private readonly CsvFileService csvFileService = new CsvFileService();
@@ -25,10 +25,12 @@
         {
             int lineCount;
             var csvLines = this.csvFileService.ReadFile(this.Settings.FileName);
-            this.pagination = new PaginationService(csvLines.Count, this.Settings.RecordsPerPage);
+
+            // assume that the first line is the column-labels
+            this.pagination = new PaginationService(csvLines.Count - 1, this.Settings.RecordsPerPage);
 
             var key = new ConsoleKeyInfo('F', ConsoleKey.F, false, false, false);
-            while (key.Key != ConsoleKey.X && key.Key != ConsoleKey.Escape)
+            while (!GetExitKeys().Contains(key.Key))
             {
                 Console.Clear();
 
@@ -49,7 +51,7 @@
                     writeLine(string.Empty);
                 
                 writeLine(this.pagination.PageInfo);
-                writeLine(this.footer);
+                writeLine(Footer);
                 writeLine($"Last key pressed: {key.Key}");
             }
 
@@ -84,8 +86,6 @@
 
         private IEnumerable<string> GetTable(IList<string> csvLines, ConsoleKey key)
         {
-            var length = this.Settings.PageLength - 2;
-
             var page = key switch
             {
                 ConsoleKey.F => this.pagination.GetFirstPage(),
@@ -95,14 +95,15 @@
                 ConsoleKey.J => this.pagination.GetPage(this.gotoPage),
                 _ => -1
             };
-            
+
             return page > 0 
-                ? this.csvService.ToTablePage(csvLines, page, length).ToList() 
+                ? this.csvService.ToTablePage(csvLines, page, this.Settings.RecordsPerPage).ToList() 
                 : this.csvService.ToTable(csvLines).ToList();
         }
 
-        private static ConsoleKey[] GetAllowedKeys() =>
-            new[]
+        private static IEnumerable<ConsoleKey> GetAllowedKeys()
+        {
+            var result = new List<ConsoleKey>
             {
                 ConsoleKey.A,
                 ConsoleKey.F,
@@ -110,7 +111,12 @@
                 ConsoleKey.N,
                 ConsoleKey.P,
                 ConsoleKey.J,
-                ConsoleKey.X, ConsoleKey.Escape
             };
+            result.AddRange(GetExitKeys());
+            return result;
+        }
+
+        private static IEnumerable<ConsoleKey> GetExitKeys() =>
+            new[] { ConsoleKey.X, ConsoleKey.Escape };
     }
 }

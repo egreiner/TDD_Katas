@@ -6,6 +6,9 @@
 
     clean up before starting with part 3
 
+    when the core parts of the software are done, TDD goes in the background naturally
+    so try to do at least Test-After!
+
 
 2020.11.30 Mo (Lockdown day 14 in AT)
 =====================================

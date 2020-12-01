@@ -12,10 +12,8 @@
         private int recordNumber;
 
 
-        public CsvTableizerService(bool addRecordNumbers = false)
-        {
+        public CsvTableizerService(bool addRecordNumbers = false) =>
             this.enableRecordNumbers = addRecordNumbers;
-        }
 
 
         public IEnumerable<string> ToTable(IList<string> csvLines)
@@ -24,9 +22,8 @@
             return this.ToTable(csvLines, 1, csvLines.Count);
         }
 
-        public IEnumerable<string> ToTablePage(IList<string> csvLines, int page, int length)
+        public IEnumerable<string> ToTablePage(IList<string> csvLines, int page, int rowsOnPage)
         {
-            var rowsOnPage    = length - 2;
             this.recordNumber = (page - 1) * rowsOnPage;
             var start         = this.recordNumber + 1;
             return this.ToTable(csvLines, start, start + rowsOnPage);
@@ -70,6 +67,7 @@
 
             return result;
         }
+
         public string CreateTableRow(IList<string> csvColumns, List<int> widths)
         {
             var result = string.Empty;

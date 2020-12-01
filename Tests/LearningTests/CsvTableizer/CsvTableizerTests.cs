@@ -26,7 +26,7 @@
 
             List<List<string>> actual = cut.SplitCsvLines(csvLines);
 
-            Assert.Equal(4, actual.Count);
+            Assert.Equal(5, actual.Count);
         }
 
         [Fact]
@@ -90,7 +90,7 @@
 
             var actual = cut.ToTable(csvLines).ToList();
 
-            Assert.Equal(5, actual.Count);
+            Assert.Equal(6, actual.Count);
         }
 
         [Fact]
@@ -116,7 +116,25 @@
             var list = cut.ToTable(csvLines).ToList();
             var actual = list.Last();
 
-            Assert.StartsWith("3.", actual);
+            Assert.StartsWith("4.", actual);
+        }
+
+        [Theory]
+        [InlineData(1, 1, "1.")]
+        [InlineData(2, 1, "2.")]
+        [InlineData(3, 1, "3.")]
+        [InlineData(4, 1, "4.")]
+        [InlineData(1, 2, "2.")]
+        [InlineData(2, 2, "4.")]
+        public void Test_ToTablePage(int page, int recordsOnPage, string expected)
+        {
+            var cut = new CsvTableizerService(true);
+            var csvLines = GetCsvLines().ToList();
+
+            var list = cut.ToTablePage(csvLines, page, recordsOnPage).ToList();
+            var actual = list.Last();
+
+            Assert.StartsWith(expected, actual);
         }
 
 
@@ -126,6 +144,7 @@
             yield return "Peter Pan;Am Hang 5;12345 Einsam;42";
             yield return "Maria Müller;Kölner Straße 45;50123 Köln;43";
             yield return "Paul Meier;Münchener Weg 1;87654 München;65";
+            yield return "Bla Blub;Münchener Weg 1;87654 München;65";
         }
 
         private static IEnumerable<string> GetSimpleCsvLines()
