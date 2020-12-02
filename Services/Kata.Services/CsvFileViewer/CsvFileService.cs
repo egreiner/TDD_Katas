@@ -10,25 +10,13 @@
         public List<string> ReadSmallFile(string fileName)
         {
             ////return FakeCsvLines.GetLines().ToList();
-
-            var list = new List<string>();
-            var reader = new StreamReader(File.OpenRead(fileName));
-            while (!reader.EndOfStream)
-            {
-                var line = reader.ReadLine();
-                if (line?.Trim().Length > 0)
-                    list.Add(line);
-            }
-
-            return list;
+            return File.ReadLines(fileName).ToList();
         }
 
-        public async Task<IEnumerable<string>> ReadFileAsync(string fileName, int start, int length)
-        {
-            return await Task.Run(() =>
+        public async Task<IEnumerable<string>> ReadFileAsync(string fileName, int start, int length) =>
+            await Task.Run(() =>
                 File.ReadLines(fileName).Skip(start).Take(length)
             ).ConfigureAwait(false);
-        }
 
 
         public async Task<int> GetFileLengthAsync(string fileName) =>
