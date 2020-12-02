@@ -13,6 +13,9 @@
     
     f*ck all of this just make a new commit, it's not that important
 
+    DONE
+    thats one of the reasons why you should commit often...
+    wasted time 30-60 minutes...
 
 
 

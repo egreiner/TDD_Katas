@@ -1,5 +1,6 @@
 namespace IntegrationTests.Services.CsvFileViewer
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using Kata.Services.CsvFileViewer;
     using Xunit;
@@ -7,48 +8,15 @@ namespace IntegrationTests.Services.CsvFileViewer
     [Collection("Sequential")]
     public class CsvFileServiceTests
     {
-        private int expectedFileLength = 10_001;
+        private readonly int expectedFileLength = 1_000_001;
 
         [Fact]
-        public void Test_Read_file_length_asyncV1()
+        public void Test_Read_file_length_async()
         {
             var cut = new CsvFileService();
             var file = GetTestCsvFile();
 
             var actual = cut.GetFileLengthAsync(file).Result;
-
-            Assert.Equal(this.expectedFileLength, actual);
-        }
-
-        [Fact]
-        public void Test_Read_file_length_asyncV2()
-        {
-            var cut = new CsvFileService();
-            var file = GetTestCsvFile();
-
-            var actual = cut.GetFileLengthAsyncV2(file).Result;
-
-            Assert.Equal(this.expectedFileLength, actual);
-        }
-
-        [Fact]
-        public void Test_Read_file_length_asyncV12()
-        {
-            var cut = new CsvFileService();
-            var file = GetTestCsvFile();
-
-            var actual = cut.GetFileLengthAsync(file).Result;
-
-            Assert.Equal(this.expectedFileLength, actual);
-        }
-
-        [Fact]
-        public void Test_Read_file_length_asyncV22()
-        {
-            var cut = new CsvFileService();
-            var file = GetTestCsvFile();
-
-            var actual = cut.GetFileLengthAsyncV2(file).Result;
 
             Assert.Equal(this.expectedFileLength, actual);
         }
@@ -59,21 +27,37 @@ namespace IntegrationTests.Services.CsvFileViewer
             var cut = new CsvFileService();
             var file = GetTestCsvFile();
 
-            var actual = 0;
-            // TIP async enumerable consumer
-            await foreach (var line in cut.ReadFileAsync(file, 0, 2000))
-                actual++;
+            var expected = 15;
+            var actual = cut.ReadFileAsync(file, 900_000, expected).Result;
 
-            Assert.Equal(this.expectedFileLength, actual);
+            Assert.Equal(expected, actual.Count());
         }
 
+
+        [Fact]
+        public async Task Test_Read_file_asyncV2()
+        {
+            var cut = new CsvFileService();
+            var file = GetTestCsvFile();
+
+            var expected = 15;
+            var actual = 0;
+            // TIP async enumerable consumer
+            await foreach (var line in cut.ReadFileAsyncV2(file, 900_000, expected))
+                actual++;
+
+            Assert.Equal(expected, actual);
+        }
 
         private static string GetTestCsvFile()
         {
-            var dir = System.IO.Directory.GetCurrentDirectory();
-            var file = System.IO.Path.Combine(dir, "CsvFileViewer", "besucherLarge.csv");
+            var dir = @"C:\DataServer\Developer\In523EasySteps\TDD_Kata\SolutionItems\";
+            //var file = $@"{dir}CSVViewer\besucherLarge.csv";        // 10_001
+            //var file = $@"{dir}LargeCsvFiles\besucherBig.csv";      // 100_001
+            var file = $@"{dir}LargeCsvFiles\besucherHugh.csv";     // 1_000_001
+            ////var file = $@"{dir}LargeCsvFiles\besucherMonster.csv";  // 10_000_001
+
             return file;
         }
-
     }
 }

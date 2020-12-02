@@ -23,42 +23,33 @@
             return list;
         }
 
-        public async IAsyncEnumerable<string> ReadFileAsync(string fileName, int start, int end)
+        public async Task<IEnumerable<string>> ReadFileAsync(string fileName, int start, int length)
+        {
+            return await Task.Run(() =>
+                File.ReadLines(fileName).Skip(start).Take(length)
+            ).ConfigureAwait(false);
+        }
+
+        // this version is 10 timex slower...
+        public async IAsyncEnumerable<string> ReadFileAsyncV2(string fileName, int start, int length)
         {
             // TIP async enumerable stream
+            var counter = 0;
             using var reader = new StreamReader(File.OpenRead(fileName));
-            while (!reader.EndOfStream)
+            while (counter < (start + length) && !reader.EndOfStream)
             {
+                counter++;
                 var line = await reader.ReadLineAsync();
-                if (line?.Trim().Length > 0)
+                if (counter > start && line?.Trim().Length > 0)
                     yield return line;
             }
         }
 
-        // this is slower than V2...
-        public async Task<int> GetFileLengthAsync(string fileName)
-        {
-            using var reader = new StreamReader(File.OpenRead(fileName));
-            var result = 0;
-            while (!reader.EndOfStream)
-            {
-                result++;
-                _ = await reader.ReadLineAsync();
-            }
 
-            return result;
-        }
 
-        public async Task<int> GetFileLengthAsyncV2(string fileName) =>
+        public async Task<int> GetFileLengthAsync(string fileName) =>
             await Task.Run(() => 
                 File.ReadLines(fileName).Count()
             ).ConfigureAwait(false);
-
-
-        // TODO WriteFile(string fileName, List<string> csvLines)
-        public bool WriteFile(string fileName, List<string> csvLines)
-        {
-            return false;
-        }
     }
 }
