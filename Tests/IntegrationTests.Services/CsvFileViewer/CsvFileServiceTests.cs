@@ -34,21 +34,6 @@ namespace IntegrationTests.Services.CsvFileViewer
         }
 
 
-        [Fact]
-        public async Task Test_Read_file_asyncV2()
-        {
-            var cut = new CsvFileService();
-            var file = GetTestCsvFile();
-
-            var expected = 15;
-            var actual = 0;
-            // TIP async enumerable consumer
-            await foreach (var line in cut.ReadFileAsyncV2(file, 900_000, expected))
-                actual++;
-
-            Assert.Equal(expected, actual);
-        }
-
         private static string GetTestCsvFile()
         {
             var dir = @"C:\DataServer\Developer\In523EasySteps\TDD_Kata\SolutionItems\";

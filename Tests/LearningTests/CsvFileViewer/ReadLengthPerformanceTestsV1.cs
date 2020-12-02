@@ -1,5 +1,6 @@
 namespace LearningTests.CsvFileViewer
 {
+    using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
     using Xunit;
@@ -11,33 +12,32 @@ namespace LearningTests.CsvFileViewer
 
 
         [Fact]
-        public void Test_Read_file_length_async1() =>
-            this.ReadFileLength();
-
-
-        [Fact]
-        public void Test_Read_file_length_async2() =>
-            this.ReadFileLength();
-
-        private void ReadFileLength()
+        public void Test_Read_file_length_async1()
         {
             var file = GetTestCsvFile();
 
-            var actual = this.GetFileLengthAsyncV1(file).Result;
+            var actual = this.GetFileLengthAsync(file).Result;
 
             Assert.Equal(this.expectedFileLength, actual);
         }
 
-        private static string GetTestCsvFile()
+        [Fact]
+        public async Task Test_Read_file_async()
         {
-            var dir = System.IO.Directory.GetCurrentDirectory();
-            var file = System.IO.Path.Combine(dir, "CsvFileViewer", "besucherLarge.csv");
-            return file;
+            var file = GetTestCsvFile();
+
+            var expected = 15;
+            var actual = 0;
+            // TIP async enumerable consumer
+            await foreach (var line in this.ReadFileAsync(file, 9_000, expected))
+                actual++;
+
+            Assert.Equal(expected, actual);
         }
 
 
         // this is slower than V2...
-        private async Task<int> GetFileLengthAsyncV1(string fileName)
+        private async Task<int> GetFileLengthAsync(string fileName)
         {
             using var reader = new StreamReader(File.OpenRead(fileName));
             var result = 0;
@@ -48,6 +48,29 @@ namespace LearningTests.CsvFileViewer
             }
 
             return result;
+        }
+
+
+        // this version is 10 times slower than V2...
+        private async IAsyncEnumerable<string> ReadFileAsync(string fileName, int start, int length)
+        {
+            // TIP async enumerable stream
+            var counter = 0;
+            using var reader = new StreamReader(File.OpenRead(fileName));
+            while (counter < (start + length) && !reader.EndOfStream)
+            {
+                counter++;
+                var line = await reader.ReadLineAsync();
+                if (counter > start && line?.Trim().Length > 0)
+                    yield return line;
+            }
+        }
+
+        private static string GetTestCsvFile()
+        {
+            var dir = System.IO.Directory.GetCurrentDirectory();
+            var file = System.IO.Path.Combine(dir, "CsvFileViewer", "besucherLarge.csv");
+            return file;
         }
     }
 }
