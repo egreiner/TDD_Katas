@@ -24,7 +24,7 @@
         public void Execute()
         {
             int lineCount;
-            var csvLines = this.csvFileService.ReadFile(this.Settings.FileName);
+            var csvLines = this.csvFileService.ReadSmallFile(this.Settings.FileName);
 
             // assume that the first line is the column-labels
             this.pagination = new PaginationService(csvLines.Count - 1, this.Settings.RecordsPerPage);

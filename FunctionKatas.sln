@@ -13,10 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kata.Services", "Services\K
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{868D5999-F86E-49CA-8673-9749C8E4ADFA}"
 	ProjectSection(SolutionItems) = preProject
+		_about_automatic_testing.txt = _about_automatic_testing.txt
+		_about_git.txt = _about_git.txt
 		SolutionItems\_done.txt = SolutionItems\_done.txt
-		SolutionItems\CSVViewer\besucher.csv = SolutionItems\CSVViewer\besucher.csv
-		SolutionItems\CSVViewer\leer.csv = SolutionItems\CSVViewer\leer.csv
-		SolutionItems\CSVViewer\personen.csv = SolutionItems\CSVViewer\personen.csv
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Executables", "Executables", "{70AAA9EB-6669-48A6-BAEE-4856A616EDC5}"
@@ -32,9 +31,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CsvFiles", "CsvFiles", "{8A
 		SolutionItems\CSVViewer\personen.csv = SolutionItems\CSVViewer\personen.csv
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests.Services", "Tests\IntegrationTests.Services\IntegrationTests.Services.csproj", "{454916B3-6771-4BF2-932C-DA053DAC8067}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests.Services", "Tests\IntegrationTests.Services\IntegrationTests.Services.csproj", "{454916B3-6771-4BF2-932C-DA053DAC8067}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.Services", "Tests\UnitTests.Services\UnitTests.Services.csproj", "{706538CD-DB54-410C-9949-0928C74D4300}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests.Services", "Tests\UnitTests.Services\UnitTests.Services.csproj", "{706538CD-DB54-410C-9949-0928C74D4300}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LargeCsvFiles", "LargeCsvFiles", "{6FDE24EA-E4D4-4B3C-A26A-6C95632A9531}"
+	ProjectSection(SolutionItems) = preProject
+		SolutionItems\LargeCsvFiles\besucherBig.csv = SolutionItems\LargeCsvFiles\besucherBig.csv
+		SolutionItems\LargeCsvFiles\besucherHugh.csv = SolutionItems\LargeCsvFiles\besucherHugh.csv
+		SolutionItems\LargeCsvFiles\besucherMonster.csv = SolutionItems\LargeCsvFiles\besucherMonster.csv
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -78,6 +84,7 @@ Global
 		{8A2B3D2E-A9EC-4DF9-ACA8-4E81923A1794} = {868D5999-F86E-49CA-8673-9749C8E4ADFA}
 		{454916B3-6771-4BF2-932C-DA053DAC8067} = {620F5F25-B558-4C4E-9008-F47952EC26BC}
 		{706538CD-DB54-410C-9949-0928C74D4300} = {620F5F25-B558-4C4E-9008-F47952EC26BC}
+		{6FDE24EA-E4D4-4B3C-A26A-6C95632A9531} = {868D5999-F86E-49CA-8673-9749C8E4ADFA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D17F9B27-9700-4197-9B8F-7CC8F20A0EFF}
