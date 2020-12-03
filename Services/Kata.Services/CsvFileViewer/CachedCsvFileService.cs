@@ -8,6 +8,7 @@
 
     public class CachedCsvFileService
     {
+        private readonly PageCache pageCache = new PageCache();
         private readonly PageCacheSettings cacheSettings;
         private readonly PaginationService paginationService;
         private readonly string fileName;
@@ -41,21 +42,33 @@
 
         public async Task<IList<string>> GetPageAsync(int pageNo)
         {
-            // read from cache if available
+            IList<string> lines;
 
-            return await this.GetPageFromFileAsync(pageNo);
+            if (await this.pageCache.IsCached(pageNo))
+            {
+                lines = await this.pageCache.GetPageCacheAsync(pageNo);
+            }
+            else
+            {
+                lines = await this.GetPageFromFileAsync(pageNo);
+                await this.pageCache.SetPageCacheAsync(pageNo, lines);
+            }
+
+            // Initialize reading ahead...
+
+            return lines;
         }
 
         private async Task<IList<string>> GetPageFromFileAsync(int pageNo)
         {
             var min = this.paginationService.PageRange.Min.LimitToMin(1);
-            
+
             // at the start there is no knowledge about maxPage...
             var max = this.paginationService.PageRange.Max.LimitToMin(2);
             var page = pageNo.LimitTo(min, max) - 1;
 
             var length = this.cacheSettings.PageLength;
-            var start  = page * length + 1;
+            var start = page * length + 1;
 
             var records = await this.ReadFileAsync(start, length)
                 .ConfigureAwait(false);
@@ -66,11 +79,40 @@
             return records;
         }
 
+        // Is this TDD?
+        // not really
+        // this is more a design session
+        private async Task<bool> ReadAheadFirstPagesAsync()
+        {
+            var max = this.cacheSettings.ReadAheadNextPages;
+            return await this.ReadAheadPagesAsync(2, max);
+        }
 
-        public async Task<IList<string>> ReadFileAsync(int start, int length) =>
-            await Task.Run(() =>
-                File.ReadLines(this.fileName).Skip(start).Take(length).ToList()
-            ).ConfigureAwait(false);
+        private async Task<bool> ReadAheadLastPagesAsync()
+        {
+            var max = this.paginationService.PageRange.Max;
+            var min = max - this.cacheSettings.ReadAheadPrevPages;
+            return await this.ReadAheadPagesAsync(min, max);
+        }
+
+        private async Task<bool> ReadAheadPagesAsync(int min, int max)
+        {
+            for (int i = min; i <= max; i++)
+                await this.ReadAheadAsync(i);
+
+            return true;
+        }
+
+
+        private async Task<bool> ReadAheadAsync(int pageNo)
+        {
+            if (await this.pageCache.IsCached(pageNo)) return false;
+
+            var page = await this.GetPageFromFileAsync(pageNo).ConfigureAwait(false);
+            await this.pageCache.SetPageCacheAsync(pageNo, page);
+            
+            return true;
+        }
 
 
         public async Task<int> GetFileLengthAsync() =>
@@ -84,5 +126,10 @@
             var length = await this.GetFileLengthAsync().ConfigureAwait(false);
             this.paginationService.InitializePageRange(length, this.cacheSettings.PageLength);
         }
+
+        private async Task<IList<string>> ReadFileAsync(int start, int length) =>
+            await Task.Run(() =>
+                File.ReadLines(this.fileName).Skip(start).Take(length).ToList()
+            ).ConfigureAwait(false);
     }
 }

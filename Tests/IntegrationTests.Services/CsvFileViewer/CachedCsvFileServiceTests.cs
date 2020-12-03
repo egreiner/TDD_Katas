@@ -65,6 +65,35 @@ namespace IntegrationTests.Services.CsvFileViewer
             Assert.StartsWith(expected, actual);
         }
 
+        [Theory]
+        [InlineData(1, "1 ")]
+        [InlineData(2, "11 ")]
+        public void Test_GetCached_FirstRecordOnPage(int page, string expected)
+        {
+            var cut = GetCachedCsvFileService(10, 100);
+
+            _ = cut.GetPageAsync(page).Result;
+            var list = cut.GetPageAsync(page).Result;
+
+            var actual = list[1];
+            Assert.StartsWith(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(1, "10 ")]
+        [InlineData(2, "20 ")]
+        public void Test_GetCached_LastRecordOnPage(int page, string expected)
+        {
+            var cut = GetCachedCsvFileService(10, 100);
+
+            _ = cut.GetPageAsync(page).Result;
+            var list = cut.GetPageAsync(page).Result;
+
+            var actual = list[10];
+            Assert.StartsWith(expected, actual);
+        }
+
+
 
         private static CachedCsvFileService GetCachedCsvFileService(int rowsOnPage, int maxCachedPages)
         {

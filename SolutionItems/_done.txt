@@ -9,6 +9,9 @@ Now we are prepared to continue with the work that we wanted to do initialy...
     let's update VS
     maybe some strange effects are gone now, i was 3 versions behind at least.
 
+the basics are done, lets continou tomorrow
+
+
 
 Collect some ideas:
     
@@ -28,6 +31,10 @@ Collect some ideas:
         DateTime HitTime
 
     CachedFileReader
+        string GetTitleAsync
+
+        ReadFirstPageAsync(s)
+        ReadLastPageAsync(s)
 
     PageCache
         // all methods should be async
@@ -35,10 +42,7 @@ Collect some ideas:
         async collection dictionary(PageInfo, page list of strings)
 
         string list GetPageAsync(pageNo)
-        string GetTitleAsync
-
-        ReadFirstPageAsync(s)
-        ReadLastPageAsync(s)
+        SetPageCacheAsync(pageNo, string list)
 
         ReadAheadAsync(pageNo)
         ReadAheadAsync(pageNo, pages)    FEX
