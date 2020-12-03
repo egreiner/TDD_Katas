@@ -11,14 +11,19 @@
         private readonly PageCacheSettings cacheSettings;
         private readonly PaginationService paginationService;
         private readonly string fileName;
+        
         private string cachedTitle;
 
 
-        public CachedCsvFileService(string fileName, PageCacheSettings cacheSettings, PaginationService paginationService)
+        public CachedCsvFileService(string fileName, 
+            PageCacheSettings cacheSettings, 
+            PaginationService paginationService)
         {
             this.paginationService = paginationService;
             this.cacheSettings     = cacheSettings;
             this.fileName          = fileName;
+
+            Task.Run(this.InitializeMaxPage);
         }
 
 
@@ -44,26 +49,27 @@
         private async Task<IList<string>> GetPageFromFileAsync(int pageNo)
         {
             var min = this.paginationService.PageRange.Min.LimitToMin(1);
-            var max = this.paginationService.PageRange.Max.LimitToMin(1);
+            
+            // at the start there is no knowledge about maxPage...
+            var max = this.paginationService.PageRange.Max.LimitToMin(2);
             var page = pageNo.LimitTo(min, max) - 1;
 
             var length = this.cacheSettings.PageLength;
             var start  = page * length + 1;
 
-            var title = await this.GetTitleAsync();
-            var records = await Task.Run(() =>
-                File.ReadLines(this.fileName).Skip(start).Take(length).ToList()
-                ).ConfigureAwait(false);
+            var records = await this.ReadFileAsync(start, length)
+                .ConfigureAwait(false);
 
+            var title = await this.GetTitleAsync().ConfigureAwait(false);
             records.Insert(0, title);
 
             return records;
         }
 
 
-        public async Task<IEnumerable<string>> ReadFileAsync(int start, int length) =>
+        public async Task<IList<string>> ReadFileAsync(int start, int length) =>
             await Task.Run(() =>
-                File.ReadLines(this.fileName).Skip(start).Take(length)
+                File.ReadLines(this.fileName).Skip(start).Take(length).ToList()
             ).ConfigureAwait(false);
 
 
@@ -71,5 +77,12 @@
             await Task.Run(() => 
                 File.ReadLines(this.fileName).Count()
             ).ConfigureAwait(false);
+
+
+        private async Task InitializeMaxPage()
+        {
+            var length = await this.GetFileLengthAsync().ConfigureAwait(false);
+            this.paginationService.InitializePageRange(length, this.cacheSettings.PageLength);
+        }
     }
 }

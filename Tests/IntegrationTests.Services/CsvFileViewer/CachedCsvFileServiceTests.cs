@@ -1,6 +1,5 @@
 namespace IntegrationTests.Services.CsvFileViewer
 {
-    using System.Linq;
     using Kata.Services.CsvFileViewer;
     using Xunit;
 
@@ -34,20 +33,35 @@ namespace IntegrationTests.Services.CsvFileViewer
         {
             var cut = GetCachedCsvFileService(10, 100);
 
-            var actual = cut.GetPageAsync(1).Result.ToList();
+            var actual = cut.GetPageAsync(1).Result;
 
             Assert.Equal(11, actual.Count);
         }
 
         [Theory]
-        [InlineData(1, "1")]
+        [InlineData(1, "1 ")]
+        [InlineData(2, "11 ")]
         public void Test_GetFirstRecordOnPage(int page, string expected)
         {
             var cut = GetCachedCsvFileService(10, 100);
 
-            var list = cut.GetPageAsync(1).Result.ToList();
+            var list = cut.GetPageAsync(page).Result;
 
             var actual = list[1];
+            Assert.StartsWith(expected, actual);
+        }
+
+
+        [Theory]
+        [InlineData(1, "10 ")]
+        [InlineData(2, "20 ")]
+        public void Test_GetLastRecordOnPage(int page, string expected)
+        {
+            var cut = GetCachedCsvFileService(10, 100);
+
+            var list = cut.GetPageAsync(page).Result;
+
+            var actual = list[10];
             Assert.StartsWith(expected, actual);
         }
 
