@@ -7,17 +7,26 @@
         public PaginationService(int rowCount, int rowsOnPage)
         {
             var max = System.Math.Ceiling((decimal) rowCount / rowsOnPage);
-            this.PageRange = (1, (int)max);
+            this.PageRange = (this.CurrentPage, (int)max);
         }
 
         public (int Min, int Max) PageRange { get; }
 
-        public int CurrentPage { get; private set; }
+        public int CurrentPage { get; private set; } = 1;
 
         
-        public string PageInfo => $"Page {this.CurrentPage} of {this.PageRange.Max}";
+        public string PageInfo
+        {
+            get
+            {
+                var max = this.PageRange.Max > 0
+                    ? this.PageRange.Max.ToString()
+                    : "?";
+                return $"Page {this.CurrentPage} of {max}";
+            }
+        }
 
-        
+
         public override string ToString() => this.PageInfo;
 
 

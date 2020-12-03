@@ -9,6 +9,7 @@
         [InlineData(100, 10, 10)]
         [InlineData(99, 10, 10)]
         [InlineData(1, 10, 1)]
+        [InlineData(0, 10, 0)]  // count of records not known at the beginning for very large files
         public void Test_PageRange(int records, int recordsPerPage, int expected)
         {
             var cut = new PaginationService(records, recordsPerPage);
@@ -17,6 +18,16 @@
 
             Assert.Equal(expected, actual);
             Assert.Equal(1, cut.PageRange.Min);
+        }
+
+        [Fact]
+        public void Test_PageRange_unknown()
+        {
+            var cut = new PaginationService(0, 100);
+
+            var actual = cut.PageInfo;
+
+            Assert.EndsWith("1 of ?", actual);
         }
 
         [Theory]

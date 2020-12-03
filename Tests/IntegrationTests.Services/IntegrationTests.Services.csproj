@@ -17,13 +17,4 @@
     <ProjectReference Include="..\..\Services\Kata.Services\Kata.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="CsvFileViewer\besucher.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="CsvFileViewer\besucherLarge.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

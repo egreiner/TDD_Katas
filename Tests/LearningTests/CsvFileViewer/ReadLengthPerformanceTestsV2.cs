@@ -58,9 +58,12 @@ namespace LearningTests.CsvFileViewer
 
         private static string GetTestCsvFile()
         {
-            var dir = System.IO.Directory.GetCurrentDirectory();
-            var file = System.IO.Path.Combine(dir, "CsvFileViewer", "besucherLarge.csv");
-            return file;
+            var dir = @"C:\DataServer\Developer\In523EasySteps\TDD_Kata\SolutionItems\";
+            ////return $@"{dir}CSVViewer\besucher.csv";        // 1_001
+            return $@"{dir}CSVViewer\besucherLarge.csv";        // 10_001
+            ////return $@"{dir}LargeCsvFiles\besucherBig.csv";      // 100_001
+            ////return $@"{dir}LargeCsvFiles\besucherHugh.csv";     // 1_000_001
+            ////return $@"{dir}LargeCsvFiles\besucherMonster.csv";  // 10_000_001
         }
     }
 }

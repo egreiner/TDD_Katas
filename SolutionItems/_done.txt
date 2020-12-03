@@ -1,4 +1,66 @@
-﻿2020.12.02 We (Lockdown day 16 in AT)
+﻿2020.12.03 Th (Lockdown day 17 in AT)
+=====================================
+
+- Agility Kata “Viewing CSV Files III” resume
+    https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-iii/
+
+Now we are prepared to continue with the work that we wanted to do initialy...
+
+    let's update VS
+    maybe some strange effects are gone now, i was 3 versions behind at least.
+
+
+Collect some ideas:
+    
+    How should the cache and the FileService work together?
+    lets build an CachedFileReader
+
+    if this would be F# we could define this directly as types/modules
+
+    // FEX future extension...
+
+    Components:
+
+    PageInfo
+        int Id
+        int Priority
+        DateTime CreationTime
+        DateTime HitTime
+
+    CachedFileReader
+
+    PageCache
+        // all methods should be async
+
+        async collection dictionary(PageInfo, page list of strings)
+
+        string list GetPageAsync(pageNo)
+        string GetTitleAsync
+
+        ReadFirstPageAsync(s)
+        ReadLastPageAsync(s)
+
+        ReadAheadAsync(pageNo)
+        ReadAheadAsync(pageNo, pages)    FEX
+        IsCachedAsync(pageNo)
+
+    PageCacheSettings
+        int PageLength
+        int ReadAheadNextPages
+        int ReadAheadPrevPages
+        int MaxCachedPages
+        int BulkReadPages FEX
+
+    PageCacheMaintance
+        DeleteOldPagesAsync
+
+    Logging
+        I want to know what this thing is doing, debugging is hard in async
+        make a simple logger
+
+
+
+2020.12.02 We (Lockdown day 16 in AT)
 =====================================
 
 - Agility Kata “Viewing CSV Files III” resume
@@ -16,6 +78,10 @@
     DONE
     thats one of the reasons why you should commit often...
     wasted time 30-60 minutes...
+
+    Now we are prepared to continue with the work that we wanted to do initialy...
+
+    but tomorrow...
 
 
 
