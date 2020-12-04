@@ -12,15 +12,21 @@ and as you can see it was pretty straight forward
 the one test showed that the ideas are working
 there are for sure bugs in there, we will find them on the way...
 
+access it in the viewer...
+
+--------these test shouldn't run parallel -> research
+lunch break!
+
 let's do some tests with larger files, just to feel the speed (or slowness)
 the reading of the file length takes some time, we will make this better later
 estimate maxpages conservative? depending on file size...
 nope, we just read the first pages and read the last pages after we know the length...
 
-these test shouldn't run parallel -> research
-lunch break!
-
-
+CachedCsvFileService should be splited up, all the readahead stuff will become a own component
+never the less its not that bad
+the principles are working
+the record numbering must be repaired
+and a general clean up is necessary
 
 Coverage:
 The moment you leave TDD you loose coverage...

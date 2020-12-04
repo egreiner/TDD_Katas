@@ -12,13 +12,12 @@
             ////args = new[] { $@"{dir}CSVViewer\besucher.csv" };             // 1.000
             ////args = new[] { $@"{dir}CSVViewer\besucherLarge.csv" };        // 10.000
             ////args = new[] { $@"{dir}LargeCsvFiles\besucherBig.csv" };          // 100.000
-            args = new[] { $@"{dir}LargeCsvFiles\besucherHugh.csv" };         // 1.000.000
-            ////args = new[] { $@"{dir}LargeCsvFiles\besucherMonster.csv" };      // 10.000.000
+            ////args = new[] { $@"{dir}LargeCsvFiles\besucherHugh.csv" };         // 1.000.000
+            args = new[] { $@"{dir}LargeCsvFiles\besucherMonster.csv" };      // 10.000.000
             ////args = new[] { "bla", "20" };
 
             var csvFileViewer = new CsvFileViewer.CsvFileViewer();
-            csvFileViewer.Settings = GetCsvFileViewerSettings(args);
-            csvFileViewer.Execute();
+            csvFileViewer.Execute(GetCsvFileViewerSettings(args));
         }
 
         private static CsvFileViewerSettings GetCsvFileViewerSettings(string[] args)

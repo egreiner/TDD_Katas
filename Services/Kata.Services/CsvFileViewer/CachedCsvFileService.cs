@@ -32,6 +32,7 @@
         // i think we will get DI after this...
         public ILog Log            { get; } = new Log();
         public PageCache PageCache { get; }
+        public string ReadLocation { get; private set; }
 
 
         public async Task<string> GetTitleAsync()
@@ -58,15 +59,18 @@
             if (await this.PageCache.IsCached(pageNo))
             {
                 this.Log.Add($"Get cached page {pageNo}.");
+                this.ReadLocation = "from cache";
                 lines = await this.PageCache.GetPageCacheAsync(pageNo);
             }
             else
             {
                 lines = await this.GetPageFromFileAsync(pageNo);
+                this.ReadLocation = "from file";
                 await this.PageCache.SetPageCacheAsync(pageNo, lines);
             }
 
-            // Initialize reading ahead...
+            _ = this.ReadAheadNextPagesAsync(pageNo);
+            _ = this.ReadAheadPrevPagesAsync(pageNo);
 
             return lines;
         }
@@ -105,21 +109,6 @@
             return pageNo.LimitTo(min, max);
         }
 
-        // Is this TDD?
-        // not really
-        // this is more a design session
-        // we need the log...
-        ////public async Task<bool> StartupReadAheadPagesAsync()
-        ////{
-        ////    this.Log.Add("StartupReadAheadPagesAsync");
-        ////    var t1 = this.ReadAheadFirstPagesAsync();
-        ////    var t2 = this.ReadAheadLastPagesAsync();
-
-        ////    var done1 = await t1.ConfigureAwait(false);
-        ////    var done2 = await t2.ConfigureAwait(false);
-        ////    return done1 && done2;
-        ////}
-
         public async Task<bool> ReadAheadFirstPagesAsync()
         {
             this.Log.Add("ReadAheadFirstPagesAsync");
@@ -132,7 +121,23 @@
         {
             this.Log.Add("ReadAheadLastPagesAsync");
             var max = this.paginationService.PageRange.Max;
-            var min = max - this.cacheSettings.ReadAheadPrevPages +1;
+            var min = max - this.cacheSettings.ReadAheadPrevPages + 1;
+            return await this.ReadAheadPrevPagesAsync(max, min);
+        }
+
+        public async Task<bool> ReadAheadNextPagesAsync(int pageNo)
+        {
+            this.Log.Add("ReadAheadNextPagesAsync");
+            var min = pageNo + 1;
+            var max = min + this.cacheSettings.ReadAheadNextPages;
+            return await this.ReadAheadNextPagesAsync(min, max);
+        }
+
+        public async Task<bool> ReadAheadPrevPagesAsync(int pageNo)
+        {
+            this.Log.Add("ReadAheadPrevPagesAsync");
+            var max = pageNo - 1;
+            var min = max - this.cacheSettings.ReadAheadPrevPages;
             return await this.ReadAheadPrevPagesAsync(max, min);
         }
 
@@ -181,6 +186,9 @@
         {
             var length = await this.GetFileLengthAsync().ConfigureAwait(false);
             this.paginationService.InitializePageRange(length, this.cacheSettings.PageLength);
+
+            _ = this.ReadAheadPrevPagesAsync(this.paginationService.PageRange.Max);
+
             this.Log.Add($"Initialized MaxPage to {length}.");
             return true;
         }

@@ -9,33 +9,31 @@
 
     public class CsvFileViewer
     {
-        private const string Footer = "[A]ll, [N]ext, [P]revious, [F]irst, [L]ast, [J]ump to page, e[X]it";
+        private const string Footer = "[A]ll, [N]ext, [P]revious, [F]irst, [L]ast, [G][J]ump to page, e[X]it";
 
         private readonly CsvTableizerService csvService = new CsvTableizerService(true);
-        private readonly CsvFileService csvFileService = new CsvFileService();
 
+        private CachedCsvFileService csvFileService;
         private PaginationService pagination;
-        private int gotoPage;
+        private int gotoPage = 1;
 
         
         public CsvFileViewerSettings Settings { get; set; }
         
 
-        public void Execute()
+        public void Execute(CsvFileViewerSettings settings)
         {
+            this.Settings = settings;
+            this.InitializeServices();
+
             int lineCount;
-            var csvLines = this.csvFileService.ReadSmallFile(this.Settings.FileName);
-
-            // assume that the first line is the column-labels
-            this.pagination = new PaginationService(csvLines.Count - 1, this.Settings.RecordsPerPage);
-
             var key = new ConsoleKeyInfo('F', ConsoleKey.F, false, false, false);
             while (!GetExitKeys().Contains(key.Key))
             {
                 Console.Clear();
 
                 lineCount = 0;
-                var table = this.GetTable(csvLines, key.Key);
+                var table = this.GetTable(key.Key);
 
                 foreach (var line in table) 
                     writeLine(line);
@@ -50,7 +48,7 @@
                 while (lineCount < this.Settings.PageLength-1) 
                     writeLine(string.Empty);
                 
-                writeLine(this.pagination.PageInfo);
+                writeLine($"{this.pagination.PageInfo} {this.csvFileService.ReadLocation}");
                 writeLine(Footer);
                 writeLine($"Last key pressed: {key.Key}");
             }
@@ -62,13 +60,23 @@
             }
         }
 
+        private void InitializeServices()
+        {
+            var cacheSettings   = new PageCacheSettings(this.Settings.RecordsPerPage, 100);
+            this.pagination     = new PaginationService(0, this.Settings.RecordsPerPage);
+            this.csvFileService = new CachedCsvFileService(this.Settings.FileName, cacheSettings, this.pagination);
+
+            _ = this.csvFileService.InitializeMaxPage();
+            _ = this.csvFileService.ReadAheadFirstPagesAsync();
+        }
+
 
         private ConsoleKeyInfo ReadConsoleInput(ConsoleKeyInfo key)
         {
             var lastKey = key;
             key = Console.ReadKey();
 
-            if (key.Key == ConsoleKey.J)
+            if (key.Key == ConsoleKey.J || key.Key == ConsoleKey.G)
                 this.gotoPage = this.GetGotoPage(Console.ReadLine());
 
             if (!GetAllowedKeys().Contains(key.Key))
@@ -84,7 +92,7 @@
         }
 
 
-        private IEnumerable<string> GetTable(IList<string> csvLines, ConsoleKey key)
+        private IEnumerable<string> GetTable(ConsoleKey key)
         {
             var page = key switch
             {
@@ -92,13 +100,18 @@
                 ConsoleKey.P => this.pagination.GetPrevPage(),
                 ConsoleKey.N => this.pagination.GetNextPage(),
                 ConsoleKey.L => this.pagination.GetLastPage(),
+                ConsoleKey.G => this.pagination.GetPage(this.gotoPage),
                 ConsoleKey.J => this.pagination.GetPage(this.gotoPage),
                 _ => -1
             };
 
-            return page > 0 
-                ? this.csvService.ToTablePage(csvLines, page, this.Settings.RecordsPerPage).ToList() 
-                : this.csvService.ToTable(csvLines).ToList();
+            var csvLines = this.csvFileService.GetPageAsync(this.pagination.CurrentPage).Result;
+
+            return this.csvService.ToTable(csvLines).ToList();
+
+            ////return page > 0 
+            ////    ? this.csvService.ToTablePage(csvLines, page, this.Settings.RecordsPerPage).ToList() 
+            ////    : this.csvService.ToTable(csvLines).ToList();
         }
 
         private static IEnumerable<ConsoleKey> GetAllowedKeys()
@@ -111,6 +124,7 @@
                 ConsoleKey.N,
                 ConsoleKey.P,
                 ConsoleKey.J,
+                ConsoleKey.G,
             };
             result.AddRange(GetExitKeys());
             return result;
