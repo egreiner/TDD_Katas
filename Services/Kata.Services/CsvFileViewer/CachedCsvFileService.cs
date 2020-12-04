@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
     using Extensions;
 
-
+    // TODO this component gets to big, where can we split?
     public class CachedCsvFileService
     {
         private readonly PageCacheSettings cacheSettings;
@@ -26,7 +26,7 @@
             this.cacheSettings     = cacheSettings;
             this.fileName          = fileName;
 
-            Task.Run(this.InitializeMaxPage);
+            ////Task.Run(this.InitializeMaxPage);
         }
 
         // i think we will get DI after this...
@@ -99,8 +99,8 @@
         {
             var min = this.paginationService.PageRange.Min.LimitToMin(1);
 
-            // at the start there is no knowledge about maxPage...
-            var max = this.paginationService.PageRange.Max.LimitToMin(2);
+            // TODO at the start there is no knowledge about maxPage...
+            var max = this.paginationService.PageRange.Max.LimitToMin(10);
 
             return pageNo.LimitTo(min, max);
         }
@@ -109,29 +109,30 @@
         // not really
         // this is more a design session
         // we need the log...
-        public async Task<bool> StartupReadAheadPagesAsync()
-        {
-            this.Log.Add("StartupReadAheadPagesAsync");
-            var t1 = this.ReadAheadFirstPagesAsync();
-            var t2 = this.ReadAheadLastPagesAsync();
+        ////public async Task<bool> StartupReadAheadPagesAsync()
+        ////{
+        ////    this.Log.Add("StartupReadAheadPagesAsync");
+        ////    var t1 = this.ReadAheadFirstPagesAsync();
+        ////    var t2 = this.ReadAheadLastPagesAsync();
 
-            var done1 = await t1.ConfigureAwait(false);
-            var done2 = await t2.ConfigureAwait(false);
-            return done1 && done2;
-        }
+        ////    var done1 = await t1.ConfigureAwait(false);
+        ////    var done2 = await t2.ConfigureAwait(false);
+        ////    return done1 && done2;
+        ////}
 
-        private async Task<bool> ReadAheadFirstPagesAsync()
+        public async Task<bool> ReadAheadFirstPagesAsync()
         {
             this.Log.Add("ReadAheadFirstPagesAsync");
-            var max = this.cacheSettings.ReadAheadNextPages;
-            return await this.ReadAheadNextPagesAsync(2, max);
+            var start = 2;
+            var end = start + this.cacheSettings.ReadAheadNextPages -1;
+            return await this.ReadAheadNextPagesAsync(start, end);
         }
 
-        private async Task<bool> ReadAheadLastPagesAsync()
+        public async Task<bool> ReadAheadLastPagesAsync()
         {
             this.Log.Add("ReadAheadLastPagesAsync");
             var max = this.paginationService.PageRange.Max;
-            var min = max - this.cacheSettings.ReadAheadPrevPages;
+            var min = max - this.cacheSettings.ReadAheadPrevPages +1;
             return await this.ReadAheadPrevPagesAsync(max, min);
         }
 
@@ -176,11 +177,12 @@
             ).ConfigureAwait(false);
 
 
-        private async Task InitializeMaxPage()
+        public async Task<bool> InitializeMaxPage()
         {
             var length = await this.GetFileLengthAsync().ConfigureAwait(false);
             this.paginationService.InitializePageRange(length, this.cacheSettings.PageLength);
             this.Log.Add($"Initialized MaxPage to {length}.");
+            return true;
         }
 
         private async Task<IList<string>> ReadFileAsync(int start, int length) =>

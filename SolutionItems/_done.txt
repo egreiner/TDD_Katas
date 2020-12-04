@@ -12,6 +12,23 @@ and as you can see it was pretty straight forward
 the one test showed that the ideas are working
 there are for sure bugs in there, we will find them on the way...
 
+let's do some tests with larger files, just to feel the speed (or slowness)
+the reading of the file length takes some time, we will make this better later
+estimate maxpages conservative? depending on file size...
+nope, we just read the first pages and read the last pages after we know the length...
+
+these test shouldn't run parallel -> research
+lunch break!
+
+
+
+Coverage:
+The moment you leave TDD you loose coverage...
+It's still good but we have to work on this...
+
+We have more Test LOC than Production LOC, thats OK and good!
+
+
 DI:
 ---
 we should introduce DI after this iteration 
