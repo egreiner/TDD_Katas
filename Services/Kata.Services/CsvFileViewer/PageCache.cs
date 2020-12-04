@@ -6,15 +6,20 @@
 
     public class PageCache
     {
-        private readonly ConcurrentDictionary<PageInfo, IList<string>> cache =
+        private readonly ILog log;
+
+
+        public ConcurrentDictionary<PageInfo, IList<string>> Cache { get; } =
             new ConcurrentDictionary<PageInfo, IList<string>>();
+        
+        public PageCache(ILog log) => this.log = log;
 
 
         public async Task<bool> IsCached(int pageNo) =>
             await Task.Run(() =>
             {
                 var page = GetNewPageInfo(pageNo);
-                return this.cache.ContainsKey(page);
+                return this.Cache.ContainsKey(page);
             }).ConfigureAwait(false);
 
         public async Task<IList<string>> GetPageCacheAsync(int pageNo) =>
@@ -22,15 +27,15 @@
             {
                 var page = GetNewPageInfo(pageNo);
                 ////var fetched = this.cache.TryGetValue(page, out var result);
-                _ = this.cache.TryGetValue(page, out var result);
+                _ = this.Cache.TryGetValue(page, out var result);
                 return result;
             }).ConfigureAwait(false);
 
-        public async Task SetPageCacheAsync(int pageNo, IList<string> lines) =>
+        public async Task<bool> SetPageCacheAsync(int pageNo, IList<string> lines) =>
             await Task.Run(() =>
             {
                 var page = GetNewPageInfo(pageNo);
-                this.cache.TryAdd(page, lines);
+                return this.Cache.TryAdd(page, lines);
             }).ConfigureAwait(false);
 
 

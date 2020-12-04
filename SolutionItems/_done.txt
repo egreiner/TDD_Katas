@@ -1,4 +1,50 @@
-﻿2020.12.03 Th (Lockdown day 17 in AT)
+﻿2020.12.04 Fr (Lockdown day 18 in AT)
+=====================================
+
+- Agility Kata “Viewing CSV Files III” resume
+    https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-iii/
+
+review what we have done yesterday...
+
+we ended yesterday with an design session not TDD
+this was to get ideas out of the head
+and as you can see it was pretty straight forward
+the one test showed that the ideas are working
+there are for sure bugs in there, we will find them on the way...
+
+DI:
+---
+we should introduce DI after this iteration 
+the components complexity increases so DI helps
+i like DI
+some don't
+there are people they say it's an antipattern
+i don't know, i didn't read there arguments (have to in the future!)
+
+https://clean-code-developer.com/grades/grade-4-green/#Inversion_of_Control_Container
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2020.12.03 Th (Lockdown day 17 in AT)
 =====================================
 
 - Agility Kata “Viewing CSV Files III” resume
@@ -9,7 +55,7 @@ Now we are prepared to continue with the work that we wanted to do initialy...
     let's update VS
     maybe some strange effects are gone now, i was 3 versions behind at least.
 
-the basics are done, lets continou tomorrow
+the basics are done, lets continue tomorrow
 
 
 
@@ -86,21 +132,6 @@ Collect some ideas:
     Now we are prepared to continue with the work that we wanted to do initialy...
 
     but tomorrow...
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -196,22 +227,6 @@ Collect some ideas:
     Each data record should be preceded by a record number.					DONE
     Show which page is displayed out of how many in total below the table.	DONE
     Let the user jump to a page by entering its number.						DONE
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

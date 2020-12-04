@@ -2,6 +2,9 @@
 {
     public static class StringExtensions
     {
+        public static bool IsNullOrEmpty(this string value) =>
+            string.IsNullOrEmpty(value);
+
         public static string ReplaceUmlauts(this string value) =>
             value.Replace("Ä", "Ae")
                  .Replace("Ö", "Oe")

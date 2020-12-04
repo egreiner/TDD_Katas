@@ -7,6 +7,7 @@
         public PaginationService(int rowCount, int rowsOnPage) =>
             this.InitializePageRange(rowCount, rowsOnPage);
 
+
         public (int Min, int Max) PageRange { get; private set; }
 
         public int CurrentPage { get; private set; } = 1;

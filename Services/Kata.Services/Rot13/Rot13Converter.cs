@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using Extensions;
 
     public class Rot13Converter
     {
@@ -20,7 +21,7 @@
 
         public string Convert(string text)
         {
-            if (string.IsNullOrEmpty(text)) return string.Empty;
+            if (text.IsNullOrEmpty()) return string.Empty;
 
             return string.Concat(
                     text.ToUpper().ToCharArray()
