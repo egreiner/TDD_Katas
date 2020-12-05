@@ -103,7 +103,7 @@ namespace IntegrationTests.Services.CsvFileViewer
             var log = cut.Log;
             var cache = cut.PageCache.Cache;
 
-            Assert.Equal(5, cache.Count);
+            Assert.Equal(cut.CacheSettings.ReadAheadNextPages, cache.Count);
         }
 
 
@@ -118,7 +118,7 @@ namespace IntegrationTests.Services.CsvFileViewer
             var log = cut.Log;
             var cache = cut.PageCache.Cache;
 
-            Assert.Equal(5, cache.Count);
+            Assert.Equal(cut.CacheSettings.ReadAheadPrevPages, cache.Count);
         }
 
 

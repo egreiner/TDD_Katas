@@ -14,8 +14,8 @@
         public int PageLength     { get; set; }
         public int MaxCachedPages { get; set; }
 
-        public int ReadAheadNextPages { get; set; } = 5;
-        public int ReadAheadPrevPages { get; set; } = 5;
+        public int ReadAheadNextPages { get; set; } = 10;
+        public int ReadAheadPrevPages { get; set; } = 10;
         
         // FEX
         ////public int BulkReadPages { get; }

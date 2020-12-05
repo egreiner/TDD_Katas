@@ -9,7 +9,6 @@
     // TODO this component gets to big, where can we split?
     public class CachedCsvFileService
     {
-        private readonly PageCacheSettings cacheSettings;
         private readonly PaginationService paginationService;
         private readonly string fileName;
         
@@ -23,15 +22,26 @@
             this.PageCache = new PageCache(this.Log);
 
             this.paginationService = paginationService;
-            this.cacheSettings     = cacheSettings;
+            this.CacheSettings     = cacheSettings;
             this.fileName          = fileName;
 
+            this.InitializeEstimatedFileLength();
+
             ////Task.Run(this.InitializeMaxPage);
+        }
+
+        private void InitializeEstimatedFileLength()
+        {
+            var fileInfo = new System.IO.FileInfo(this.fileName);
+            var length = fileInfo.Length / 500;
+            this.Log.Add($"Calculate estimated file length to {length}.");
+            this.paginationService.InitializePageRange(length, this.CacheSettings.PageLength);
         }
 
         // i think we will get DI after this...
         public ILog Log            { get; } = new Log();
         public PageCache PageCache { get; }
+        public PageCacheSettings CacheSettings { get; }
         public string ReadLocation { get; private set; }
 
 
@@ -93,7 +103,7 @@
         private (int start, int length) GetReadRange(int pageNo)
         {
             var page   = this.GetLimitedPageNo(pageNo) - 1;
-            var length = this.cacheSettings.PageLength;
+            var length = this.CacheSettings.PageLength;
             var start  = page * length + 1;
 
             return (start, length);
@@ -113,7 +123,7 @@
         {
             this.Log.Add("ReadAheadFirstPagesAsync");
             var start = 2;
-            var end = start + this.cacheSettings.ReadAheadNextPages -1;
+            var end = start + this.CacheSettings.ReadAheadNextPages -1;
             return await this.ReadAheadNextPagesAsync(start, end);
         }
 
@@ -121,7 +131,7 @@
         {
             this.Log.Add("ReadAheadLastPagesAsync");
             var max = this.paginationService.PageRange.Max;
-            var min = max - this.cacheSettings.ReadAheadPrevPages + 1;
+            var min = max - this.CacheSettings.ReadAheadPrevPages + 1;
             return await this.ReadAheadPrevPagesAsync(max, min);
         }
 
@@ -129,7 +139,7 @@
         {
             this.Log.Add("ReadAheadNextPagesAsync");
             var min = pageNo + 1;
-            var max = min + this.cacheSettings.ReadAheadNextPages;
+            var max = min + this.CacheSettings.ReadAheadNextPages;
             return await this.ReadAheadNextPagesAsync(min, max);
         }
 
@@ -137,7 +147,7 @@
         {
             this.Log.Add("ReadAheadPrevPagesAsync");
             var max = pageNo - 1;
-            var min = max - this.cacheSettings.ReadAheadPrevPages;
+            var min = max - this.CacheSettings.ReadAheadPrevPages;
             return await this.ReadAheadPrevPagesAsync(max, min);
         }
 
@@ -185,7 +195,7 @@
         public async Task<bool> InitializeMaxPage()
         {
             var length = await this.GetFileLengthAsync().ConfigureAwait(false);
-            this.paginationService.InitializePageRange(length, this.cacheSettings.PageLength);
+            this.paginationService.InitializePageRange(length, this.CacheSettings.PageLength);
 
             _ = this.ReadAheadPrevPagesAsync(this.paginationService.PageRange.Max);
 

@@ -4,7 +4,7 @@
 
     public class PaginationService
     {
-        public PaginationService(int rowCount, int rowsOnPage) =>
+        public PaginationService(long rowCount, int rowsOnPage) =>
             this.InitializePageRange(rowCount, rowsOnPage);
 
 
@@ -28,7 +28,7 @@
         public override string ToString() => this.PageInfo;
 
 
-        public void InitializePageRange(int rowCount, int rowsOnPage)
+        public void InitializePageRange(long rowCount, int rowsOnPage)
         {
             var max = System.Math.Ceiling((decimal)rowCount / rowsOnPage);
             this.PageRange = (this.CurrentPage, (int)max);
