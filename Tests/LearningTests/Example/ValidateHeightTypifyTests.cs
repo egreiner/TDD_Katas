@@ -11,7 +11,7 @@ namespace LearningTests.Example
         [InlineData("100 cm", false)]
         [InlineData("160 cm", true)]
         [InlineData("50 in", false)]
-        [InlineData("160 in", true)]
+        [InlineData("60 in", true)]
         public void Test_ValidateHeightV2(string heightString, bool expected)
         {
             var cut = HeightType.TryParse(heightString);

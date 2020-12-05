@@ -10,7 +10,7 @@ namespace LearningTests.Example
         [InlineData("100 cm", false)]
         [InlineData("160 cm", true)]
         [InlineData("50 in", false)]
-        [InlineData("160 in", true)]
+        [InlineData("60 in", true)]
         public void Test_ValidateHeight(string heightString, bool expected)
         {
             var actual = ValidateHeight(heightString);
