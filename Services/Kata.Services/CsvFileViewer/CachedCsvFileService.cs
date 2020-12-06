@@ -57,18 +57,21 @@
 
                 this.AddPageToQueue(pageNo, 1);
 
-                while (!await this.PageCache.IsCached(pageNo))
-                {
-                    await Task.Delay(10);
-                }
+                while (!await this.PageCache.IsCached(pageNo)) 
+                    await Task.Delay(50);
 
                 lines = await this.PageCache.GetPageCacheAsync(pageNo);
             }
 
-            _ = this.ReadAheadNextPagesAsync(pageNo);
-            ////_ = this.ReadAheadPrevPagesAsync(pageNo);
-
             return lines;
+        }
+
+        public async Task ReadAheadSurroundingPagesAsync(int pageNo)
+        {
+            var t1 = this.ReadAheadNextPagesAsync(pageNo);
+            var t2 = this.ReadAheadPrevPagesAsync(pageNo);
+            await t1.ConfigureAwait(false);
+            await t2.ConfigureAwait(false);
         }
 
         public async Task<string> GetTitleAsync()
@@ -173,17 +176,27 @@
 
         public async Task<bool> ReadAheadNextPagesAsync(int pageNo)
         {
-            this.Log.Add("ReadAheadNextPagesAsync");
+            var pageRange = this.paginationService.PageRange;
             var min = pageNo + 1;
             var max = min + this.CacheSettings.ReadAheadNextPages;
+
+            if (!min.IsBetween(pageRange) && !max.IsBetween(pageRange))
+                return false;
+
+            this.Log.Add("ReadAheadNextPagesAsync");
             return await this.ReadAheadNextPagesAsync(min, max);
         }
 
         public async Task<bool> ReadAheadPrevPagesAsync(int pageNo)
         {
-            this.Log.Add("ReadAheadPrevPagesAsync");
+            var pageRange = this.paginationService.PageRange;
             var max = pageNo - 1;
             var min = max - this.CacheSettings.ReadAheadPrevPages;
+
+            if (!min.IsBetween(pageRange) && !max.IsBetween(pageRange))
+                return false;
+
+            this.Log.Add("ReadAheadPrevPagesAsync");
             return await this.ReadAheadPrevPagesAsync(max, min);
         }
 

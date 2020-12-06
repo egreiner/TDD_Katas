@@ -7,6 +7,9 @@
         public static bool IsBetween<T>(this T value, T min, T max) where T : IComparable<T> =>
             value.CompareTo(min) >= 0 && value.CompareTo(max) <= 0;
 
+        public static bool IsBetween<T>(this T value, (T min, T max) range) where T : IComparable<T> =>
+            value.IsBetween(range.min, range.max);
+
 
         public static T LimitTo<T>(this T value, T min, T max) where T : IComparable<T> =>
             value.LimitToMin(min).LimitToMax(max);

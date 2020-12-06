@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Services.CsvFileViewer;
     using Services.CsvTableizer;
 
@@ -16,8 +17,11 @@
         private CachedCsvFileService csvFileService;
         private PaginationService pagination;
         private int gotoPage = 1;
+        private bool initializedImportantPages;
+        private ILog log;
+        private Task readAheadImportantPages;
 
-        
+
         public CsvFileViewerSettings Settings { get; set; }
         
 
@@ -41,7 +45,13 @@
                 printFootLine();
 
                 key = this.ReadConsoleInput(key);
+
+                if (!this.initializedImportantPages) 
+                    Task.Run(this.ReadAheadImportantPages);
             }
+
+            this.PrintLog();
+            Console.ReadKey();
 
             void printFootLine()
             {
@@ -60,15 +70,40 @@
             }
         }
 
+        private void PrintLog()
+        {
+            Console.WriteLine(string.Empty);
+            Console.WriteLine("Logged events:");
+            foreach (var logInfo in this.csvFileService.Log.LogInfos) 
+                Console.WriteLine(logInfo);
+        }
+
         private void InitializeServices()
         {
             var cacheSettings   = new PageCacheSettings(this.Settings.RecordsPerPage, 100);
             this.pagination     = new PaginationService(0, this.Settings.RecordsPerPage);
             this.csvFileService = new CachedCsvFileService(this.Settings.FileName, cacheSettings, this.pagination);
-
-            _ = this.csvFileService.InitializeMaxPage();
-            _ = this.csvFileService.ReadAheadFirstPagesAsync();
+            this.log = this.csvFileService.Log;
         }
+
+        private void ReadAheadImportantPages() =>
+            this.readAheadImportantPages = Task.Run(() =>
+            {
+                this.log.Add("ReadAheadImportantPages");
+
+                this.log.Add("InitializeMaxPage");
+                var maxPagesTask = this.csvFileService.InitializeMaxPage();
+                this.log.Add("ReadAheadFirstPagesAsync");
+                _ = this.csvFileService.ReadAheadFirstPagesAsync();
+
+                this.log.Add("wait for tasks finished");
+                Task.WaitAll(maxPagesTask);
+                this.log.Add("tasks finished");
+
+                this.log.Add("ReadAheadLastPagesAsync");
+                _ = this.csvFileService.ReadAheadLastPagesAsync();
+                this.initializedImportantPages = true;
+            });
 
 
         private ConsoleKeyInfo ReadConsoleInput(ConsoleKeyInfo key)
@@ -105,13 +140,11 @@
                 _ => -1
             };
 
-            var csvLines = this.csvFileService.GetPageAsync(this.pagination.CurrentPage).Result;
+            var pageNo = this.pagination.CurrentPage;
+            _ = this.csvFileService.ReadAheadSurroundingPagesAsync(pageNo);
+            var csvLines = this.csvFileService.GetPageAsync(pageNo).Result;
 
             return this.csvService.ToTable(csvLines).ToList();
-
-            ////return page > 0 
-            ////    ? this.csvService.ToTablePage(csvLines, page, this.Settings.RecordsPerPage).ToList() 
-            ////    : this.csvService.ToTable(csvLines).ToList();
         }
 
         private static IEnumerable<ConsoleKey> GetAllowedKeys()
