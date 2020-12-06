@@ -1,4 +1,39 @@
-﻿2020.12.05 Sa (Lockdown day 19 in AT)
+﻿2020.12.06 Su (Lockdown day 20 in AT, last day tomorrow is the first post lockdown day)
+=======================================================================================
+
+Austria is switching back to a kind of soft lockdown
+- shops are open again
+- 3/4 of schools are open again
+- museums...
+
+numbers are still much to high (4x WHO limits)
+so what do u expect?
+15.12.2020 numbers are going up again slowly...
+24.12.2020 christmas, about 3000 new infected each day
+    families meet -> much to high numbers in mid January
+    nobody wants a 3rd lockdown, so again hesitation
+    feb, march 3rd lockdown, again much to late
+    each week means double the death 1-> 2-> 4-> 8
+    three weeks of hesitation means 8x dead people
+
+    but tommorrow people "play normal" again
+
+so back to the kata
+
+- Agility Kata “Viewing CSV Files III” resume
+    https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-iii/
+
+    yesterday was a bad hair day
+    nothing worked out as planned
+    but we need a PriorityQueue
+    we have most of the code we need, so no TDD
+    just extract existing code, reimplement it and test after
+
+
+
+
+
+2020.12.05 Sa (Lockdown day 19 in AT)
 =====================================
 
 - Agility Kata “Viewing CSV Files III” resume

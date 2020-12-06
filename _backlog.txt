@@ -1,0 +1,6 @@
+- switch to .Net 5
+
+- use IoC/DI what ever container, research .Net built in, exisiting fast one???
+	i know Windsor.Castle and StructureMap so test a knew one
+
+- Mutation-Testing

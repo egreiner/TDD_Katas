@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 	ProjectSection(SolutionItems) = preProject
 		_about_automatic_testing.txt = _about_automatic_testing.txt
 		_about_git.txt = _about_git.txt
+		_backlog.txt = _backlog.txt
 		SolutionItems\_done.txt = SolutionItems\_done.txt
 	EndProjectSection
 EndProject
