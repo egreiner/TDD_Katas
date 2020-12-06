@@ -1,10 +1,10 @@
 ﻿namespace Kata.Services.CsvFileViewer
 {
-    using System.Collections.Concurrent;
+    using System.Collections.Generic;
 
     public interface ILog
     {
-        ConcurrentBag<LogInfo> LogInfos { get; }
+        IList<LogInfo> LogInfos { get; }
         void Add(string text);
     }
 }

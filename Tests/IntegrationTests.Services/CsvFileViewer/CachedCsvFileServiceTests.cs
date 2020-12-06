@@ -6,7 +6,7 @@ namespace IntegrationTests.Services.CsvFileViewer
     [Collection("Sequential")]
     public class CachedCsvFileServiceTests
     {
-        private readonly int expectedFileLength = 1_000_001;
+        private readonly int expectedFileLength = 1_001;
 
         [Fact]
         public void Test_Read_file_length_async()
@@ -28,6 +28,10 @@ namespace IntegrationTests.Services.CsvFileViewer
             Assert.NotEmpty(actual);
         }
 
+
+
+
+
         [Fact]
         public void Test_GetFirstPage()
         {
@@ -35,8 +39,22 @@ namespace IntegrationTests.Services.CsvFileViewer
 
             var actual = cut.GetPageAsync(1).Result;
 
+            var log = cut.Log.LogInfos;
+            var cache = cut.PageCache.Cache;
+
             Assert.Equal(11, actual.Count);
         }
+
+
+
+
+
+
+
+
+
+
+
 
         [Theory]
         [InlineData(1, "1 ")]
@@ -107,19 +125,19 @@ namespace IntegrationTests.Services.CsvFileViewer
         }
 
 
-        [Fact]
-        public void Test_ReadAheadLastPages()
-        {
-            var cut = GetCachedCsvFileService(10, 100);
-            var initialized = cut.InitializeMaxPage().Result;
+        ////[Fact]
+        ////public void Test_ReadAheadLastPages()
+        ////{
+        ////    var cut = GetCachedCsvFileService(10, 100);
+        ////    var initialized = cut.InitializeMaxPage().Result;
 
-            var actual = cut.ReadAheadLastPagesAsync().Result;
+        ////    var actual = cut.ReadAheadLastPagesAsync().Result;
 
-            var log = cut.Log;
-            var cache = cut.PageCache.Cache;
+        ////    var log = cut.Log;
+        ////    var cache = cut.PageCache.Cache;
 
-            Assert.Equal(cut.CacheSettings.ReadAheadPrevPages, cache.Count);
-        }
+        ////    Assert.Equal(cut.CacheSettings.ReadAheadPrevPages, cache.Count);
+        ////}
 
 
 
@@ -134,7 +152,7 @@ namespace IntegrationTests.Services.CsvFileViewer
         private static string GetTestCsvFile()
         {
             var dir = @"C:\DataServer\Developer\In523EasySteps\TDD_Kata\SolutionItems\";
-            ////return $@"{dir}CSVViewer\besucher.csv";        // 1_001
+            return $@"{dir}CSVViewer\besucher.csv";        // 1_001
             ////return $@"{dir}CSVViewer\besucherLarge.csv";        // 10_001
             ////return $@"{dir}LargeCsvFiles\besucherBig.csv";      // 100_001
             return $@"{dir}LargeCsvFiles\besucherHugh.csv";     // 1_000_001

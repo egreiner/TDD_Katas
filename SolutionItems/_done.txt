@@ -8,6 +8,9 @@ ReadAheadAsync(pageNo, pages)    FEX
 the app is slow due to multiple file access
 this is not necessary, so make this better
 
+clean up
+
+not my day today
 
 
 
