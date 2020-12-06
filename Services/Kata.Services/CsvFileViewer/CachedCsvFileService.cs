@@ -5,11 +5,13 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Extensions;
+    using PriorityQueue;
+
 
     // TODO this component gets to big, where can we split?
     public class CachedCsvFileService
     {
-        private readonly IList<PageInfo> pagePool = new List<PageInfo>();
+        private readonly PriorityQueue<PageInfo> pageQueue = new PriorityQueue<PageInfo>();
         private readonly PaginationService paginationService;
         private readonly string fileName;
         
@@ -39,23 +41,6 @@
         public string ReadLocation { get; private set; }
 
 
-        public async Task<string> GetTitleAsync()
-        {
-            if (!this.cachedTitle.IsNullOrEmpty())
-            {
-                this.Log.Add("return cached title");
-                return this.cachedTitle;
-            }
-
-            this.Log.Add("read title from file");
-
-            var titleLine    = await this.ReadFileAsync(0, 1);
-            this.cachedTitle = titleLine.FirstOrDefault();
-
-            return this.cachedTitle;
-        }
-
-
         public async Task<IList<string>> GetPageAsync(int pageNo)
         {
             IList<string> lines;
@@ -68,15 +53,16 @@
             }
             else
             {
-                //this isn't working anymore
                 this.ReadLocation = "from file";
 
-                this.AddPageToPool(pageNo, 1);
+                this.AddPageToQueue(pageNo, 1);
 
-                await Task.Delay(10);
+                while (!await this.PageCache.IsCached(pageNo))
+                {
+                    await Task.Delay(10);
+                }
 
-                // iterate until page is in cache
-                lines = await this.GetPageAsync(pageNo);
+                lines = await this.PageCache.GetPageCacheAsync(pageNo);
             }
 
             _ = this.ReadAheadNextPagesAsync(pageNo);
@@ -85,47 +71,52 @@
             return lines;
         }
 
-        private void AddPageToPool(int pageNo, int priority) =>
+        public async Task<string> GetTitleAsync()
+        {
+            if (!this.cachedTitle.IsNullOrEmpty())
+            {
+                this.Log.Add("return cached title");
+                return this.cachedTitle;
+            }
+
+            this.Log.Add("read title from file");
+
+            var titleLine = await this.ReadFileAsync(0, 1);
+            this.cachedTitle = titleLine.FirstOrDefault();
+
+            return this.cachedTitle;
+        }
+
+        private void AddPageToQueue(int pageNo, int priority) =>
             Task.Run(() =>
             {
-                var page = GetNewPageInfo(pageNo, priority);
-                ////if (this.pagePool.Contains(page))
-                ////{
-                ////    this.Log.Add($"Page {page} with priority {priority} is still in the to pool, adding skipped");
-                ////    return;
-                ////}
-                
+                var page = GetNewPageInfo(pageNo);
                 this.Log.Add($"Add page {page} with priority {priority} to pool");
 
-                this.pagePool.Add(page);
-                this.DequeuePool();
+                this.pageQueue.Enqueue(page, priority);
+                this.ProcessQueue();
             });
 
-        private void DequeuePool()
+        private void ProcessQueue()
         {
             Task.Run(() =>
             {
                 if (this.dequeuingPoolIsRunning) return;
 
                 this.dequeuingPoolIsRunning = true;
-                while (this.pagePool.Count > 0)
+                while (!this.pageQueue.IsEmpty)
                 {
-                    var page = this.pagePool.Where(x => x != null).OrderBy(x => x.Priority)
-                        .ThenBy(x => x.Created).FirstOrDefault();
-
-                    if (page == null) return;
+                    if (!this.pageQueue.TryDequeue(out var page)) break;
 
                     this.Log.Add($"Dequeue page {page} from pool for reading from file");
                     _ = this.ReadAheadAsync(page.PageNo).Result;
-
-                    this.pagePool.Remove(page);
                 }
                 this.dequeuingPoolIsRunning = false;
             });
         }
 
-        private static PageInfo GetNewPageInfo(in int pageNo, int priority) =>
-            new PageInfo(pageNo, priority);
+        private static PageInfo GetNewPageInfo(in int pageNo) =>
+            new PageInfo(pageNo);
 
 
         private async Task<IList<string>> GetPageFromFileAsync(int pageNo)
@@ -201,7 +192,7 @@
             this.Log.Add($"ReadAheadNextPagesAsync {min}-{max}");
             var priority = 2;
             for (var i = min; i <= max; i++)
-                this.AddPageToPool(i, priority++);
+                this.AddPageToQueue(i, priority++);
 
             return true;
         }
@@ -211,7 +202,7 @@
             this.Log.Add($"ReadAheadPrevPagesAsync {max}-{min}");
             var priority = 2;
             for (var i = max; i >= min; i--)
-                this.AddPageToPool(i, priority++);
+                this.AddPageToQueue(i, priority++);
 
             return true;
         }
