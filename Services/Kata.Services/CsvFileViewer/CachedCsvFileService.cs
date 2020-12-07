@@ -200,7 +200,7 @@
             return true;
         }
 
-        private void OnReadAheadEnqueuePage(object sender, EnqueuePageEventArgs e) =>
-            this.AddPageToQueue(e.Page, e.Priority);
+        private void OnReadAheadEnqueuePage(object sender, EnqueueItemEventArgs<int> e) =>
+            this.AddPageToQueue(e.Item, e.Priority);
     }
 }

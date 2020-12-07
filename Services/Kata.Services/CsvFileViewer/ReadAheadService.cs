@@ -3,6 +3,7 @@
     using System;
     using Extensions;
     using Logger;
+    using PriorityQueue;
 
     public class ReadAheadService
     {
@@ -13,7 +14,7 @@
             this.cacheSettings = cacheSettings;
 
 
-        public event EventHandler<EnqueuePageEventArgs> EnqueuePage;
+        public event EventHandler<EnqueueItemEventArgs<int>> EnqueuePage;
 
         public (int Min, int Max) PageRange { get; set; } = (1, 1000);
 
@@ -57,7 +58,7 @@
         {
             Log.Add($"Read Ahead next pages from {min} to {max}");
             for (var i = min; i <= max; i++)
-                this.Raise_EnqueuePage(new EnqueuePageEventArgs(i, priority++));
+                this.Raise_EnqueuePage(new EnqueueItemEventArgs<int>(i, priority++));
         }
 
 
@@ -65,11 +66,11 @@
         {
             Log.Add($"Read Ahead previous pages from {max} to {min}");
             for (var i = max; i >= min; i--) 
-                this.Raise_EnqueuePage(new EnqueuePageEventArgs(i, priority++));
+                this.Raise_EnqueuePage(new EnqueueItemEventArgs<int>(i, priority++));
         }
 
 
-        private void Raise_EnqueuePage(EnqueuePageEventArgs e) =>
+        private void Raise_EnqueuePage(EnqueueItemEventArgs<int> e) =>
             this.EnqueuePage?.Invoke(this, e);
     }
 }
