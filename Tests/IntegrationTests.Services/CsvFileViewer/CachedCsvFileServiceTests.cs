@@ -111,35 +111,6 @@ namespace IntegrationTests.Services.CsvFileViewer
             Assert.StartsWith(expected, actual);
         }
 
-        [Fact]
-        public void Test_ReadAheadFirstPages()
-        {
-            var cut = GetCachedCsvFileService(10, 100);
-
-            var actual = cut.ReadAheadFirstPagesAsync().Result;
-
-            var log = cut.Log;
-            var cache = cut.PageCache.Cache;
-
-            Assert.Equal(cut.CacheSettings.ReadAheadNextPages, cache.Count);
-        }
-
-
-        ////[Fact]
-        ////public void Test_ReadAheadLastPages()
-        ////{
-        ////    var cut = GetCachedCsvFileService(10, 100);
-        ////    var initialized = cut.InitializeMaxPage().Result;
-
-        ////    var actual = cut.ReadAheadLastPagesAsync().Result;
-
-        ////    var log = cut.Log;
-        ////    var cache = cut.PageCache.Cache;
-
-        ////    Assert.Equal(cut.CacheSettings.ReadAheadPrevPages, cache.Count);
-        ////}
-
-
 
         private static CachedCsvFileService GetCachedCsvFileService(int rowsOnPage, int maxCachedPages)
         {

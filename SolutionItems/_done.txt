@@ -1,4 +1,44 @@
-﻿2020.12.06 Su (Lockdown day 20 in AT, last day tomorrow is the first post lockdown day)
+﻿2020.12.07 Mo (Post-Lockdown day 1 in AT)
+=========================================
+
+.Net Core 3.1 ther is no Threadsafe Collections that is useable in this case
+in .Net 5 there is a Syncornized Collection
+we will switch to .Net 5 asap
+
+but we implement an own threadsafe usage for the priority queue
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2020.12.06 Su (Lockdown day 20 in AT, last day tomorrow is the first post lockdown day)
 =======================================================================================
 
 Austria is switching back to a kind of soft lockdown

@@ -107,7 +107,7 @@
                 if (this.dequeuingPoolIsRunning) return;
 
                 this.dequeuingPoolIsRunning = true;
-                while (!this.pageQueue.IsEmpty)
+                while (this.pageQueue.HasItems)
                 {
                     if (!this.pageQueue.TryDequeue(out var page)) break;
 
