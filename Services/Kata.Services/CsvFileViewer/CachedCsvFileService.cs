@@ -15,6 +15,8 @@
     {
         private readonly PriorityQueue<int> pageQueue = new PriorityQueue<int>();
         private readonly PaginationService paginationService;
+        private readonly ReadAhead readAhead;
+        ////private readonly PageCacheSettings cacheSettings;
         private readonly string fileName;
         
         private string cachedTitle;
@@ -30,7 +32,8 @@
             this.paginationService = paginationService;
             this.CacheSettings     = cacheSettings;
             this.fileName          = fileName;
-
+            this.readAhead = new ReadAhead(this.CacheSettings, this.pageQueue);
+            this.readAhead.ReadAheadDemanded += this.OnReadAhead_ReadAheadDemanded;
             this.InitializeEstimatedFileLength();
 
             ////Task.Run(this.InitializeMaxPage);
@@ -64,15 +67,9 @@
                 lines = await this.Cache.GetAsync(pageNo);
             }
 
-            return lines;
-        }
+            _ = this.readAhead.ReadAheadSurroundingPagesAsync(pageNo);
 
-        public async Task ReadAheadSurroundingPagesAsync(int pageNo)
-        {
-            var t1 = this.ReadAheadNextPagesAsync(pageNo);
-            var t2 = this.ReadAheadPrevPagesAsync(pageNo);
-            await t1.ConfigureAwait(false);
-            await t2.ConfigureAwait(false);
+            return lines;
         }
 
         public async Task<string> GetTitleAsync()
@@ -119,21 +116,6 @@
         }
 
 
-        private async Task<IList<string>> GetPageFromFileAsync(int pageNo)
-        {
-            Log.Add($"read page {pageNo} from file");
-            var (start, length) = this.GetReadRange(pageNo);
-
-            var recordsTask = this.ReadFileAsync(start, length);
-            var titleTask   = this.GetTitleAsync();
-
-            var records = await recordsTask.ConfigureAwait(false);
-            var title   = await titleTask.ConfigureAwait(false);
-            records.Insert(0, title);
-
-            return records;
-        }
-
         private (int start, int length) GetReadRange(int pageNo)
         {
             var page   = this.GetLimitedPageNo(pageNo) - 1;
@@ -151,86 +133,6 @@
             var max = this.paginationService.PageRange.Max.LimitToMin(10);
 
             return pageNo.LimitTo(min, max);
-        }
-
-        public async Task<bool> ReadAheadFirstPagesAsync()
-        {
-            // add job to pool with prio 2
-            Log.Add("ReadAheadFirstPagesAsync");
-            var start = 2;
-            var end = start + this.CacheSettings.ReadAheadNextPages -1;
-            return await this.ReadAheadNextPagesAsync(start, end);
-        }
-
-        public async Task<bool> ReadAheadLastPagesAsync()
-        {
-            // add job to pool with prio 2
-            Log.Add("ReadAheadLastPagesAsync");
-            var max = this.paginationService.PageRange.Max;
-            var min = max - this.CacheSettings.ReadAheadPrevPages + 1;
-            return await this.ReadAheadPrevPagesAsync(max, min);
-        }
-
-        public async Task<bool> ReadAheadNextPagesAsync(int pageNo)
-        {
-            var pageRange = this.paginationService.PageRange;
-            var min = pageNo + 1;
-            var max = min + this.CacheSettings.ReadAheadNextPages;
-
-            if (!min.IsBetween(pageRange) && !max.IsBetween(pageRange))
-                return false;
-
-            Log.Add("ReadAheadNextPagesAsync");
-            return await this.ReadAheadNextPagesAsync(min, max);
-        }
-
-        public async Task<bool> ReadAheadPrevPagesAsync(int pageNo)
-        {
-            var pageRange = this.paginationService.PageRange;
-            var max = pageNo - 1;
-            var min = max - this.CacheSettings.ReadAheadPrevPages;
-
-            if (!min.IsBetween(pageRange) && !max.IsBetween(pageRange))
-                return false;
-
-            Log.Add("ReadAheadPrevPagesAsync");
-            return await this.ReadAheadPrevPagesAsync(max, min);
-        }
-
-        private async Task<bool> ReadAheadNextPagesAsync(int min, int max)
-        {
-            Log.Add($"ReadAheadNextPagesAsync {min}-{max}");
-            var priority = 2;
-            for (var i = min; i <= max; i++)
-                this.AddPageToQueue(i, priority++);
-
-            return true;
-        }
-
-        private async Task<bool> ReadAheadPrevPagesAsync(int max, int min)
-        {
-            Log.Add($"ReadAheadPrevPagesAsync {max}-{min}");
-            var priority = 2;
-            for (var i = max; i >= min; i--)
-                this.AddPageToQueue(i, priority++);
-
-            return true;
-        }
-
-
-        private async Task<bool> ReadAheadAsync(int pageNo)
-        {
-            if (await this.Cache.ContainsAsync(pageNo))
-            {
-                Log.Add($"ReadAheadAsync page {pageNo} was cached before");
-                return false;
-            }
-
-            Log.Add($"ReadAheadAsync page {pageNo}");
-            var lines = await this.GetPageFromFileAsync(pageNo).ConfigureAwait(false);
-            await this.Cache.SetAsync(pageNo, lines);
-            
-            return true;
         }
 
 
@@ -254,15 +156,60 @@
             var length = await this.GetFileLengthAsync().ConfigureAwait(false);
             this.paginationService.InitializePageRange(length, this.CacheSettings.PageLength);
 
-            _ = this.ReadAheadPrevPagesAsync(this.paginationService.PageRange.Max);
+            var maxPagesTask = this.readAhead.ReadAheadLastPagesAsync();
 
             Log.Add($"Initialized MaxPage to {this.paginationService.PageRange.Max}");
+
+            Log.Add("ReadAheadFirstPagesAsync");
+            _ = this.readAhead.ReadAheadFirstPagesAsync();
+
+            Task.WaitAll(maxPagesTask);
+
+            Log.Add("ReadAheadLastPagesAsync");
+            _ = this.readAhead.ReadAheadLastPagesAsync();
+
             return true;
+        }
+
+
+
+        private async Task<IList<string>> GetPageFromFileAsync(int pageNo)
+        {
+            Log.Add($"read page {pageNo} from file");
+            var (start, length) = this.GetReadRange(pageNo);
+
+            var recordsTask = this.ReadFileAsync(start, length);
+            var titleTask = this.GetTitleAsync();
+
+            var records = await recordsTask.ConfigureAwait(false);
+            var title = await titleTask.ConfigureAwait(false);
+            records.Insert(0, title);
+
+            return records;
         }
 
         private async Task<IList<string>> ReadFileAsync(int start, int length) =>
             await Task.Run(() =>
                 File.ReadLines(this.fileName).Skip(start).Take(length).ToList()
             ).ConfigureAwait(false);
+
+
+        private async Task<bool> ReadAheadAsync(int pageNo)
+        {
+            if (await this.Cache.ContainsAsync(pageNo))
+            {
+                Log.Add($"ReadAheadAsync page {pageNo} was cached before");
+                return false;
+            }
+
+            Log.Add($"ReadAheadAsync page {pageNo}");
+            var lines = await this.GetPageFromFileAsync(pageNo).ConfigureAwait(false);
+            await this.Cache.SetAsync(pageNo, lines);
+
+            return true;
+        }
+
+        private void OnReadAhead_ReadAheadDemanded(object sender, ReadAheadEventArgs e) =>
+            this.AddPageToQueue(e.Page, e.Priority);
     }
 }

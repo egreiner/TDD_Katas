@@ -89,18 +89,7 @@
             this.readAheadImportantPages = Task.Run(() =>
             {
                 Log.Add("ReadAheadImportantPages");
-
-                Log.Add("InitializeMaxPage");
-                var maxPagesTask = this.csvFileService.InitializeMaxPage();
-                Log.Add("ReadAheadFirstPagesAsync");
-                _ = this.csvFileService.ReadAheadFirstPagesAsync();
-
-                Log.Add("wait for tasks finished");
-                Task.WaitAll(maxPagesTask);
-                Log.Add("tasks finished");
-
-                Log.Add("ReadAheadLastPagesAsync");
-                _ = this.csvFileService.ReadAheadLastPagesAsync();
+                _ = this.csvFileService.InitializeMaxPage();
                 this.initializedImportantPages = true;
             });
 
@@ -140,7 +129,6 @@
             };
 
             var pageNo = this.pagination.CurrentPage;
-            _ = this.csvFileService.ReadAheadSurroundingPagesAsync(pageNo);
             var csvLines = this.csvFileService.GetPageAsync(pageNo).Result;
 
             return this.csvService.ToTable(csvLines).ToList();
