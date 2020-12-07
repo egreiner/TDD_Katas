@@ -10,13 +10,11 @@
     using PriorityQueue;
 
 
-    // TODO this component gets to big, where can we split?
     public class CachedCsvFileService
     {
         private readonly PriorityQueue<int> pageQueue = new PriorityQueue<int>();
         private readonly PaginationService paginationService;
-        private readonly ReadAhead readAhead;
-        ////private readonly PageCacheSettings cacheSettings;
+        private readonly ReadAheadService readAhead;
         private readonly string fileName;
         
         private string cachedTitle;
@@ -32,8 +30,8 @@
             this.paginationService = paginationService;
             this.CacheSettings     = cacheSettings;
             this.fileName          = fileName;
-            this.readAhead = new ReadAhead(this.CacheSettings, this.pageQueue);
-            this.readAhead.ReadAheadDemanded += this.OnReadAhead_ReadAheadDemanded;
+            this.readAhead = new ReadAheadService(this.CacheSettings);
+            this.readAhead.EnqueuePage += this.OnReadAheadEnqueuePage;
             this.InitializeEstimatedFileLength();
 
             ////Task.Run(this.InitializeMaxPage);
@@ -67,7 +65,7 @@
                 lines = await this.Cache.GetAsync(pageNo);
             }
 
-            _ = this.readAhead.ReadAheadSurroundingPagesAsync(pageNo);
+            this.readAhead.SurroundingPages(pageNo);
 
             return lines;
         }
@@ -145,28 +143,21 @@
 
         private void InitializeEstimatedFileLength()
         {
-            var fileInfo = new System.IO.FileInfo(this.fileName);
-            var length = fileInfo.Length / 500;
-            Log.Add($"Calculate estimated file length to {length}");
+            var fileInfo = new FileInfo(this.fileName);
+            var length = fileInfo.Length / 250;
             this.paginationService.InitializePageRange(length, this.CacheSettings.PageLength);
+            this.readAhead.PageRange = this.paginationService.PageRange;
+            Log.Add($"Initialized MaxPage to estimated {this.paginationService.PageRange.Max}");
         }
 
         public async Task<bool> InitializeMaxPage()
         {
             var length = await this.GetFileLengthAsync().ConfigureAwait(false);
             this.paginationService.InitializePageRange(length, this.CacheSettings.PageLength);
-
-            var maxPagesTask = this.readAhead.ReadAheadLastPagesAsync();
-
+            this.readAhead.PageRange = this.paginationService.PageRange;
             Log.Add($"Initialized MaxPage to {this.paginationService.PageRange.Max}");
 
-            Log.Add("ReadAheadFirstPagesAsync");
-            _ = this.readAhead.ReadAheadFirstPagesAsync();
-
-            Task.WaitAll(maxPagesTask);
-
-            Log.Add("ReadAheadLastPagesAsync");
-            _ = this.readAhead.ReadAheadLastPagesAsync();
+            this.readAhead.LastPages();
 
             return true;
         }
@@ -209,7 +200,7 @@
             return true;
         }
 
-        private void OnReadAhead_ReadAheadDemanded(object sender, ReadAheadEventArgs e) =>
+        private void OnReadAheadEnqueuePage(object sender, EnqueuePageEventArgs e) =>
             this.AddPageToQueue(e.Page, e.Priority);
     }
 }

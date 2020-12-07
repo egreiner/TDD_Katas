@@ -7,6 +7,6 @@
         public string FileName { get; set; }
         public int PageLength  { get; set; }
 
-        public int RecordsPerPage { get; set; } = 15;
+        public int RecordsPerPage { get; set; } = 100;
     }
 }

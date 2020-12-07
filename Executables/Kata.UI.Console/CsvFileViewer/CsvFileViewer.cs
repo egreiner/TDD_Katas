@@ -19,7 +19,6 @@
         private PaginationService pagination;
         private int gotoPage = 1;
         private bool initializedImportantPages;
-        private Task readAheadImportantPages;
 
 
         public CsvFileViewerSettings Settings { get; set; }
@@ -86,7 +85,7 @@
         }
 
         private void ReadAheadImportantPages() =>
-            this.readAheadImportantPages = Task.Run(() =>
+            Task.Run(() =>
             {
                 Log.Add("ReadAheadImportantPages");
                 _ = this.csvFileService.InitializeMaxPage();

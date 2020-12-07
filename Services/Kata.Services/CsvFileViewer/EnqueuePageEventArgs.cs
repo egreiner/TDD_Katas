@@ -2,9 +2,9 @@
 {
     using System;
 
-    public class ReadAheadEventArgs: EventArgs
+    public class EnqueuePageEventArgs: EventArgs
     {
-        public ReadAheadEventArgs(int page, int priority)
+        public EnqueuePageEventArgs(int page, int priority)
         {
             this.Page = page;
             this.Priority = priority;
