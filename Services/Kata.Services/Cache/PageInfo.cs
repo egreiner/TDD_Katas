@@ -1,4 +1,4 @@
-﻿namespace Kata.Services.CsvFileViewer
+﻿namespace Kata.Services.Cache
 {
     using System;
 

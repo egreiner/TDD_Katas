@@ -1,4 +1,4 @@
-﻿namespace Kata.Services.CsvFileViewer
+﻿namespace Kata.Services.Cache
 {
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -6,9 +6,6 @@
 
     public class PageCache
     {
-        
-
-
         public ConcurrentDictionary<PageInfo, IList<string>> Cache { get; } =
             new ConcurrentDictionary<PageInfo, IList<string>>();
         

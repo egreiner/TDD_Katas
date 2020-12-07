@@ -9,8 +9,6 @@
         }
 
 
-        public bool DisableCache  { get; set; }
-
         public int PageLength     { get; set; }
         public int MaxCachedPages { get; set; }
 
