@@ -1,7 +1,6 @@
 namespace IntegrationTests.Services.CsvFileViewer
 {
     using System.Linq;
-    using System.Threading.Tasks;
     using Kata.Services.CsvFileViewer;
     using Xunit;
 
@@ -23,7 +22,7 @@ namespace IntegrationTests.Services.CsvFileViewer
         }
 
         [Fact]
-        public async Task Test_Read_file_async()
+        public void Test_Read_file_async()
         {
             var cut = new CsvFileService();
             var file = GetTestCsvFile();

@@ -21,7 +21,7 @@
             return $"[{this.InvertedIndex}] {item} -> {nextItem}";
         }
 
-        public override bool Equals(object? obj) =>
+        public override bool Equals(object obj) =>
             obj is Element<T> x && (x.Item?.Equals(this.Item) ?? false);
 
         public override int GetHashCode() =>

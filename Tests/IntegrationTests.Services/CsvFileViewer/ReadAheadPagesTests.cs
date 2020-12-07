@@ -52,7 +52,7 @@ namespace IntegrationTests.Services.CsvFileViewer
             return $@"{dir}CSVViewer\besucher.csv";        // 1_001
             ////return $@"{dir}CSVViewer\besucherLarge.csv";        // 10_001
             ////return $@"{dir}LargeCsvFiles\besucherBig.csv";      // 100_001
-            return $@"{dir}LargeCsvFiles\besucherHugh.csv";     // 1_000_001
+            ////return $@"{dir}LargeCsvFiles\besucherHugh.csv";     // 1_000_001
             ////return $@"{dir}LargeCsvFiles\besucherMonster.csv";  // 10_000_001
         }
     }
