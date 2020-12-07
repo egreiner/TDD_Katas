@@ -2,29 +2,30 @@
 {
     using System;
 
-    public class PageInfo
+    public class CacheItem<TKey>
     {
         private readonly int hashCode;
 
 
-        public PageInfo(int pageNo)
+        public CacheItem(TKey key)
         {
-            this.PageNo   = pageNo;
-            this.hashCode = pageNo.GetHashCode();
+            this.Key = key;
+            this.hashCode = key.GetHashCode();
         }
 
 
-        public int PageNo { get; }
+        public TKey Key { get; }
 
         public int FetchCount { get; set; }
 
         public DateTime Fetched { get; set; }
 
         public override string ToString() =>
-            this.PageNo.ToString();
+            this.Key.ToString();
+
 
         public override bool Equals(object obj) =>
-            obj is PageInfo x && x.PageNo == this.PageNo;
+            obj is CacheItem<TKey> other && other.Key.Equals(this.Key);
 
         public override int GetHashCode() => this.hashCode;
     }

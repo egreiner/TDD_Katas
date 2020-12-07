@@ -1,26 +1,35 @@
 ﻿namespace Kata.Services.Cache
 {
     using System.Collections.Concurrent;
+    using System.Collections.Immutable;
     using System.Threading.Tasks;
 
     public class Cache<TKey, TValue>
     {
-        public ConcurrentDictionary<TKey, TValue> Items { get; } =
-            new ConcurrentDictionary<TKey, TValue>();
-        
+        private readonly ConcurrentDictionary<CacheItem<TKey>, TValue> cache =
+            new ConcurrentDictionary<CacheItem<TKey>, TValue>();
 
-        public async Task<bool> IsCached(TKey key) =>
-            await Task.Run(() => this.Items.ContainsKey(key)).ConfigureAwait(false);
 
-        public async Task<TValue> GetPageCacheAsync(TKey key) =>
+        public ImmutableDictionary<CacheItem<TKey>, TValue> Items =>
+            this.cache.ToImmutableDictionary();
+
+
+        public async Task<bool> ContainsAsync(TKey key) =>
+            await Task.Run(() => this.cache.ContainsKey(CreateCacheItem(key))).ConfigureAwait(false);
+
+        public async Task<TValue> GetAsync(TKey key) =>
             await Task.Run(() =>
             {
-                _ = this.Items.TryGetValue(key, out TValue result);
+                _ = this.cache.TryGetValue(CreateCacheItem(key), out TValue result);
                 return result;
             }).ConfigureAwait(false);
 
-        public async Task<bool> SetPageCacheAsync(TKey key, TValue value) =>
-            await Task.Run(() => this.Items.TryAdd(key, value))
+        public async Task<bool> SetAsync(TKey key, TValue value) =>
+            await Task.Run(() => this.cache.TryAdd(CreateCacheItem(key), value))
                 .ConfigureAwait(false);
+
+
+        private static CacheItem<TKey> CreateCacheItem(TKey key) =>
+            new CacheItem<TKey>(key);
     }
 }

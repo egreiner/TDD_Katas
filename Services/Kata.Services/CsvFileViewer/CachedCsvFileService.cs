@@ -13,7 +13,7 @@
     // TODO this component gets to big, where can we split?
     public class CachedCsvFileService
     {
-        private readonly PriorityQueue<PageInfo> pageQueue = new PriorityQueue<PageInfo>();
+        private readonly PriorityQueue<int> pageQueue = new PriorityQueue<int>();
         private readonly PaginationService paginationService;
         private readonly string fileName;
         
@@ -46,11 +46,11 @@
         {
             IList<string> lines;
 
-            if (await this.Cache.IsCached(pageNo))
+            if (await this.Cache.ContainsAsync(pageNo))
             {
                 Log.Add($"Get cached page {pageNo}");
                 this.ReadLocation = "from cache";
-                lines = await this.Cache.GetPageCacheAsync(pageNo);
+                lines = await this.Cache.GetAsync(pageNo);
             }
             else
             {
@@ -58,10 +58,10 @@
 
                 this.AddPageToQueue(pageNo, 1);
 
-                while (!await this.Cache.IsCached(pageNo)) 
+                while (!await this.Cache.ContainsAsync(pageNo)) 
                     await Task.Delay(50);
 
-                lines = await this.Cache.GetPageCacheAsync(pageNo);
+                lines = await this.Cache.GetAsync(pageNo);
             }
 
             return lines;
@@ -94,10 +94,9 @@
         private void AddPageToQueue(int pageNo, int priority) =>
             Task.Run(() =>
             {
-                var page = GetNewPageInfo(pageNo);
-                Log.Add($"Add page {page} with priority {priority} to pool");
+                Log.Add($"Add page {pageNo} with priority {priority} to pool");
 
-                this.pageQueue.Enqueue(page, priority);
+                this.pageQueue.Enqueue(pageNo, priority);
                 this.ProcessQueue();
             });
 
@@ -113,14 +112,11 @@
                     if (!this.pageQueue.TryDequeue(out var page)) break;
 
                     Log.Add($"Dequeue page {page} from pool for reading from file");
-                    _ = this.ReadAheadAsync(page.PageNo).Result;
+                    _ = this.ReadAheadAsync(page).Result;
                 }
                 this.dequeuingPoolIsRunning = false;
             });
         }
-
-        private static PageInfo GetNewPageInfo(in int pageNo) =>
-            new PageInfo(pageNo);
 
 
         private async Task<IList<string>> GetPageFromFileAsync(int pageNo)
@@ -224,7 +220,7 @@
 
         private async Task<bool> ReadAheadAsync(int pageNo)
         {
-            if (await this.Cache.IsCached(pageNo))
+            if (await this.Cache.ContainsAsync(pageNo))
             {
                 Log.Add($"ReadAheadAsync page {pageNo} was cached before");
                 return false;
@@ -232,7 +228,7 @@
 
             Log.Add($"ReadAheadAsync page {pageNo}");
             var lines = await this.GetPageFromFileAsync(pageNo).ConfigureAwait(false);
-            await this.Cache.SetPageCacheAsync(pageNo, lines);
+            await this.Cache.SetAsync(pageNo, lines);
             
             return true;
         }

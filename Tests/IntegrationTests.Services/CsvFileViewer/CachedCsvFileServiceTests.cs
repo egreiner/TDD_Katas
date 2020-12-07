@@ -28,11 +28,7 @@ namespace IntegrationTests.Services.CsvFileViewer
 
             Assert.NotEmpty(actual);
         }
-
-
-
-
-
+        
         [Fact]
         public void Test_GetFirstPage()
         {
@@ -45,18 +41,7 @@ namespace IntegrationTests.Services.CsvFileViewer
 
             Assert.Equal(11, actual.Count);
         }
-
-
-
-
-
-
-
-
-
-
-
-
+        
         [Theory]
         [InlineData(1, "1 ")]
         [InlineData(2, "11 ")]
