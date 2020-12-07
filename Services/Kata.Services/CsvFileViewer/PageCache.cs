@@ -6,14 +6,12 @@
 
     public class PageCache
     {
-        private readonly ILog log;
+        
 
 
         public ConcurrentDictionary<PageInfo, IList<string>> Cache { get; } =
             new ConcurrentDictionary<PageInfo, IList<string>>();
         
-        public PageCache(ILog log) => this.log = log;
-
 
         public async Task<bool> IsCached(int pageNo) =>
             await Task.Run(() =>

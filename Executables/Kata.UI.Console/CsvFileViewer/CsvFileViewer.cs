@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Services.CsvFileViewer;
     using Services.CsvTableizer;
+    using Services.Logger;
 
 
     public class CsvFileViewer
@@ -18,7 +19,6 @@
         private PaginationService pagination;
         private int gotoPage = 1;
         private bool initializedImportantPages;
-        private ILog log;
         private Task readAheadImportantPages;
 
 
@@ -74,7 +74,7 @@
         {
             Console.WriteLine(string.Empty);
             Console.WriteLine("Logged events:");
-            foreach (var logInfo in this.csvFileService.Log.LogInfos) 
+            foreach (var logInfo in Log.OrderedLogInfos) 
                 Console.WriteLine(logInfo);
         }
 
@@ -83,24 +83,23 @@
             var cacheSettings   = new PageCacheSettings(this.Settings.RecordsPerPage, 100);
             this.pagination     = new PaginationService(0, this.Settings.RecordsPerPage);
             this.csvFileService = new CachedCsvFileService(this.Settings.FileName, cacheSettings, this.pagination);
-            this.log = this.csvFileService.Log;
         }
 
         private void ReadAheadImportantPages() =>
             this.readAheadImportantPages = Task.Run(() =>
             {
-                this.log.Add("ReadAheadImportantPages");
+                Log.Add("ReadAheadImportantPages");
 
-                this.log.Add("InitializeMaxPage");
+                Log.Add("InitializeMaxPage");
                 var maxPagesTask = this.csvFileService.InitializeMaxPage();
-                this.log.Add("ReadAheadFirstPagesAsync");
+                Log.Add("ReadAheadFirstPagesAsync");
                 _ = this.csvFileService.ReadAheadFirstPagesAsync();
 
-                this.log.Add("wait for tasks finished");
+                Log.Add("wait for tasks finished");
                 Task.WaitAll(maxPagesTask);
-                this.log.Add("tasks finished");
+                Log.Add("tasks finished");
 
-                this.log.Add("ReadAheadLastPagesAsync");
+                Log.Add("ReadAheadLastPagesAsync");
                 _ = this.csvFileService.ReadAheadLastPagesAsync();
                 this.initializedImportantPages = true;
             });

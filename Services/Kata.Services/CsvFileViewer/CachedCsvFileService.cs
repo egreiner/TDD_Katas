@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Extensions;
+    using Logger;
     using PriorityQueue;
 
 
@@ -23,7 +24,7 @@
             PageCacheSettings cacheSettings, 
             PaginationService paginationService)
         {
-            this.PageCache = new PageCache(this.Log);
+            this.PageCache = new PageCache();
 
             this.paginationService = paginationService;
             this.CacheSettings     = cacheSettings;
@@ -35,7 +36,6 @@
         }
 
         // i think we will get DI after this...
-        public ILog Log            { get; } = new Log();
         public PageCache PageCache { get; }
         public PageCacheSettings CacheSettings { get; }
         public string ReadLocation { get; private set; }
@@ -47,7 +47,7 @@
 
             if (await this.PageCache.IsCached(pageNo))
             {
-                this.Log.Add($"Get cached page {pageNo}");
+                Log.Add($"Get cached page {pageNo}");
                 this.ReadLocation = "from cache";
                 lines = await this.PageCache.GetPageCacheAsync(pageNo);
             }
@@ -78,11 +78,11 @@
         {
             if (!this.cachedTitle.IsNullOrEmpty())
             {
-                this.Log.Add("return cached title");
+                Log.Add("return cached title");
                 return this.cachedTitle;
             }
 
-            this.Log.Add("read title from file");
+            Log.Add("read title from file");
 
             var titleLine = await this.ReadFileAsync(0, 1);
             this.cachedTitle = titleLine.FirstOrDefault();
@@ -94,7 +94,7 @@
             Task.Run(() =>
             {
                 var page = GetNewPageInfo(pageNo);
-                this.Log.Add($"Add page {page} with priority {priority} to pool");
+                Log.Add($"Add page {page} with priority {priority} to pool");
 
                 this.pageQueue.Enqueue(page, priority);
                 this.ProcessQueue();
@@ -111,7 +111,7 @@
                 {
                     if (!this.pageQueue.TryDequeue(out var page)) break;
 
-                    this.Log.Add($"Dequeue page {page} from pool for reading from file");
+                    Log.Add($"Dequeue page {page} from pool for reading from file");
                     _ = this.ReadAheadAsync(page.PageNo).Result;
                 }
                 this.dequeuingPoolIsRunning = false;
@@ -124,7 +124,7 @@
 
         private async Task<IList<string>> GetPageFromFileAsync(int pageNo)
         {
-            this.Log.Add($"read page {pageNo} from file");
+            Log.Add($"read page {pageNo} from file");
             var (start, length) = this.GetReadRange(pageNo);
 
             var recordsTask = this.ReadFileAsync(start, length);
@@ -159,7 +159,7 @@
         public async Task<bool> ReadAheadFirstPagesAsync()
         {
             // add job to pool with prio 2
-            this.Log.Add("ReadAheadFirstPagesAsync");
+            Log.Add("ReadAheadFirstPagesAsync");
             var start = 2;
             var end = start + this.CacheSettings.ReadAheadNextPages -1;
             return await this.ReadAheadNextPagesAsync(start, end);
@@ -168,7 +168,7 @@
         public async Task<bool> ReadAheadLastPagesAsync()
         {
             // add job to pool with prio 2
-            this.Log.Add("ReadAheadLastPagesAsync");
+            Log.Add("ReadAheadLastPagesAsync");
             var max = this.paginationService.PageRange.Max;
             var min = max - this.CacheSettings.ReadAheadPrevPages + 1;
             return await this.ReadAheadPrevPagesAsync(max, min);
@@ -183,7 +183,7 @@
             if (!min.IsBetween(pageRange) && !max.IsBetween(pageRange))
                 return false;
 
-            this.Log.Add("ReadAheadNextPagesAsync");
+            Log.Add("ReadAheadNextPagesAsync");
             return await this.ReadAheadNextPagesAsync(min, max);
         }
 
@@ -196,13 +196,13 @@
             if (!min.IsBetween(pageRange) && !max.IsBetween(pageRange))
                 return false;
 
-            this.Log.Add("ReadAheadPrevPagesAsync");
+            Log.Add("ReadAheadPrevPagesAsync");
             return await this.ReadAheadPrevPagesAsync(max, min);
         }
 
         private async Task<bool> ReadAheadNextPagesAsync(int min, int max)
         {
-            this.Log.Add($"ReadAheadNextPagesAsync {min}-{max}");
+            Log.Add($"ReadAheadNextPagesAsync {min}-{max}");
             var priority = 2;
             for (var i = min; i <= max; i++)
                 this.AddPageToQueue(i, priority++);
@@ -212,7 +212,7 @@
 
         private async Task<bool> ReadAheadPrevPagesAsync(int max, int min)
         {
-            this.Log.Add($"ReadAheadPrevPagesAsync {max}-{min}");
+            Log.Add($"ReadAheadPrevPagesAsync {max}-{min}");
             var priority = 2;
             for (var i = max; i >= min; i--)
                 this.AddPageToQueue(i, priority++);
@@ -225,11 +225,11 @@
         {
             if (await this.PageCache.IsCached(pageNo))
             {
-                this.Log.Add($"ReadAheadAsync page {pageNo} was cached before");
+                Log.Add($"ReadAheadAsync page {pageNo} was cached before");
                 return false;
             }
 
-            this.Log.Add($"ReadAheadAsync page {pageNo}");
+            Log.Add($"ReadAheadAsync page {pageNo}");
             var page = await this.GetPageFromFileAsync(pageNo).ConfigureAwait(false);
             await this.PageCache.SetPageCacheAsync(pageNo, page);
             
@@ -248,7 +248,7 @@
         {
             var fileInfo = new System.IO.FileInfo(this.fileName);
             var length = fileInfo.Length / 500;
-            this.Log.Add($"Calculate estimated file length to {length}");
+            Log.Add($"Calculate estimated file length to {length}");
             this.paginationService.InitializePageRange(length, this.CacheSettings.PageLength);
         }
 
@@ -259,7 +259,7 @@
 
             _ = this.ReadAheadPrevPagesAsync(this.paginationService.PageRange.Max);
 
-            this.Log.Add($"Initialized MaxPage to {this.paginationService.PageRange.Max}");
+            Log.Add($"Initialized MaxPage to {this.paginationService.PageRange.Max}");
             return true;
         }
 

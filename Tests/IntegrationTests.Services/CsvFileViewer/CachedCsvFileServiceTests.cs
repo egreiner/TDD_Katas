@@ -1,6 +1,7 @@
 namespace IntegrationTests.Services.CsvFileViewer
 {
     using Kata.Services.CsvFileViewer;
+    using Kata.Services.Logger;
     using Xunit;
 
     [Collection("Sequential")]
@@ -39,7 +40,7 @@ namespace IntegrationTests.Services.CsvFileViewer
 
             var actual = cut.GetPageAsync(1).Result;
 
-            var log = cut.Log.LogInfos;
+            var log = Log.OrderedLogInfos;
             var cache = cut.PageCache.Cache;
 
             Assert.Equal(11, actual.Count);
