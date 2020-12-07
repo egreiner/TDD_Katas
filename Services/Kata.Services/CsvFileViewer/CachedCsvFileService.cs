@@ -25,7 +25,7 @@
             PageCacheSettings cacheSettings, 
             PaginationService paginationService)
         {
-            this.PageCache = new PageCache();
+            this.Cache = new Cache<int, IList<string>>();
 
             this.paginationService = paginationService;
             this.CacheSettings     = cacheSettings;
@@ -37,7 +37,7 @@
         }
 
         // i think we will get DI after this...
-        public PageCache PageCache { get; }
+        public Cache<int, IList<string>> Cache { get; }
         public PageCacheSettings CacheSettings { get; }
         public string ReadLocation { get; private set; }
 
@@ -46,11 +46,11 @@
         {
             IList<string> lines;
 
-            if (await this.PageCache.IsCached(pageNo))
+            if (await this.Cache.IsCached(pageNo))
             {
                 Log.Add($"Get cached page {pageNo}");
                 this.ReadLocation = "from cache";
-                lines = await this.PageCache.GetPageCacheAsync(pageNo);
+                lines = await this.Cache.GetPageCacheAsync(pageNo);
             }
             else
             {
@@ -58,10 +58,10 @@
 
                 this.AddPageToQueue(pageNo, 1);
 
-                while (!await this.PageCache.IsCached(pageNo)) 
+                while (!await this.Cache.IsCached(pageNo)) 
                     await Task.Delay(50);
 
-                lines = await this.PageCache.GetPageCacheAsync(pageNo);
+                lines = await this.Cache.GetPageCacheAsync(pageNo);
             }
 
             return lines;
@@ -224,15 +224,15 @@
 
         private async Task<bool> ReadAheadAsync(int pageNo)
         {
-            if (await this.PageCache.IsCached(pageNo))
+            if (await this.Cache.IsCached(pageNo))
             {
                 Log.Add($"ReadAheadAsync page {pageNo} was cached before");
                 return false;
             }
 
             Log.Add($"ReadAheadAsync page {pageNo}");
-            var page = await this.GetPageFromFileAsync(pageNo).ConfigureAwait(false);
-            await this.PageCache.SetPageCacheAsync(pageNo, page);
+            var lines = await this.GetPageFromFileAsync(pageNo).ConfigureAwait(false);
+            await this.Cache.SetPageCacheAsync(pageNo, lines);
             
             return true;
         }

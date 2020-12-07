@@ -41,7 +41,7 @@ namespace IntegrationTests.Services.CsvFileViewer
             var actual = cut.GetPageAsync(1).Result;
 
             var log = Log.OrderedLogInfos;
-            var cache = cut.PageCache.Cache;
+            var cache = cut.Cache.Items;
 
             Assert.Equal(11, actual.Count);
         }

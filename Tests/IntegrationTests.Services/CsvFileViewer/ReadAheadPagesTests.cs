@@ -16,7 +16,7 @@ namespace IntegrationTests.Services.CsvFileViewer
         ////    var actual = cut.ReadAheadFirstPagesAsync().Result;
 
         ////    var log = cut.Log;
-        ////    var cache = cut.PageCache.Cache;
+        ////    var cache = cut.Items.Items;
 
         ////    Assert.Equal(cut.CacheSettings.ReadAheadNextPages, cache.Count);
         ////}
@@ -31,7 +31,7 @@ namespace IntegrationTests.Services.CsvFileViewer
         ////    var actual = cut.ReadAheadLastPagesAsync().Result;
 
         ////    var log = cut.Log;
-        ////    var cache = cut.PageCache.Cache;
+        ////    var cache = cut.Items.Items;
 
         ////    Assert.Equal(cut.CacheSettings.ReadAheadPrevPages, cache.Count);
         ////}
