@@ -24,94 +24,69 @@
             this.queue = queue;
         }
 
-        public async Task<bool> ReadAheadFirstPagesAsync()
+
+        public async Task ReadAheadFirstPagesAsync()
         {
-            // add job to pool with priority 2
-            Log.Add("ReadAheadFirstPagesAsync");
-            var start = 2;
-            var end = start + this.cacheSettings.ReadAheadNextPages - 1;
-            return await this.ReadAheadNextPagesAsync(start, end);
+            Log.Add("Read Ahead First Pages");
+            var min = 2;
+            var max = min + this.cacheSettings.ReadAheadNextPages - 1;
+            this.ReadAheadNextPages(min, max, 2);
+            await Task.Delay(0).ConfigureAwait(false);
         }
 
-        public async Task<bool> ReadAheadLastPagesAsync()
+        public async Task ReadAheadLastPagesAsync()
         {
-            // add job to pool with priority 2
-            Log.Add("ReadAheadLastPagesAsync");
+            Log.Add("Read Ahead Last Pages");
             var max = this.pageRange.Max;
             var min = max - this.cacheSettings.ReadAheadPrevPages + 1;
-            return await this.ReadAheadPrevPagesAsync(max, min);
+            this.ReadAheadPrevPages(max, min, 2);
+            await Task.Delay(0).ConfigureAwait(false);
         }
-
 
 
 
         public async Task ReadAheadSurroundingPagesAsync(int pageNo)
         {
-            var t1 = this.ReadAheadNextPagesAsync(pageNo);
-            var t2 = this.ReadAheadPrevPagesAsync(pageNo);
-            await t1.ConfigureAwait(false);
-            await t2.ConfigureAwait(false);
+            Log.Add($"Read Ahead surrounding pages for page {pageNo}");
+            var (min, max) = this.GetRangeForNextPages(pageNo);
+            this.ReadAheadNextPages(min, max, 2);
+
+            (min, max) = this.GetRangeForPrevPages(pageNo);
+            this.ReadAheadPrevPages(max, min, 2);
+            await Task.Delay(0).ConfigureAwait(false);
         }
 
 
-
-        private async Task<bool> ReadAheadNextPagesAsync(int pageNo)
+        private (int min, int max) GetRangeForNextPages(int pageNo)
         {
-            var pageRange = this.pageRange;
-            var min = pageNo + 1;
-            var max = min + this.cacheSettings.ReadAheadNextPages;
-
-            if (!min.IsBetween(pageRange) && !max.IsBetween(pageRange))
-                return false;
-
-            Log.Add("ReadAheadNextPagesAsync");
-            return await this.ReadAheadNextPagesAsync(min, max);
+            var min = pageNo + 1.LimitToMin(this.pageRange.Min);
+            var max = min + this.cacheSettings.ReadAheadNextPages.LimitToMax(this.pageRange.Max);
+            return (min, max);
         }
 
-        private async Task<bool> ReadAheadNextPagesAsync(int min, int max)
+        private (int min, int max) GetRangeForPrevPages(int pageNo)
         {
-            Log.Add($"ReadAheadNextPagesAsync {min}-{max}");
-            var priority = 2;
+            var max = (pageNo - 1).LimitToMax(this.pageRange.Max);
+            var min = (max - this.cacheSettings.ReadAheadPrevPages).LimitToMin(this.pageRange.Min);
+            return (min, max);
+        }
+
+
+        private void ReadAheadNextPages(int min, int max, int priority)
+        {
+            Log.Add($"Read Ahead next pages from {min} to {max}");
             for (var i = min; i <= max; i++)
-            {
                 this.RaiseEvent_ReadAheadDemanded(new ReadAheadEventArgs(i, priority++));
-                ////this.AddPageToQueue(i, priority++);
-            }
-
-            await Task.Delay(0);
-            return true;
         }
 
 
-
-
-
-        private async Task<bool> ReadAheadPrevPagesAsync(int pageNo)
+        private void ReadAheadPrevPages(int max, int min, int priority)
         {
-            var pageRange = this.pageRange;
-            var max = pageNo - 1;
-            var min = max - this.cacheSettings.ReadAheadPrevPages;
-
-            if (!min.IsBetween(pageRange) && !max.IsBetween(pageRange))
-                return false;
-
-            Log.Add("ReadAheadPrevPagesAsync");
-            return await this.ReadAheadPrevPagesAsync(max, min);
-        }
-
-        private async Task<bool> ReadAheadPrevPagesAsync(int max, int min)
-        {
-            Log.Add($"ReadAheadPrevPagesAsync {max}-{min}");
-            var priority = 2;
-            for (var i = max; i >= min; i--)
-            {
+            Log.Add($"Read Ahead previous pages from {max} to {min}");
+            for (var i = max; i >= min; i--) 
                 this.RaiseEvent_ReadAheadDemanded(new ReadAheadEventArgs(i, priority++));
-                ////this.AddPageToQueue(i, priority++);
-            }
-
-            await Task.Delay(0);
-            return true;
         }
+
 
         private void RaiseEvent_ReadAheadDemanded(ReadAheadEventArgs e) =>
             this.ReadAheadDemanded?.Invoke(this, e);
