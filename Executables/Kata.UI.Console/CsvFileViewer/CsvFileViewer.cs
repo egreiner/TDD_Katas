@@ -80,7 +80,7 @@
         private void InitializeServices()
         {
             var cacheSettings   = new PageCacheSettings(this.Settings.RecordsPerPage, 100);
-            this.pagination     = new PaginationService(0, this.Settings.RecordsPerPage);
+            this.pagination     = new PaginationService(this.Settings.RecordsPerPage);
             this.csvFileService = new CachedCsvFileService(this.Settings.FileName, cacheSettings, this.pagination);
         }
 

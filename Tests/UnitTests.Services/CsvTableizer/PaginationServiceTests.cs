@@ -23,7 +23,7 @@
         [Fact]
         public void Test_PageRange_unknown()
         {
-            var cut = new PaginationService(0, 100);
+            var cut = new PaginationService(100);
 
             var actual = cut.PageInfo;
 

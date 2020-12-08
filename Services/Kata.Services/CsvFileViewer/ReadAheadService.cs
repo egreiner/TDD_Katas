@@ -16,7 +16,7 @@
 
         public event EventHandler<EnqueueItemEventArgs<int>> EnqueuePage;
 
-        public (int Min, int Max) PageRange { get; set; } = (1, 1000);
+        public (int Min, int Max) PageRange { get; set; }
 
 
 

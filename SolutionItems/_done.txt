@@ -1,11 +1,47 @@
-﻿2020.12.07 Mo (Post-Lockdown day 1 in AT)
+﻿2020.12.08 Tu (Post-Lockdown day 2 in AT)
 =========================================
 
+- Agility Kata “Viewing CSV Files III” resume
+    https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-iii/
+
+
+Do some clean up
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2020.12.07 Mo (Post-Lockdown day 1 in AT)
+=========================================
+
+- Agility Kata “Viewing CSV Files III” resume
+    https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-iii/
+
+
 .Net Core 3.1 ther is no Threadsafe Collections that is useable in this case
-in .Net 5 there is a Syncornized Collection
+in .Net 5 there is a SyncronizedCollection
 we will switch to .Net 5 asap
 
-but we implement an own threadsafe usage for the priority queue
+but we implement an own threadsafe usage for the priority queue temporarely
 
 i like this smart little component
 let's do the same with our cache, make this more generic

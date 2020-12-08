@@ -144,16 +144,16 @@
         private void InitializeEstimatedFileLength()
         {
             var fileInfo = new FileInfo(this.fileName);
-            var length = fileInfo.Length / 250;
-            this.paginationService.InitializePageRange(length, this.CacheSettings.PageLength);
+            var lines = fileInfo.Length / 250;
+            this.paginationService.SetPageRangeEstimated(lines, this.CacheSettings.PageLength);
             this.readAhead.PageRange = this.paginationService.PageRange;
             Log.Add($"Initialized MaxPage to estimated {this.paginationService.PageRange.Max}");
         }
 
         public async Task<bool> InitializeMaxPage()
         {
-            var length = await this.GetFileLengthAsync().ConfigureAwait(false);
-            this.paginationService.InitializePageRange(length, this.CacheSettings.PageLength);
+            var lines = await this.GetFileLengthAsync().ConfigureAwait(false);
+            this.paginationService.SetRealPageRange(lines, this.CacheSettings.PageLength);
             this.readAhead.PageRange = this.paginationService.PageRange;
             Log.Add($"Initialized MaxPage to {this.paginationService.PageRange.Max}");
 

@@ -16,8 +16,9 @@
 
         public TKey Key { get; }
 
+        // TODO these are properties for the CacheGarbageCollector
+        // The oldest items should be removed over time...
         public int FetchCount { get; set; }
-
         public DateTime Fetched { get; set; }
 
         public override string ToString() =>

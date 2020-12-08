@@ -1,8 +1,6 @@
 ﻿namespace Kata.Services.PriorityQueue
 {
-    using System;
-
-    public class EnqueueItemEventArgs<T>: EventArgs
+    public class EnqueueItemEventArgs<T>: System.EventArgs
     {
         public EnqueueItemEventArgs(T item, int priority)
         {

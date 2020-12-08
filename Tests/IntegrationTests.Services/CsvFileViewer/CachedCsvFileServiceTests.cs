@@ -102,7 +102,7 @@ namespace IntegrationTests.Services.CsvFileViewer
         {
             var file = GetTestCsvFile();
             var settings = new PageCacheSettings(rowsOnPage, maxCachedPages);
-            var pagination = new PaginationService(0, rowsOnPage);
+            var pagination = new PaginationService(rowsOnPage);
             return new CachedCsvFileService(file, settings, pagination);
         }
         
