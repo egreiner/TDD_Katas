@@ -1,41 +1,37 @@
 namespace IntegrationTests.Services.CsvFileViewer
 {
     using Kata.Services.CsvFileViewer;
+    using Kata.Services.Logger;
     using Xunit;
 
     [Collection("Sequential")]
     public class ReadAheadPagesTests
     {
-        // TODO not working at the moment
+        [Fact]
+        public void Test_ReadAheadFirstPages()
+        {
+            var cut = GetCachedCsvFileService(10, 100);
 
-        ////[Fact]
-        ////public void Test_ReadAheadFirstPages()
-        ////{
-        ////    var cut = GetCachedCsvFileService(10, 100);
+            var actual = cut.GetPageAsync(1).Result;
 
-        ////    var actual = cut.ReadAheadFirstPagesAsync().Result;
+            var log = Log.OrderedLogInfos;
+            var cache = cut.Cache.Items;
 
-        ////    var log = cut.Log;
-        ////    var cache = cut.Items.Items;
+            Assert.True(cache.Count >= cut.CacheSettings.ReadAheadPages);
+        }
 
-        ////    Assert.Equal(cut.CacheSettings.ReadAheadNextPages, cache.Count);
-        ////}
+        [Fact]
+        public void Test_ReadAheadLastPages()
+        {
+            var cut = GetCachedCsvFileService(10, 100);
 
+            var actual = cut.GetPageAsync(100).Result;
 
-        ////[Fact]
-        ////public void Test_ReadAheadLastPages()
-        ////{
-        ////    var cut = GetCachedCsvFileService(10, 100);
-        ////    var initialized = cut.SetRealFileLength().Result;
+            var log = Log.OrderedLogInfos;
+            var cache = cut.Cache.Items;
 
-        ////    var actual = cut.ReadAheadLastPagesAsync().Result;
-
-        ////    var log = cut.Log;
-        ////    var cache = cut.Items.Items;
-
-        ////    Assert.Equal(cut.CacheSettings.ReadAheadPages, cache.Count);
-        ////}
-
+            Assert.True(cache.Count >= cut.CacheSettings.ReadAheadPages);
+        }
 
 
         private static CachedCsvFileService GetCachedCsvFileService(int rowsOnPage, int maxCachedPages)
@@ -43,7 +39,10 @@ namespace IntegrationTests.Services.CsvFileViewer
             var file = GetTestCsvFile();
             var settings = new PageCacheSettings(rowsOnPage, maxCachedPages);
             var pagination = new PaginationService(rowsOnPage);
-            return new CachedCsvFileService(file, settings, pagination);
+
+            var service = new CachedCsvFileService(file, settings, pagination);
+            _ = service.SetRealFileLength().Result;
+            return service;
         }
         
         private static string GetTestCsvFile()
