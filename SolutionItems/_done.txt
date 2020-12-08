@@ -7,6 +7,12 @@
 
 Do some clean up
 
+- switch to .Net 5
+
+
+
+
+
 BulkRead:
 i want to read 10 pages at once 
 -> 10 time less file access
