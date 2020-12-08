@@ -45,7 +45,7 @@
             this.SetPageRange(rowCount, rowsOnPage, true);
 
         public void SetRealPageRange(long rowCount, int rowsOnPage) =>
-            this.SetPageRange(rowCount, rowsOnPage, true);
+            this.SetPageRange(rowCount, rowsOnPage, false);
 
 
         public int GetFirstPage() => this.GetPage(this.PageRange.Min);

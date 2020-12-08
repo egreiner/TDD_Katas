@@ -30,11 +30,9 @@
             this.paginationService = paginationService;
             this.CacheSettings     = cacheSettings;
             this.fileName          = fileName;
-            this.readAhead = new ReadAheadService(this.CacheSettings);
+            this.readAhead         = new ReadAheadService(paginationService, this.CacheSettings);
             this.readAhead.EnqueuePage += this.OnReadAheadEnqueuePage;
-            this.InitializeEstimatedFileLength();
-
-            ////Task.Run(this.InitializeMaxPage);
+            this.SetEstimatedFileLength();
         }
 
         // i think we will get DI after this...
@@ -141,20 +139,18 @@
 
 
 
-        private void InitializeEstimatedFileLength()
+        private void SetEstimatedFileLength()
         {
             var fileInfo = new FileInfo(this.fileName);
             var lines = fileInfo.Length / 250;
             this.paginationService.SetPageRangeEstimated(lines, this.CacheSettings.PageLength);
-            this.readAhead.PageRange = this.paginationService.PageRange;
             Log.Add($"Initialized MaxPage to estimated {this.paginationService.PageRange.Max}");
         }
 
-        public async Task<bool> InitializeMaxPage()
+        public async Task<bool> SetRealFileLength()
         {
             var lines = await this.GetFileLengthAsync().ConfigureAwait(false);
             this.paginationService.SetRealPageRange(lines, this.CacheSettings.PageLength);
-            this.readAhead.PageRange = this.paginationService.PageRange;
             Log.Add($"Initialized MaxPage to {this.paginationService.PageRange.Max}");
 
             this.readAhead.LastPages();

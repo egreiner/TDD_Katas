@@ -7,18 +7,21 @@
 
     public class ReadAheadService
     {
+        private readonly PaginationService paginationService;
         private readonly PageCacheSettings cacheSettings;
         
 
-        public ReadAheadService(PageCacheSettings cacheSettings) =>
-            this.cacheSettings = cacheSettings;
+        public ReadAheadService(PaginationService paginationService, PageCacheSettings cacheSettings)
+        {
+            this.paginationService = paginationService;
+            this.cacheSettings     = cacheSettings;
+        }
 
 
         public event EventHandler<EnqueueItemEventArgs<int>> EnqueuePage;
 
-        public (int Min, int Max) PageRange { get; set; }
-
-
+        private (int Min, int Max) PageRange => this.paginationService.PageRange;
+        
 
         public void LastPages()
         {

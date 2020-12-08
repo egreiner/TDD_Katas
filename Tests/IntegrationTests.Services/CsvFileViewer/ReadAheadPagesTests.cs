@@ -26,7 +26,7 @@ namespace IntegrationTests.Services.CsvFileViewer
         ////public void Test_ReadAheadLastPages()
         ////{
         ////    var cut = GetCachedCsvFileService(10, 100);
-        ////    var initialized = cut.InitializeMaxPage().Result;
+        ////    var initialized = cut.SetRealFileLength().Result;
 
         ////    var actual = cut.ReadAheadLastPagesAsync().Result;
 

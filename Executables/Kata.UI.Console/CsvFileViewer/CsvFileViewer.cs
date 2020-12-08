@@ -88,7 +88,7 @@
             Task.Run(() =>
             {
                 Log.Add("ReadAheadImportantPages");
-                _ = this.csvFileService.InitializeMaxPage();
+                _ = this.csvFileService.SetRealFileLength();
                 this.initializedImportantPages = true;
             });
 
