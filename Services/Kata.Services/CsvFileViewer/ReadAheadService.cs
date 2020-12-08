@@ -7,13 +7,13 @@
     public class ReadAheadService
     {
         private readonly PaginationService paginationService;
-        private readonly PageCacheSettings cacheSettings;
+        private readonly int readAheadPages;
         
 
-        public ReadAheadService(PaginationService paginationService, PageCacheSettings cacheSettings)
+        public ReadAheadService(PaginationService paginationService, int readAheadPages)
         {
             this.paginationService = paginationService;
-            this.cacheSettings     = cacheSettings;
+            this.readAheadPages    = readAheadPages;
         }
 
 
@@ -26,7 +26,7 @@
         {
             Log.Add("Read Ahead Last Pages");
             var max = this.PageRange.Max;
-            var min = max - this.cacheSettings.ReadAheadPages + 1;
+            var min = max - this.readAheadPages + 1;
             this.EnqueuePrevPages(max, min, 2);
         }
         
@@ -44,14 +44,14 @@
         private (int min, int max) GetRangeForNextPages(int pageNo)
         {
             var min = pageNo + 1;
-            var max = min + this.cacheSettings.ReadAheadPages;
+            var max = min + this.readAheadPages;
             return this.paginationService.GetLimitedPageRange(min, max);
         }
 
         private (int min, int max) GetRangeForPrevPages(int pageNo)
         {
             var max = pageNo - 1;
-            var min = max - this.cacheSettings.ReadAheadPages;
+            var min = max - this.readAheadPages;
             return this.paginationService.GetLimitedPageRange(min, max);
         }
 

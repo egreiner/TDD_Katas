@@ -7,6 +7,13 @@
 
 Do some clean up
 
+BulkRead:
+i want to read 10 pages at once 
+-> 10 time less file access
+this should speed up this thing tremendously
+the pages should be stored in the cache at is now, so there is no nead to make any changes here.
+
+
 
 
 

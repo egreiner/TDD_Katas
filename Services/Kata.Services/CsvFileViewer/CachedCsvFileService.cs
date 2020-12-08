@@ -30,7 +30,7 @@
             this.paginationService = paginationService;
             this.CacheSettings     = cacheSettings;
             this.fileName          = fileName;
-            this.readAhead         = new ReadAheadService(paginationService, this.CacheSettings);
+            this.readAhead         = new ReadAheadService(paginationService, this.CacheSettings.ReadAheadPages);
             this.readAhead.EnqueuePage += this.OnReadAheadEnqueuePage;
             this.SetEstimatedFileLength();
         }
