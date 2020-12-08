@@ -1,7 +1,6 @@
 ﻿namespace Kata.Services.CsvFileViewer
 {
     using System;
-    using Extensions;
     using Logger;
     using PriorityQueue;
 
@@ -44,16 +43,16 @@
 
         private (int min, int max) GetRangeForNextPages(int pageNo)
         {
-            var min = pageNo + 1.LimitToMin(this.PageRange.Min);
-            var max = min + this.cacheSettings.ReadAheadNextPages.LimitToMax(this.PageRange.Max);
-            return (min, max);
+            var min = pageNo + 1;
+            var max = min + this.cacheSettings.ReadAheadNextPages;
+            return this.paginationService.GetLimitedPageRange(min, max);
         }
 
         private (int min, int max) GetRangeForPrevPages(int pageNo)
         {
-            var max = (pageNo - 1).LimitToMax(this.PageRange.Max);
-            var min = (max - this.cacheSettings.ReadAheadPrevPages).LimitToMin(this.PageRange.Min);
-            return (min, max);
+            var max = pageNo - 1;
+            var min = max - this.cacheSettings.ReadAheadPrevPages;
+            return this.paginationService.GetLimitedPageRange(min, max);
         }
 
 

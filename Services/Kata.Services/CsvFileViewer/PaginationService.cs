@@ -63,5 +63,8 @@
             var max = System.Math.Ceiling((decimal)rowCount / rowsOnPage);
             this.PageRange = (this.CurrentPage, (int)max);
         }
+
+        public (int min, int max) GetLimitedPageRange(in int min, in int max) =>
+            (min.LimitToMin(this.PageRange.Min), max.LimitToMax(this.PageRange.Max));
     }
 }
