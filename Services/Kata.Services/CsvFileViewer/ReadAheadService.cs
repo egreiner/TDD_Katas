@@ -26,7 +26,7 @@
         {
             Log.Add("Read Ahead Last Pages");
             var max = this.PageRange.Max;
-            var min = max - this.cacheSettings.ReadAheadPrevPages + 1;
+            var min = max - this.cacheSettings.ReadAheadPages + 1;
             this.EnqueuePrevPages(max, min, 2);
         }
         
@@ -44,14 +44,14 @@
         private (int min, int max) GetRangeForNextPages(int pageNo)
         {
             var min = pageNo + 1;
-            var max = min + this.cacheSettings.ReadAheadNextPages;
+            var max = min + this.cacheSettings.ReadAheadPages;
             return this.paginationService.GetLimitedPageRange(min, max);
         }
 
         private (int min, int max) GetRangeForPrevPages(int pageNo)
         {
             var max = pageNo - 1;
-            var min = max - this.cacheSettings.ReadAheadPrevPages;
+            var min = max - this.cacheSettings.ReadAheadPages;
             return this.paginationService.GetLimitedPageRange(min, max);
         }
 

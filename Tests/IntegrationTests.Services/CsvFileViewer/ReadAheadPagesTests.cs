@@ -33,7 +33,7 @@ namespace IntegrationTests.Services.CsvFileViewer
         ////    var log = cut.Log;
         ////    var cache = cut.Items.Items;
 
-        ////    Assert.Equal(cut.CacheSettings.ReadAheadPrevPages, cache.Count);
+        ////    Assert.Equal(cut.CacheSettings.ReadAheadPages, cache.Count);
         ////}
 
 
