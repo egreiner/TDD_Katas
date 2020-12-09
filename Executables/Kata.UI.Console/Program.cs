@@ -10,10 +10,10 @@
             ////args = new[] { $@"{dir}CSVViewer\leer.csv" };
             ////args = new[] { $@"{dir}CSVViewer\personen.csv" };
             ////args = new[] { $@"{dir}CSVViewer\besucher.csv" };             // 1.000
-            args = new[] { $@"{dir}CSVViewer\besucherLarge.csv" };        // 10.000
+            ////args = new[] { $@"{dir}CSVViewer\besucherLarge.csv" };        // 10.000
             ////args = new[] { $@"{dir}LargeCsvFiles\besucherBig.csv" };          // 100.000
             ////args = new[] { $@"{dir}LargeCsvFiles\besucherHugh.csv" };         // 1.000.000
-            ////args = new[] { $@"{dir}LargeCsvFiles\besucherMonster.csv" };      // 10.000.000
+            args = new[] { $@"{dir}LargeCsvFiles\besucherMonster.csv" };      // 10.000.000
             ////args = new[] { "bla", "20" };
 
             var csvFileViewer = new CsvFileViewer.CsvFileViewer();

@@ -85,11 +85,19 @@
                 lines = this.CacheGetPage(pageNo);
             }
 
-            ////this.readAhead.SurroundingPages(pageNo, pageNo > this.lastPage);
+            this.ReadSurroundingPages(pageNo, pageNo > this.lastPage);
             this.lastPage = pageNo;
 
             return lines;
         }
+
+        private void ReadSurroundingPages(int pageNo, bool favorNext)
+        {
+            var bulkPages = this.CacheSettings.BulkReadPages;
+            this.AddPageToQueue(pageNo + bulkPages, favorNext ? 10 : 20);
+            this.AddPageToQueue(pageNo - bulkPages, favorNext ? 20 : 10);
+        }
+
 
         public async Task<string> GetTitleAsync()
         {
@@ -113,6 +121,7 @@
             this.paginationService.SetRealPageRange(lines, this.CacheSettings.PageLength);
             Log.Add($"Initialized MaxPage to {this.paginationService.PageRange.Max}");
 
+            this.AddPageToQueue(this.paginationService.PageRange.Max-1, 10);
             ////this.readAhead.LastPages();
             ////this.readAhead.AllPages();
 

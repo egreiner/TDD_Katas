@@ -1,5 +1,6 @@
 ﻿namespace Kata.Services.CsvFileViewer
 {
+    using System.Globalization;
     using Extensions;
 
     public class PaginationService
@@ -20,7 +21,7 @@
         /// <param name="rowCount">Line quantity of the data source.</param>
         /// <param name="rowsOnPage">How many records should be displayed on one screen page.</param>
         public PaginationService(long rowCount, int rowsOnPage) =>
-            this.SetPageRangeEstimated(rowCount, rowsOnPage);
+            this.SetRealPageRange(rowCount, rowsOnPage);
 
 
         public (int Min, int Max) PageRange { get; private set; }
@@ -32,8 +33,11 @@
         {
             get
             {
-                var max = this.maxPageEstimated ? "?" : this.PageRange.Max.ToString();
-                return $"Page {this.CurrentPage} of {max}";
+                var culture = CultureInfo.GetCultureInfo("de-de");
+                var max = this.maxPageEstimated 
+                    ? "?" 
+                    : this.PageRange.Max.ToString("N0", culture);
+                return $"Page {this.CurrentPage.ToString("N0", culture)} of {max}";
             }
         }
 

@@ -14,7 +14,7 @@
 
         public int ReadAheadPages { get; set; } = 5;
 
-        public int BulkReadPages { get; set; } = 10;
+        public int BulkReadPages { get; set; } = 100;
 
 
         // TODO wrong location ...

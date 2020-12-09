@@ -30,6 +30,17 @@
             Assert.EndsWith("1 of ?", actual);
         }
 
+        [Fact]
+        public void Test_PageInfo()
+        {
+            var cut = new PaginationService(10000, 10);
+            cut.GetPage(1000);
+
+            var actual = cut.PageInfo;
+
+            Assert.EndsWith("1.000 of 1.000", actual);
+        }
+
         [Theory]
         [InlineData(10, 10)]
         [InlineData(0, 1)]
