@@ -1,5 +1,6 @@
 ﻿namespace Kata.Services.CsvFileViewer
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -91,6 +92,7 @@
             Log.Add($"Initialized MaxPage to {this.paginationService.PageRange.Max}");
 
             this.readAhead.LastPages();
+            this.readAhead.AllPages();
 
             return true;
         }
@@ -123,9 +125,21 @@
 
                     Log.Add($"Dequeue page {page} from pool for reading from file");
                     _ = this.ReadAheadAsync(page).Result;
+
+                    ////ClearCurrentConsoleLine();
+                    Console.Write($"\r{page} was read from file     ");
+
                 }
                 this.dequeuingPoolIsRunning = false;
             });
+        }
+
+        private static void ClearCurrentConsoleLine()
+        {
+            int currentLineCursor = Console.CursorTop;
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, currentLineCursor);
         }
 
         private (int start, int length) GetReadRange(int pageNo)

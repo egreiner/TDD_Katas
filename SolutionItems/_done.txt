@@ -1,8 +1,11 @@
-﻿2020.12.08 Tu (Post-Lockdown day 2 in AT)
+﻿2020.12.09 We (Post-Lockdown day 3 in AT)
 =========================================
 
 - Agility Kata “Viewing CSV Files III” resume
     https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-iii/
+
+
+- Before we make the BulkRead let's do a CacheAll function
 
 
 

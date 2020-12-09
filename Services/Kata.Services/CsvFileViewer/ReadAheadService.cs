@@ -20,7 +20,7 @@
         public event EventHandler<EnqueueItemEventArgs<int>> EnqueuePage;
 
         private (int Min, int Max) PageRange => this.paginationService.PageRange;
-        
+
 
         public void LastPages()
         {
@@ -29,7 +29,15 @@
             var min = max - this.readAheadPages + 1;
             this.EnqueuePrevPages(max, min, 2);
         }
-        
+
+        public void AllPages()
+        {
+            Log.Add("Read Ahead All Pages");
+            var min = this.PageRange.Min;
+            var max = this.PageRange.Max;
+            this.EnqueueNextPages(min, max, 100);
+        }
+
         public void SurroundingPages(int pageNo)
         {
             Log.Add($"Read Ahead surrounding pages for page {pageNo}");
