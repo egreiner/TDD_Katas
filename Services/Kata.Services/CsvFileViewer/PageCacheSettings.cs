@@ -18,7 +18,14 @@
 
 
         // TODO wrong location ...
-        public int GetStartBulkBlockAtPage(in int pageNo) =>
-            (pageNo / this.BulkReadPages) * this.BulkReadPages + 1;
+        public (int start, int end, int offset, int length) GetBulkBlockInfo(in int pageNo)
+        {
+            var start = ((pageNo - 1) / this.BulkReadPages) * this.BulkReadPages;
+            var end = start +  this.BulkReadPages;
+            var offset = pageNo - start;
+            start++;
+            var length = this.PageLength * this.BulkReadPages;
+            return (start, end, offset, length);
+        }
     }
 }
