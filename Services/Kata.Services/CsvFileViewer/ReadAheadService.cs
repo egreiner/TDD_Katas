@@ -38,14 +38,14 @@
             this.EnqueueNextPages(min, max, 100);
         }
 
-        public void SurroundingPages(int pageNo)
+        public void SurroundingPages(int pageNo, bool preferNextPages)
         {
             Log.Add($"Read Ahead surrounding pages for page {pageNo}");
             var (min, max) = this.GetRangeForNextPages(pageNo);
-            this.EnqueueNextPages(min, max, 2);
+            this.EnqueueNextPages(min, max, preferNextPages ? 2: 4);
 
             (min, max) = this.GetRangeForPrevPages(pageNo);
-            this.EnqueuePrevPages(max, min, 2);
+            this.EnqueuePrevPages(max, min, preferNextPages ? 4: 2);
         }
 
 
