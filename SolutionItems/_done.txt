@@ -5,13 +5,6 @@
     https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-iii/
 
 
-Do some clean up
-
-- switch to .Net 5
-
-
-
-
 
 BulkRead:
 i want to read 10 pages at once 
@@ -19,6 +12,42 @@ i want to read 10 pages at once
 this should speed up this thing tremendously
 the pages should be stored in the cache at is now, so there is no nead to make any changes here.
 
+what to do....
+
+GetPage(1)
+ReadFromFile start at line 1, length = 10 x pageLength
+
+GetPage(50)
+start = start of (page - bulkpages/2)
+ReadFromFile start , length = 10 x pageLength
+
+GetPage(lsatPage)
+start = start of (page - bulkpages)
+ReadFromFile start , length = 10 x pageLength
+
+first 10 pages  1-10
+second 10 pages 11-20
+....
+last 10 pages 221-...
+
+startPageBlock = ((int)pageNo / BulkPages) * BulkPages + 1
+
+                15 / 10 = 1 * 10 +1 =11
+                223 / 10 = 22 * 10 + 1 = 221 OK
+
+
+what about saving the bulkInfo instead of the pageInfo in the cache?
+
+bulk page: key (from to) value list of strings
+
+bulkCache.Contains(page)
+    page.IsBetween(from to)
+
+return bulkCache.GetPage(page)
+
+the existing components couldn't be cut in the correct way to get a satisfying result
+
+rework this???
 
 
 
@@ -34,6 +63,37 @@ the pages should be stored in the cache at is now, so there is no nead to make a
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2020.12.08 Tu (Post-Lockdown day 2 in AT)
+=========================================
+
+- Agility Kata “Viewing CSV Files III” resume
+    https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-iii/
+
+
+Do some clean up
+
+- switch to .Net 5      DONE
+
+- BulkRead planning
 
 
 
@@ -62,28 +122,6 @@ let's do the same with our cache, make this more generic
 is there a existing cache in .Net? nope
 
 extract the logger
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -129,6 +167,9 @@ so back to the kata
 
 
 
+
+
+
 2020.12.05 Sa (Lockdown day 19 in AT)
 =====================================
 
@@ -142,23 +183,6 @@ this is not necessary, so make this better
 clean up
 
 not my day today
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -290,6 +314,11 @@ Collect some ideas:
 
 
 
+
+
+
+
+
 2020.12.02 We (Lockdown day 16 in AT)
 =====================================
 
@@ -312,6 +341,7 @@ Collect some ideas:
     Now we are prepared to continue with the work that we wanted to do initialy...
 
     but tomorrow...
+
 
 
 

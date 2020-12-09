@@ -84,6 +84,23 @@
             return this.cachedTitle;
         }
 
+        public async Task<bool> SetRealFileLength()
+        {
+            var lines = await this.GetFileLengthAsync().ConfigureAwait(false);
+            this.paginationService.SetRealPageRange(lines, this.CacheSettings.PageLength);
+            Log.Add($"Initialized MaxPage to {this.paginationService.PageRange.Max}");
+
+            this.readAhead.LastPages();
+
+            return true;
+        }
+
+        public async Task<int> GetFileLengthAsync() =>
+            await Task.Run(() =>
+                File.ReadLines(this.fileName).Count()
+            ).ConfigureAwait(false);
+
+
         private void AddPageToQueue(int pageNo, int priority) =>
             Task.Run(() =>
             {
@@ -111,33 +128,14 @@
             });
         }
 
-
         private (int start, int length) GetReadRange(int pageNo)
         {
-            var page   = this.GetLimitedPageNo(pageNo) - 1;
+            var page   = this.paginationService.GetLimitedPageNo(pageNo) - 1;
             var length = this.CacheSettings.PageLength;
             var start  = page * length + 1;
 
             return (start, length);
         }
-
-        private int GetLimitedPageNo(int pageNo)
-        {
-            var min = this.paginationService.PageRange.Min.LimitToMin(1);
-
-            // TODO at the start there is no knowledge about maxPage...
-            var max = this.paginationService.PageRange.Max.LimitToMin(10);
-
-            return pageNo.LimitTo(min, max);
-        }
-
-
-        public async Task<int> GetFileLengthAsync() =>
-            await Task.Run(() => 
-                File.ReadLines(this.fileName).Count()
-            ).ConfigureAwait(false);
-
-
 
         private void SetEstimatedFileLength()
         {
@@ -146,19 +144,6 @@
             this.paginationService.SetPageRangeEstimated(lines, this.CacheSettings.PageLength);
             Log.Add($"Initialized MaxPage to estimated {this.paginationService.PageRange.Max}");
         }
-
-        public async Task<bool> SetRealFileLength()
-        {
-            var lines = await this.GetFileLengthAsync().ConfigureAwait(false);
-            this.paginationService.SetRealPageRange(lines, this.CacheSettings.PageLength);
-            Log.Add($"Initialized MaxPage to {this.paginationService.PageRange.Max}");
-
-            this.readAhead.LastPages();
-
-            return true;
-        }
-
-
 
         private async Task<IList<string>> GetPageFromFileAsync(int pageNo)
         {

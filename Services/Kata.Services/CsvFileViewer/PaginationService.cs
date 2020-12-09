@@ -41,6 +41,13 @@
         public override string ToString() => this.PageInfo;
 
 
+        public (int min, int max) GetLimitedPageRange(in int min, in int max) =>
+            (min.LimitToMin(this.PageRange.Min), max.LimitToMax(this.PageRange.Max));
+
+        public int GetLimitedPageNo(int pageNo) =>
+            pageNo.LimitTo(this.PageRange.Min, this.PageRange.Max);
+
+
         public void SetPageRangeEstimated(long rowCount, int rowsOnPage) =>
             this.SetPageRange(rowCount, rowsOnPage, true);
 
@@ -63,8 +70,5 @@
             var max = System.Math.Ceiling((decimal)rowCount / rowsOnPage);
             this.PageRange = (this.CurrentPage, (int)max);
         }
-
-        public (int min, int max) GetLimitedPageRange(in int min, in int max) =>
-            (min.LimitToMin(this.PageRange.Min), max.LimitToMax(this.PageRange.Max));
     }
 }

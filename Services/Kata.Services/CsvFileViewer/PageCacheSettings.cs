@@ -15,5 +15,10 @@
         public int ReadAheadPages { get; set; } = 5;
 
         public int BulkReadPages { get; set; } = 10;
+
+
+        // TODO wrong location ...
+        public int GetStartBulkBlockAtPage(in int pageNo) =>
+            (pageNo / this.BulkReadPages) * this.BulkReadPages + 1;
     }
 }
