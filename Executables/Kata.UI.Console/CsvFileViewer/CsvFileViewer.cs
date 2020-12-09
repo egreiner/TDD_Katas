@@ -15,7 +15,7 @@
 
         private readonly CsvTableizerService csvService = new CsvTableizerService(true);
 
-        private CachedCsvFileService csvFileService;
+        private BulkCachedCsvFileService csvFileService;
         private PaginationService pagination;
         private int gotoPage = 1;
         private bool initializedImportantPages;
@@ -81,7 +81,7 @@
         {
             var cacheSettings   = new PageCacheSettings(this.Settings.RecordsPerPage, 100);
             this.pagination     = new PaginationService(this.Settings.RecordsPerPage);
-            this.csvFileService = new CachedCsvFileService(this.Settings.FileName, cacheSettings, this.pagination);
+            this.csvFileService = new BulkCachedCsvFileService(this.Settings.FileName, cacheSettings, this.pagination);
         }
 
         private void ReadAheadImportantPages() =>

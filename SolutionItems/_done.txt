@@ -6,7 +6,7 @@
 
 
 - Before we make the BulkRead let's do a CacheAll function
-
+- favoured navigation direction
 
 
 BulkRead:
@@ -46,11 +46,30 @@ bulk page: key (from to) value list of strings
 bulkCache.Contains(page)
     page.IsBetween(from to)
 
+Cache.Contains(() => function)
+
 return bulkCache.GetPage(page)
 
 the existing components couldn't be cut in the correct way to get a satisfying result
 
 rework this???
+
+make new components and look what stays the same...
+
+UseCases:
+
+SearchPage(pageNo)
+
+GetFromCache
+
+GetFromFile
+
+WriteToCache
+
+UpdateCache for garbage collection
+
+
+
 
 
 
