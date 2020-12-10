@@ -118,14 +118,22 @@
         public async Task<bool> SetRealFileLength()
         {
             var lines = await this.GetFileLengthAsync().ConfigureAwait(false);
-            this.pagination.SetRealPageRange(lines -1, this.CacheSettings.PageLength);
-            Log.Add($"Initialized MaxPage to {this.pagination.PageRange.Max}");
+            this.pagination.SetRealPageRange(lines-1, this.CacheSettings.PageLength);
+            
+            var maxPage = this.pagination.PageRange.Max;
+            Log.Add($"Initialized MaxPage to {maxPage}");
 
-            this.AddPageToQueue(this.pagination.PageRange.Max-1, 10);
-            ////this.readAhead.LastPages();
-            ////this.readAhead.AllPages();
+            this.AddPageToQueue(maxPage, 10);
+
+            ////this.AddAllPagesToCache(maxPage, 100);
 
             return true;
+        }
+
+        private void AddAllPagesToCache(int maxPage, int priority)
+        {
+            for (int i = 1; i < maxPage; i += this.CacheSettings.BulkReadPages)
+                this.AddPageToQueue(i, priority);
         }
 
         public async Task<int> GetFileLengthAsync() =>

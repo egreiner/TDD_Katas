@@ -72,7 +72,7 @@
         {
             this.maxPageEstimated = rowCountEstimated;
             var max = System.Math.Ceiling((decimal)rowCount / rowsOnPage);
-            this.PageRange = (this.CurrentPage, (int)max);
+            this.PageRange = (1, (int)max);
         }
     }
 }
