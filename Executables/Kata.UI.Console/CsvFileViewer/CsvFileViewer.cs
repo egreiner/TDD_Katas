@@ -11,7 +11,7 @@
 
     public class CsvFileViewer
     {
-        private const string Footer = "[A]ll, [N]ext, [P]revious, [F]irst, [L]ast, [G][J]ump to page, e[X]it";
+        private const string Footer = "[F]irst, [L]ast, [N]ext, [P]revious, [G][J]ump to page, e[X]it";
 
         private readonly CsvTableizerService csvService = new CsvTableizerService(true);
 
@@ -98,7 +98,7 @@
             var lastKey = key;
             key = Console.ReadKey();
 
-            if (key.Key == ConsoleKey.J || key.Key == ConsoleKey.G)
+            if (GetJumpToPageKeys().Contains(key.Key))
                 this.gotoPage = this.GetGotoPage(Console.ReadLine());
 
             if (!GetAllowedKeys().Contains(key.Key))
@@ -127,29 +127,26 @@
                 _ => -1
             };
 
-            var pageNo = this.pagination.CurrentPage;
-            var csvLines = this.csvFileService.GetPageAsync(pageNo).Result;
+            var csvLines = this.csvFileService.GetPageAsync(page).Result;
 
             return this.csvService.ToTable(csvLines).ToList();
         }
 
         private static IEnumerable<ConsoleKey> GetAllowedKeys()
         {
-            var result = new List<ConsoleKey>
-            {
-                ConsoleKey.A,
-                ConsoleKey.F,
-                ConsoleKey.L,
-                ConsoleKey.N,
-                ConsoleKey.P,
-                ConsoleKey.J,
-                ConsoleKey.G,
-            };
+            var result = new List<ConsoleKey>(GetNavigationKeys());
             result.AddRange(GetExitKeys());
+            result.AddRange(GetJumpToPageKeys());
             return result;
         }
 
+        private static IEnumerable<ConsoleKey> GetNavigationKeys() =>
+            new[] { ConsoleKey.F, ConsoleKey.L, ConsoleKey.P, ConsoleKey.N };
+
         private static IEnumerable<ConsoleKey> GetExitKeys() =>
-            new[] { ConsoleKey.X, ConsoleKey.Escape };
+            new[] { ConsoleKey.X, ConsoleKey.Q, ConsoleKey.Escape };
+
+        private static IEnumerable<ConsoleKey> GetJumpToPageKeys() =>
+            new[] { ConsoleKey.J, ConsoleKey.G };
     }
 }
