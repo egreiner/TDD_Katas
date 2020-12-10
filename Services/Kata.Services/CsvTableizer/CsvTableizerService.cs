@@ -16,22 +16,22 @@
             this.enableRecordNumbers = addRecordNumbers;
 
 
+        public IEnumerable<string> ToTablePage(IList<string> csvLines, int page, int rowsOnPage)
+        {
+            this.recordNumber = (page - 1) * rowsOnPage;
+            return this.ToTable(csvLines, 1, rowsOnPage + 1);
+        }
+
         public IEnumerable<string> ToTable(IList<string> csvLines)
         {
             this.recordNumber = 0;
             return this.ToTable(csvLines, 1, csvLines.Count);
         }
 
-        public IEnumerable<string> ToTablePage(IList<string> csvLines, int page, int rowsOnPage)
-        {
-            this.recordNumber = (page - 1) * rowsOnPage;
-            var start         = this.recordNumber + 1;
-            return this.ToTable(csvLines, start, start + rowsOnPage);
-        }
-
         private IEnumerable<string> ToTable(IList<string> csvLines, int start, int end)
         {
-            var widths = this.GetMaxColumnWidths(csvLines).ToList();
+            var lengthIdxColumn = (this.recordNumber + end).ToString().Length;
+            var widths = this.GetMaxColumnWidths(csvLines, lengthIdxColumn).ToList();
             if (widths.Count == 0) yield break;
 
             yield return this.CreateTitleLine(this.SplitCsvLine(csvLines[0]), widths);
@@ -74,12 +74,16 @@
             this.recordNumber++;
 
             if (this.enableRecordNumbers)
-                csvColumns.Insert(0, $"{this.recordNumber}.");
+            {
+                var idx = this.recordNumber.ToString();
+                var spaces = new string(' ', (widths[0] - idx.Length - 1).LimitToMin(0));
+                csvColumns.Insert(0, $"{spaces}{idx}.");
+            }
 
             for (int i = 0; i < widths.Count; i++)
             {
                 var text = csvColumns[i];
-                var spaces = new string(' ', widths[i] - text.Length);
+                var spaces = new string(' ', (widths[i] - text.Length).LimitToMin(0));
                 result += $"{text}{spaces}|";
             }
 
@@ -99,7 +103,7 @@
         public List<string> SplitCsvLine(string csvLine) =>
             csvLine.Split(';').ToList();
 
-        public List<int> GetMaxColumnWidths(IEnumerable<string> csvLines)
+        public List<int> GetMaxColumnWidths(IEnumerable<string> csvLines, int lengthIdxColumn = 0)
         {
             var result = new List<int>();
 
@@ -111,11 +115,11 @@
             for (var i = 0; i < columnsQuantity; i++) 
                 result.Add(splitLines.Max(x => x[i].Length));
 
-            if (this.enableRecordNumbers)
-            {
-                var digitsRecordNumber = csvLines.Count().ToString().Length + 1;
-                result.Insert(0, digitsRecordNumber.LimitToMin(LabelNameForRecordNumber.Length));
-            }
+            if (!this.enableRecordNumbers) return result;
+
+            var digitsIdx = csvLines.Count().ToString().Length + 1;
+            digitsIdx = digitsIdx.LimitToMin(LabelNameForRecordNumber.Length);
+            result.Insert(0, digitsIdx.LimitToMin(lengthIdxColumn + 1));
 
             return result;
         }

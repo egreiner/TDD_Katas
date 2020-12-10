@@ -129,7 +129,7 @@
 
             var csvLines = this.csvFileService.GetPageAsync(page).Result;
 
-            return this.csvService.ToTable(csvLines).ToList();
+            return this.csvService.ToTablePage(csvLines, page, this.Settings.RecordsPerPage).ToList();
         }
 
         private static IEnumerable<ConsoleKey> GetAllowedKeys()

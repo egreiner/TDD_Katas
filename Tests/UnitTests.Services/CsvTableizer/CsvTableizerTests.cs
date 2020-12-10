@@ -116,16 +116,16 @@
             var list = cut.ToTable(csvLines).ToList();
             var actual = list.Last();
 
-            Assert.StartsWith("4.", actual);
+            Assert.StartsWith(" 4.", actual);
         }
 
         [Theory]
-        [InlineData(1, 1, "1.")]
-        [InlineData(2, 1, "2.")]
-        [InlineData(3, 1, "3.")]
-        [InlineData(4, 1, "4.")]
-        [InlineData(1, 2, "2.")]
-        [InlineData(2, 2, "4.")]
+        [InlineData(1, 1, " 1.")]
+        [InlineData(2, 1, " 2.")]
+        [InlineData(3, 1, " 3.")]
+        [InlineData(4, 1, " 4.")]
+        [InlineData(1, 2, " 2.")]
+        [InlineData(2, 2, " 4.")]
         public void Test_ToTablePage(int page, int recordsOnPage, string expected)
         {
             var cut = new CsvTableizerService(true);
