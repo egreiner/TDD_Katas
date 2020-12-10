@@ -1,4 +1,42 @@
-﻿2020.12.09 We (Post-Lockdown day 3 in AT)
+﻿2020.12.10 Th (Post-HardLockdown day 4 in AT)
+=============================================
+
+now SoftLockdown
+... doesn't help
+
+
+- Agility Kata “Viewing CSV Files III” resume
+    https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-iii/
+
+BulkRead
+    works realy fine, better than i thougth
+
+    some bugs...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2020.12.09 We (Post-Lockdown day 3 in AT)
 =========================================
 
 - Agility Kata “Viewing CSV Files III” resume

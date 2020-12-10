@@ -57,7 +57,7 @@
                 while (lineCount < this.Settings.PageLength-1) 
                     writeLine(string.Empty);
                 
-                writeLine($"{this.pagination.PageInfo} {this.csvFileService.ReadLocation}");
+                writeLine($"{this.pagination.PageInfo} {this.csvFileService.ReadLocation}, {this.csvFileService.GetCachedPages()} pages cached");
                 writeLine(Footer);
                 writeLine($"Last key pressed: {key.Key}");
             }

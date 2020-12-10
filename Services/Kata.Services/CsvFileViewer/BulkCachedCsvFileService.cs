@@ -13,8 +13,7 @@
     public class BulkCachedCsvFileService
     {
         private readonly PriorityQueue<int> pageQueue = new PriorityQueue<int>();
-        private readonly PaginationService paginationService;
-        ////private readonly ReadAheadService readAhead;
+        private readonly PaginationService pagination;
         private readonly string fileName;
         
         private string cachedTitle;
@@ -24,37 +23,36 @@
 
         public BulkCachedCsvFileService(string fileName, 
             PageCacheSettings cacheSettings, 
-            PaginationService paginationService)
+            PaginationService pagination)
         {
             this.Cache = new Cache<(int min, int max), IList<string>>();
 
-            this.paginationService = paginationService;
+            this.pagination = pagination;
             this.CacheSettings     = cacheSettings;
             this.fileName          = fileName;
-            ////this.readAhead         = new ReadAheadService(paginationService, this.CacheSettings.ReadAheadPages);
-            ////this.readAhead.EnqueuePage += this.OnReadAheadEnqueuePage;
             this.SetEstimatedFileLength();
         }
 
-        // i think we will get DI after this...
         public Cache<(int min, int max), IList<string>> Cache { get; }
         public PageCacheSettings CacheSettings { get; }
+
         public string ReadLocation { get; private set; }
 
 
-
-
-        private bool CacheContains(int pageNo) =>
-            this.Cache.Items.Any(x =>
-                pageNo.IsBetween(x.Key.Key.min, x.Key.Key.max));
+        public int GetCachedPages() => 
+            this.Cache.Items
+                .Select(x => x.Key.Key)
+                .Sum(y => y.max - y.min);
+        
 
         private IList<string> CacheGetPage(int pageNo)
         {
-            var (start, end, offset, length) = this.CacheSettings.GetBulkBlockInfo(pageNo);
+            var (start, end, offset, _) = this.CacheSettings.GetBulkBlockInfo(pageNo);
 
-            var records = this.Cache.Items.FirstOrDefault(x =>
-                    pageNo.IsBetween(x.Key.Key.min, x.Key.Key.max)).Value
-                .Skip(offset).Take(this.CacheSettings.PageLength).ToList();
+            var records = this.Cache.GetAsync((start, end)).Result
+                              .Skip(offset)
+                              .Take(this.CacheSettings.PageLength)
+                              .ToList();
 
             var title = this.GetTitleAsync().Result;
             records.Insert(0, title);
@@ -67,7 +65,9 @@
         {
             IList<string> lines;
 
-            if (this.CacheContains(pageNo))
+            var (start, end, _, _) = this.CacheSettings.GetBulkBlockInfo(pageNo);
+
+            if (await this.Cache.ContainsAsync((start,end)))
             {
                 Log.Add($"Get cached page {pageNo}");
                 this.ReadLocation = "from cache";
@@ -79,7 +79,7 @@
 
                 this.AddPageToQueue(pageNo, 1);
 
-                while (!this.CacheContains(pageNo)) 
+                while (!await this.Cache.ContainsAsync((start, end))) 
                     await Task.Delay(50);
 
                 lines = this.CacheGetPage(pageNo);
@@ -118,10 +118,10 @@
         public async Task<bool> SetRealFileLength()
         {
             var lines = await this.GetFileLengthAsync().ConfigureAwait(false);
-            this.paginationService.SetRealPageRange(lines, this.CacheSettings.PageLength);
-            Log.Add($"Initialized MaxPage to {this.paginationService.PageRange.Max}");
+            this.pagination.SetRealPageRange(lines -1, this.CacheSettings.PageLength);
+            Log.Add($"Initialized MaxPage to {this.pagination.PageRange.Max}");
 
-            this.AddPageToQueue(this.paginationService.PageRange.Max-1, 10);
+            this.AddPageToQueue(this.pagination.PageRange.Max-1, 10);
             ////this.readAhead.LastPages();
             ////this.readAhead.AllPages();
 
@@ -178,8 +178,8 @@
         {
             var fileInfo = new FileInfo(this.fileName);
             var lines = fileInfo.Length / 250;
-            this.paginationService.SetPageRangeEstimated(lines, this.CacheSettings.PageLength);
-            Log.Add($"Initialized MaxPage to estimated {this.paginationService.PageRange.Max}");
+            this.pagination.SetPageRangeEstimated(lines, this.CacheSettings.PageLength);
+            Log.Add($"Initialized MaxPage to estimated {this.pagination.PageRange.Max}");
         }
 
         private async Task<IList<string>> GetPageFromFileAsync(int pageNo)
@@ -198,13 +198,13 @@
 
         private async Task<bool> ReadAheadAsync(int pageNo)
         {
-            if (this.CacheContains(pageNo))
+            var bulk = this.CacheSettings.GetBulkBlockInfo(pageNo);
+
+            if (this.Cache.ContainsAsync((bulk.start, bulk.end)).Result)
             {
                 Log.Add($"ReadAheadAsync page {pageNo} was cached before");
                 return false;
             }
-
-            var bulk = this.CacheSettings.GetBulkBlockInfo(pageNo);
 
             Log.Add($"ReadAheadAsync page {pageNo}");
             var lines = await this.GetPageFromFileAsync(pageNo).ConfigureAwait(false);
