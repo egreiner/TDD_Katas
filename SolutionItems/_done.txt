@@ -9,6 +9,13 @@ This weekend there are corona mass tests in my area!
 So bulk tests do work really well and it also was done really fast
 but we have to clean up
 
+- fix bugs
+    we have a problem with the first cache page due to the title line
+    we do not have the title in the following cache-pages
+    so Test-After...
+
+
+
 - fix the tests that we ignored unfortunately
 - cache purge strategy?
 - make some enhancements
