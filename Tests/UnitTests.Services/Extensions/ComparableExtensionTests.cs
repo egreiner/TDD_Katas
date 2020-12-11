@@ -20,6 +20,19 @@
 
         // DO NOT SKIP SUCH A SIMPLE TEST!!!
         [Theory]
+        [InlineData(1, 1, 100, true)]
+        [InlineData(2, 1, 100, true)]
+        [InlineData(100, 1, 100, true)]
+        [InlineData(-2, 1, 100, false)]
+        public void Test_IsBetween_tuple_int(int value, int min, int max, bool expected)
+        {
+            var actual = value.IsBetween((min, max));
+
+            Assert.Equal(expected, actual);
+        }
+
+        // DO NOT SKIP SUCH A SIMPLE TEST!!!
+        [Theory]
         [InlineData("C", "A", "Z", true)]
         [InlineData("a", "A", "Z", false)]
         [InlineData("-", "A", "Z", false)]
@@ -27,6 +40,19 @@
         public void Test_IsBetween_string(string value, string min, string max, bool expected)
         {
             var actual = value.IsBetween(min, max);
+
+            Assert.Equal(expected, actual);
+        }
+        
+        // DO NOT SKIP SUCH A SIMPLE TEST!!!
+        [Theory]
+        [InlineData("C", "A", "Z", true)]
+        [InlineData("a", "A", "Z", false)]
+        [InlineData("-", "A", "Z", false)]
+        [InlineData("0", "A", "Z", false)]
+        public void Test_IsBetween_tuple_string(string value, string min, string max, bool expected)
+        {
+            var actual = value.IsBetween((min, max));
 
             Assert.Equal(expected, actual);
         }

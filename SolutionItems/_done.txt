@@ -1,4 +1,36 @@
-﻿2020.12.10 Th (Post-HardLockdown day 4 in AT)
+﻿2020.12.11 Fr (Post-HardLockdown day 5 in AT)
+=============================================
+
+This weekend there are corona mass tests in my area!
+
+- Agility Kata “Viewing CSV Files III” resume
+    https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-iii/
+
+So bulk tests do work really well and it also was done really fast
+but we have to clean up
+
+- fix the tests that we ignored unfortunately
+- cache purge strategy?
+- make some enhancements
+- get rid of old not used components 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2020.12.10 Th (Post-HardLockdown day 4 in AT)
 =============================================
 
 now SoftLockdown
@@ -11,7 +43,7 @@ now SoftLockdown
 BulkRead
     works realy fine, better than i thougth
 
-    some bugs...
+    some bugs                               DONE
 
 
 
