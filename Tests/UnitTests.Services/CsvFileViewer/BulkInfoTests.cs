@@ -17,11 +17,7 @@
         [InlineData(10, 100, 100, 0)]
         [InlineData(10, 100, 101, 1)]
         [InlineData(10, 100, 210, 2)]
-        public void Test_BulkInfo_Index(
-            int recordsOnPage,
-            int bulkPages,
-            int page,
-            int expected)
+        public void Test_BulkInfo_Index(int recordsOnPage, int bulkPages, int page, int expected)
         {
             var settings = new PageCacheSettings(recordsOnPage, 100);
             settings.BulkReadPages = bulkPages;
@@ -33,15 +29,15 @@
         }
 
         [Theory]
-        [InlineData(10, 10, 1, 0)]
-        [InlineData(10, 10, 9, 0)]
-        [InlineData(10, 10, 10, 0)]
-        [InlineData(10, 10, 11, 10)]
-        [InlineData(10, 20, 1, 0)]
-        [InlineData(10, 20, 20, 0)]
-        [InlineData(10, 20, 21, 20)]
-        [InlineData(10, 20, 40, 20)]
-        public void Test_BulkInfo_Start(
+        [InlineData(10, 10, 1, 1)]
+        [InlineData(10, 10, 9, 1)]
+        [InlineData(10, 10, 10, 1)]
+        [InlineData(10, 10, 11, 11)]
+        [InlineData(10, 20, 1, 1)]
+        [InlineData(10, 20, 20, 1)]
+        [InlineData(10, 20, 21, 21)]
+        [InlineData(10, 20, 40, 21)]
+        public void Test_BulkInfo_BulkStartPage(
             int recordsOnPage,
             int bulkPages,
             int page,
@@ -53,9 +49,35 @@
             };
 
             var cut = BulkInfo.Create(page, settings);
-            var actual = cut.StartPage;
+            var startPage = cut.BulkStartPage;
+            var endPage = cut.BulkEndPage;
+
+            Assert.Equal(expected, startPage);
+            Assert.Equal(expected + bulkPages - 1, endPage);
+        }
+
+        [Theory]
+        [InlineData(10, 10, 1, 1)]
+        [InlineData(10, 10, 9, 1)]
+        [InlineData(10, 10, 10, 1)]
+        [InlineData(10, 10, 11, 101)]
+        [InlineData(10, 20, 1, 1)]
+        [InlineData(10, 20, 20, 1)]
+        [InlineData(10, 20, 21, 201)]
+        [InlineData(10, 20, 40, 201)]
+        public void Test_BulkInfo_FileStartLine(int recordsOnPage, int bulkPages, int page, int expected)
+        {
+            var settings = new PageCacheSettings(recordsOnPage, 100)
+            {
+                BulkReadPages = bulkPages
+            };
+
+            var cut = BulkInfo.Create(page, settings);
+            var actual = cut.FileStartLine;
+            var endLine = cut.FileEndLine;
 
             Assert.Equal(expected, actual);
+            Assert.Equal(expected + recordsOnPage * bulkPages, endLine);
         }
 
         [Theory]

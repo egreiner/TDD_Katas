@@ -2,16 +2,13 @@
 {
     public class BulkInfo
     {
-        /*
-         * |<-------------------- file --------------------------->|
-         *        |<----- bulk cache ----->|
-         *           |<- page ->|
-         */
-
         public int BulkId  { get; set; }
 
-        public int StartPage  { get; set; }
-        public int EndPage    { get; set; }
+        public int BulkStartPage { get; set; }
+        public int BulkEndPage { get; set; }
+
+        public int FileStartLine { get; set; }
+        public int FileEndLine { get; set; }
 
         public int OffsetIndex { get; set; }
         public int OffsetStart { get; set; }
@@ -19,22 +16,29 @@
         public int LinesPerBulk { get; set; }
 
 
+        /*
+        * |<-------------------- file --------------------------->|
+        *        |<----- bulk cache ----->|
+        *           |<- page ->|
+        */
+
         public static BulkInfo Create(in int pageNo, PageCacheSettings settings)
         {
-            var bulkPages  = settings.BulkReadPages;
-            var pageLength = settings.PageLength;
-            var pageIdx    = pageNo - 1;
+            var bulkPages    = settings.BulkReadPages;
+            var pageLength   = settings.PageLength;
+            var linesPerBulk = bulkPages * pageLength;
+            var pageIdx      = pageNo - 1;
 
-            var result          = new BulkInfo();
-            result.BulkId       = pageIdx / bulkPages;
-            result.StartPage    = result.BulkId * bulkPages;
-            result.EndPage      = result.StartPage + bulkPages;
-            result.LinesPerBulk = pageLength * bulkPages;
+            var result           = new BulkInfo();
+            result.BulkId        = pageIdx / bulkPages;
+            result.BulkStartPage = result.BulkId * bulkPages + 1;
+            result.BulkEndPage   = result.BulkStartPage + bulkPages - 1;
+            result.LinesPerBulk  = pageLength * bulkPages;
 
-            ////result.StartPage++;
+            result.FileStartLine = result.BulkId * linesPerBulk + 1;
+            result.FileEndLine   = result.FileStartLine + linesPerBulk;
 
-            // offset within the bulk-cached lines
-            result.OffsetIndex = pageIdx - result.StartPage;
+            result.OffsetIndex = pageNo - result.BulkId * bulkPages - 1;
             result.OffsetStart = result.OffsetIndex * pageLength;
             
             return result;

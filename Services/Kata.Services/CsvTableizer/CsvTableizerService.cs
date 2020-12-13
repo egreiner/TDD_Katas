@@ -1,6 +1,7 @@
 ﻿namespace Kata.Services.CsvTableizer
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using Extensions;
 
@@ -75,7 +76,7 @@
 
             if (this.enableRecordNumbers)
             {
-                var idx = this.recordNumber.ToString();
+                var idx = this.recordNumber.ToString("N0", new CultureInfo("de"));
                 var spaces = new string(' ', (widths[0] - idx.Length - 1).LimitToMin(0));
                 csvColumns.Insert(0, $"{spaces}{idx}.");
             }
@@ -117,7 +118,7 @@
 
             if (!this.enableRecordNumbers) return result;
 
-            var digitsIdx = csvLines.Count().ToString().Length + 1;
+            var digitsIdx = csvLines.Count().ToString("N0",new CultureInfo("de")).Length + 1;
             digitsIdx = digitsIdx.LimitToMin(LabelNameForRecordNumber.Length);
             result.Insert(0, digitsIdx.LimitToMin(lengthIdxColumn + 1));
 
