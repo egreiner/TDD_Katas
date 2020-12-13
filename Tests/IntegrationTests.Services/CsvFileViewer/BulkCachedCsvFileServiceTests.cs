@@ -5,7 +5,7 @@ namespace IntegrationTests.Services.CsvFileViewer
     using Xunit;
 
     [Collection("Sequential")]
-    public class CachedCsvFileServiceTests
+    public class BulkCachedCsvFileServiceTests
     {
         private readonly int expectedFileLength = 1_001;
 
@@ -59,46 +59,18 @@ namespace IntegrationTests.Services.CsvFileViewer
         }
 
 
-        ////[Theory]
-        ////[InlineData(1, "10 ")]
-        ////[InlineData(2, "20 ")]
-        ////public void Test_GetLastRecordOnPage(int page, string expected)
-        ////{
-        ////    var cut = GetCachedCsvFileService(10, 100);
+        [Theory]
+        [InlineData(1, "10 ")]
+        [InlineData(2, "20 ")]
+        public void Test_GetLastRecordOnPage(int page, string expected)
+        {
+            var cut = GetCachedCsvFileService(10, 100);
 
-        ////    var list = cut.GetPageAsync(page).Result;
+            var list = cut.GetPageAsync(page).Result;
 
-        ////    var actual = list[9];
-        ////    Assert.StartsWith(expected, actual);
-        ////}
-
-        ////[Theory]
-        ////[InlineData(1, "1 ")]
-        ////[InlineData(2, "11 ")]
-        ////public void Test_GetCached_FirstRecordOnPage(int page, string expected)
-        ////{
-        ////    var cut = GetCachedCsvFileService(10, 100);
-
-        ////    ////_ = cut.GetPageAsync(page).Result;
-        ////    var list = cut.GetPageAsync(page).Result;
-
-        ////    var actual = list[1];
-        ////    Assert.StartsWith(expected, actual);
-        ////}
-
-        ////[Theory]
-        ////[InlineData(1, "10 ")]
-        ////[InlineData(2, "20 ")]
-        ////public void Test_GetCached_LastRecordOnPage(int page, string expected)
-        ////{
-        ////    var cut = GetCachedCsvFileService(10, 100);
-
-        ////    _ = cut.GetPageAsync(page).Result;
-        ////    var list = cut.GetPageAsync(page).Result;
-
-        ////    var actual = list[10];
-        ////    Assert.StartsWith(expected, actual);
-        ////}
+            var actual = list[10];
+            Assert.StartsWith(expected, actual);
+        }
 
 
         private static BulkCachedCsvFileService GetCachedCsvFileService(int rowsOnPage, int maxCachedPages)

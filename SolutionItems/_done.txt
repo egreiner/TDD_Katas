@@ -1,4 +1,34 @@
-﻿2020.12.11 Fr (Post-HardLockdown day 5 in AT)
+﻿2020.12.13 Su (Post-HardLockdown day 7 in AT)
+=============================================
+
+- Agility Kata “Viewing CSV Files III” resume
+    https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-iii/
+
+- fix bugs
+    we have a problem with the first cache page due to the title line
+    we do not have the title in the following cache-pages
+    so Test-After...
+
+
+
+- fix the tests that we ignored unfortunately
+- cache purge strategy?
+- make some enhancements
+- get rid of old not used components 
+
+
+
+
+
+
+
+
+
+
+
+
+
+2020.12.11 Fr (Post-HardLockdown day 5 in AT)
 =============================================
 
 This weekend there are corona mass tests in my area!

@@ -44,9 +44,9 @@
         {
             IList<string> lines;
 
-            var (start, end, _, _) = this.CacheSettings.GetBulkBlockInfo(pageNo);
+            var bulk = BulkInfo.Create(pageNo, this.CacheSettings);
 
-            if (await this.Cache.ContainsAsync((start,end)))
+            if (await this.Cache.ContainsAsync((bulk.StartPage, bulk.EndPage)))
             {
                 Log.Add($"Get cached page {pageNo}");
                 this.ReadLocation = "from cache";
@@ -58,7 +58,7 @@
 
                 this.AddPageToQueue(pageNo, 1);
 
-                while (!await this.Cache.ContainsAsync((start, end))) 
+                while (!await this.Cache.ContainsAsync((bulk.StartPage, bulk.EndPage))) 
                     await Task.Delay(50);
 
                 lines = this.GetPageFromCache(pageNo);
@@ -139,17 +139,17 @@
         private async Task<IList<string>> GetPageFromFileAsync(int pageNo)
         {
             Log.Add($"read page {pageNo} from file");
-            var (start, length) = this.GetReadRange(pageNo);
+            var bulk = BulkInfo.Create(pageNo, this.CacheSettings);
 
-            return await this.GetPageFromFileAsync(start, length).ConfigureAwait(false);
+            return await this.GetPageFromFileAsync(bulk.StartPage + 1, bulk.LinesPerBulk).ConfigureAwait(false);
         }
 
         // merge this with GetPageFromFileAsync
         private async Task<bool> ReadAheadAsync(int pageNo)
         {
-            var bulk = this.CacheSettings.GetBulkBlockInfo(pageNo);
+            var bulk = BulkInfo.Create(pageNo, this.CacheSettings);
 
-            if (this.Cache.ContainsAsync((bulk.start, bulk.end)).Result)
+            if (this.Cache.ContainsAsync((bulk.StartPage, bulk.EndPage)).Result)
             {
                 Log.Add($"ReadAheadAsync page {pageNo} was cached before");
                 return false;
@@ -157,7 +157,7 @@
 
             Log.Add($"ReadAheadAsync page {pageNo}");
             var lines = await this.GetPageFromFileAsync(pageNo).ConfigureAwait(false);
-            await this.Cache.SetAsync((bulk.start, bulk.end), lines);
+            await this.Cache.SetAsync((bulk.StartPage, bulk.EndPage), lines);
 
             return true;
         }
@@ -166,17 +166,6 @@
             await Task.Run(() =>
                 File.ReadLines(this.fileName).Skip(start).Take(length).ToList()
             ).ConfigureAwait(false);
-
-        private (int start, int length) GetReadRange(int pageNo)
-        {
-            var bulk = this.CacheSettings.GetBulkBlockInfo(pageNo);
-
-            var page = bulk.start - 1;
-            var length = this.CacheSettings.PageLength;
-            var start = page * length + 1;
-
-            return (start, bulk.length);
-        }
 
         private async Task<string> GetTitleAsync()
         {
@@ -222,10 +211,10 @@
 
         private IList<string> GetPageFromCache(int pageNo)
         {
-            var (start, end, offset, _) = this.CacheSettings.GetBulkBlockInfo(pageNo);
+            var bulk = BulkInfo.Create(pageNo, this.CacheSettings);
 
-            var records = this.Cache.GetAsync((start, end)).Result
-                .Skip(offset)
+            var records = this.Cache.GetAsync((bulk.StartPage, bulk.EndPage)).Result
+                .Skip(bulk.OffsetStart)
                 .Take(this.CacheSettings.PageLength)
                 .ToList();
 

@@ -15,17 +15,5 @@
         public int ReadAheadPages { get; set; } = 5;
 
         public int BulkReadPages { get; set; } = 100;
-
-
-        // TODO wrong location ...
-        public (int start, int end, int offset, int length) GetBulkBlockInfo(in int pageNo)
-        {
-            var start = ((pageNo - 1) / this.BulkReadPages) * this.BulkReadPages;
-            var end = start +  this.BulkReadPages;
-            start++;
-            var offset = pageNo - start;
-            var length = this.PageLength * this.BulkReadPages;
-            return (start, end, offset, length);
-        }
     }
 }

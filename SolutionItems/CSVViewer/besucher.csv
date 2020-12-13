@@ -11,11 +11,11 @@ Jakob;84;11.12.2010 00:00:00;Wuppertal
 10 Karli;51;04.03.2010 00:00:00;München
 11 Mike;9;11.03.2009 00:00:00;Hamburg
 12 Mausi;30;07.09.2009 00:00:00;Berlin
-Peter;6;15.02.2009 00:00:00;Wanne-Eikel
-Paul;66;12.07.2010 00:00:00;Bottrop
-Maria;10;23.03.2009 00:00:00;Essen
-Jupp;5;04.02.2009 00:00:00;Wuppertal
-Jopi;43;28.12.2009 00:00:00;Köln
+13 Peter;6;15.02.2009 00:00:00;Wanne-Eikel
+14 Paul;66;12.07.2010 00:00:00;Bottrop
+15 Maria;10;23.03.2009 00:00:00;Essen
+16 Jupp;5;04.02.2009 00:00:00;Wuppertal
+17 Jopi;43;28.12.2009 00:00:00;Köln
 Pumuckl;24;14.07.2009 00:00:00;München
 19 Hanna;37;04.11.2009 00:00:00;Hamburg
 20 Jakob;8;05.03.2009 00:00:00;Berlin
@@ -27,9 +27,9 @@ Peter;93;26.02.2011 00:00:00;Köln
 Paul;50;26.02.2010 00:00:00;München
 Maria;97;31.03.2011 00:00:00;Hamburg
 Jupp;94;28.02.2011 00:00:00;Berlin
-Jopi;52;11.03.2010 00:00:00;Wanne-Eikel
-Pumuckl;33;03.10.2009 00:00:00;Bottrop
-Hanna;47;29.01.2010 00:00:00;Essen
+29 Jopi;52;11.03.2010 00:00:00;Wanne-Eikel
+30 Pumuckl;33;03.10.2009 00:00:00;Bottrop
+31 Hanna;47;29.01.2010 00:00:00;Essen
 Jakob;103;22.05.2011 00:00:00;Wuppertal
 Stefan;6;14.02.2009 00:00:00;Köln
 Karli;100;25.04.2011 00:00:00;München
@@ -998,4 +998,4 @@ Mausi;59;08.05.2010 00:00:00;Berlin
 Peter;5;04.02.2009 00:00:00;Wanne-Eikel
 Paul;97;25.03.2011 00:00:00;Bottrop
 Maria;25;29.07.2009 00:00:00;Essen
-Jupp;48;05.02.2010 00:00:00;Wuppertal
+1000 Jupp;48;05.02.2010 00:00:00;Wuppertal
