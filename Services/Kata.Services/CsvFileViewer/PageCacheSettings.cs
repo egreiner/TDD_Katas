@@ -12,8 +12,6 @@
         public int PageLength     { get; set; }
         public int MaxCachedPages { get; set; }
 
-        public int ReadAheadPages { get; set; } = 5;
-
         public int BulkReadPages { get; set; } = 100;
     }
 }

@@ -1,17 +1,47 @@
-﻿2020.12.13 Su (Post-HardLockdown day 7 in AT)
+﻿2020.12.14 Mo (Post-HardLockdown day 8 in AT)
 =============================================
 
 - Agility Kata “Viewing CSV Files III” resume
     https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-iii/
 
-- fix bugs
+- cache purge strategy?
+- make some enhancements
+- get rid of old not used components 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2020.12.13 Su (Post-HardLockdown day 7 in AT)
+=============================================
+
+- Agility Kata “Viewing CSV Files III” resume
+    https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-iii/
+
+- fix bugs                                                                  DONE
     we have a problem with the first cache page due to the title line
     we do not have the title in the following cache-pages
     so Test-After...
 
 
 
-- fix the tests that we ignored unfortunately
+- fix the tests that we ignored unfortunately                               DONE
 - cache purge strategy?
 - make some enhancements
 - get rid of old not used components 
