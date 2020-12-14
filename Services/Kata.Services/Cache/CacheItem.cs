@@ -1,21 +1,15 @@
 ﻿namespace Kata.Services.Cache
 {
-    using System;
-
-    public class CacheItem<TKey>
+    public class CacheItem<T>
     {
-        private readonly int hashCode;
-
-
-        public CacheItem(TKey key)
+        public CacheItem(T cachedItem)
         {
-            this.Key      = key;
-            this.hashCode = key.GetHashCode();
-            this.Fetched  = DateTime.Now;
+            this.CachedItem = cachedItem;
+            this.Fetched = System.DateTime.Now;
         }
 
 
-        public TKey Key { get; }
+        public T CachedItem { get; set; }
 
         /// <summary>
         /// For LFU cache
@@ -25,18 +19,8 @@
 
         /// <summary>
         /// For LRU cache
-        /// Least recently cache
+        /// Least recently used cache
         /// </summary>
-        public DateTime Fetched { get; set; }
-
-
-        public override string ToString() =>
-            this.Key.ToString();
-
-
-        public override bool Equals(object obj) =>
-            obj is CacheItem<TKey> other && other.Key.Equals(this.Key);
-
-        public override int GetHashCode() => this.hashCode;
+        public System.DateTime Fetched { get; set; }
     }
 }

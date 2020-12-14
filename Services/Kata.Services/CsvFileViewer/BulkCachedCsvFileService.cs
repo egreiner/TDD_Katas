@@ -201,7 +201,7 @@
 
         public int GetCachedPages() =>
             this.Cache.Items
-                .Select(x => x.Value)
+                .Select(x => x.Value.CachedItem)
                 .Sum(y => y.Count / this.Settings.RecordsPerPage);
 
 

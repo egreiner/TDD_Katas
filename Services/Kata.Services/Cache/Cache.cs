@@ -5,27 +5,46 @@
 
     public class Cache<TKey, TValue>
     {
-        private readonly ConcurrentDictionary<CacheItem<TKey>, TValue> cache =
-            new ConcurrentDictionary<CacheItem<TKey>, TValue>();
+        public ImmutableDictionary<TKey, CacheItem<TValue>> Items =>
+            this.CachedItems.ToImmutableDictionary();
+
+        protected ConcurrentDictionary<TKey, CacheItem<TValue>> CachedItems { get; set; } =
+            new ConcurrentDictionary<TKey, CacheItem<TValue>>();
 
 
-        public ImmutableDictionary<CacheItem<TKey>, TValue> Items =>
-            this.cache.ToImmutableDictionary();
+        public virtual bool Contains(TKey key) =>
+            this.CachedItems.ContainsKey(key);
 
-        public bool Contains(TKey key) =>
-            this.cache.ContainsKey(CreateCacheItem(key));
-
-        public TValue Get(TKey key)
+        public virtual TValue Get(TKey key)
         {
-            _ = this.cache.TryGetValue(CreateCacheItem(key), out TValue result);
-            return result;
+            var cached = this.GetCacheItem(key);
+            return cached.CachedItem;
         }
 
-        public bool Set(TKey key, TValue value) =>
-            this.cache.TryAdd(CreateCacheItem(key), value);
+        public virtual void Set(TKey key, TValue value)
+        {
+            if (this.Contains(key))
+            {
+                var cached            = this.GetCacheItem(key);
+                cached.CachedItem     = value;
+                this.CachedItems[key] = cached;
+            }
+            else
+            {
+                this.CachedItems.TryAdd(key, CreateCacheItem(value));
+            }
+        }
 
 
-        private static CacheItem<TKey> CreateCacheItem(TKey key) =>
-            new CacheItem<TKey>(key);
+        private CacheItem<TValue> GetCacheItem(TKey key)
+        {
+            _ = this.CachedItems.TryGetValue(key, out var cached);
+            cached.FetchCount++;
+            cached.Fetched = System.DateTime.Now;
+            return cached;
+        }
+        
+        private static CacheItem<TValue> CreateCacheItem(TValue value) =>
+            new CacheItem<TValue>(value);
     }
 }
