@@ -10,7 +10,7 @@
     a adaptive cached would be nice, 
     that means the higher pages stays more likely in the cache than the lower pages
     due to load times
-    -> https://en.wikipedia.org/wiki/Cache_replacement_policies
+    -> https://en.wikipedia.org/wiki/Cache_replacement_policies             DONE
 
 
 - make some enhancements                    DONE
