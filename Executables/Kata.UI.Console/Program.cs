@@ -22,11 +22,14 @@
 
         private static CsvFileViewerSettings GetCsvFileViewerSettings(string[] args)
         {
-            var result = new CsvFileViewerSettings();
-            result.FileName = args.Length >= 1 ? args[0] : "file-name not found";
-            result.PageLength = args.Length >= 2
+            var pageLength = args.Length >= 2
                 ? GetPageLength(args[1])
                 : CsvFileViewerSettings.DefaultPageLength;
+
+            var result = new CsvFileViewerSettings(pageLength, 100)
+            {
+                FileName = args.Length >= 1 ? args[0] : "file-name not found"
+            };
 
             return result;
         }

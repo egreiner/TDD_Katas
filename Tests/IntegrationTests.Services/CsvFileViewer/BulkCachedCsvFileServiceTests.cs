@@ -75,10 +75,10 @@ namespace IntegrationTests.Services.CsvFileViewer
 
         private static BulkCachedCsvFileService GetCachedCsvFileService(int rowsOnPage, int maxCachedPages)
         {
-            var file = GetTestCsvFile();
-            var settings = new PageCacheSettings(rowsOnPage, maxCachedPages);
-            var pagination = new PaginationService(rowsOnPage);
-            return new BulkCachedCsvFileService(file, settings, pagination);
+            var settings      = new CsvFileViewerSettings(rowsOnPage, maxCachedPages);
+            settings.FileName = GetTestCsvFile();
+            var pagination    = new PaginationService(rowsOnPage);
+            return new BulkCachedCsvFileService(settings, pagination);
         }
         
         private static string GetTestCsvFile()

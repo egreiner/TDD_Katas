@@ -22,10 +22,10 @@
         *           |<- page ->|
         */
 
-        public static BulkInfo Create(in int pageNo, PageCacheSettings settings)
+        public static BulkInfo Create(in int pageNo, CsvFileViewerSettings settings)
         {
             var bulkPages    = settings.BulkReadPages;
-            var pageLength   = settings.PageLength;
+            var pageLength   = settings.RecordsPerPage;
             var linesPerBulk = bulkPages * pageLength;
             var pageIdx      = pageNo - 1;
 

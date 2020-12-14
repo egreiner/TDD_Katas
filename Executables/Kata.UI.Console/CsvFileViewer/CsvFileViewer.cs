@@ -79,9 +79,8 @@
 
         private void InitializeServices()
         {
-            var cacheSettings   = new PageCacheSettings(this.Settings.RecordsPerPage, 100);
             this.pagination     = new PaginationService(this.Settings.RecordsPerPage);
-            this.csvFileService = new BulkCachedCsvFileService(this.Settings.FileName, cacheSettings, this.pagination);
+            this.csvFileService = new BulkCachedCsvFileService(this.Settings, this.pagination);
         }
 
         private void ReadAheadImportantPages() =>

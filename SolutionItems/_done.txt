@@ -10,6 +10,10 @@
 
 
 
+bugfix
+- column width for record no is not calculated correct
+
+
 
 
 

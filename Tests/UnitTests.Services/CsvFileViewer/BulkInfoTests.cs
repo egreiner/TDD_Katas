@@ -19,7 +19,7 @@
         [InlineData(10, 100, 210, 2)]
         public void Test_BulkInfo_Index(int recordsOnPage, int bulkPages, int page, int expected)
         {
-            var settings = new PageCacheSettings(recordsOnPage, 100);
+            var settings = new CsvFileViewerSettings(recordsOnPage, 100);
             settings.BulkReadPages = bulkPages;
 
             var cut = BulkInfo.Create(page, settings);
@@ -43,7 +43,7 @@
             int page,
             int expected)
         {
-            var settings = new PageCacheSettings(recordsOnPage, 100)
+            var settings = new CsvFileViewerSettings(recordsOnPage, 100)
             {
                 BulkReadPages = bulkPages
             };
@@ -67,7 +67,7 @@
         [InlineData(10, 20, 40, 201)]
         public void Test_BulkInfo_FileStartLine(int recordsOnPage, int bulkPages, int page, int expected)
         {
-            var settings = new PageCacheSettings(recordsOnPage, 100)
+            var settings = new CsvFileViewerSettings(recordsOnPage, 100)
             {
                 BulkReadPages = bulkPages
             };
@@ -94,7 +94,7 @@
         [InlineData(10, 20, 42, 1)]
         public void Test_BulkInfo_OffsetIndex(int recordsOnPage, int bulkPages, int page, int expected)
         {
-            var settings = new PageCacheSettings(recordsOnPage, 100)
+            var settings = new CsvFileViewerSettings(recordsOnPage, 100)
             {
                 BulkReadPages = bulkPages
             };
@@ -119,7 +119,7 @@
         [InlineData(10, 20, 42, 10)]
         public void Test_BulkInfo_OffsetStart(int recordsOnPage, int bulkPages, int page, int expected)
         {
-            var settings = new PageCacheSettings(recordsOnPage, 100)
+            var settings = new CsvFileViewerSettings(recordsOnPage, 100)
             {
                 BulkReadPages = bulkPages
             };
