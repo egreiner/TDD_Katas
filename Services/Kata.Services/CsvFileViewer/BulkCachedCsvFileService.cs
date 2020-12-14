@@ -22,7 +22,7 @@
 
         public BulkCachedCsvFileService(CsvFileViewerSettings settings, PaginationService pagination)
         {
-            this.Cache = new Cache<int, IList<string>>();
+            this.Cache = new LFUKeyWeightedCache<int, IList<string>>(settings.MaxCachedPages);
 
             this.pagination = pagination;
             this.Settings   = settings;
@@ -30,7 +30,7 @@
         }
 
 
-        public Cache<int , IList<string>> Cache { get; }
+        public LFUKeyWeightedCache<int , IList<string>> Cache { get; }
         public CsvFileViewerSettings Settings { get; }
 
         public string ReadLocation { get; private set; }

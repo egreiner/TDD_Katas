@@ -1,6 +1,7 @@
 ﻿namespace Kata.Services.Cache
 {
     using System.Linq;
+    using Logger;
 
     /// <summary>
     /// Least Recently Used cache (LRU)
@@ -28,6 +29,7 @@
             {
                 var x = this.CachedItems.OrderBy(x => x.Value.Fetched)
                     .FirstOrDefault();
+                Log.Add($"Removing key {x.Key} from LFU-cache");
                 this.CachedItems.TryRemove(x);
             }
         }

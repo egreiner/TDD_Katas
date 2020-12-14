@@ -6,9 +6,9 @@
     /// <summary>
     /// Least Frequently Used cache (LFU)
     /// </summary>
-    public class LFUCache<TKey, TValue>: Cache<TKey, TValue>
+    public class LFUKeyWeightedCache<TKey, TValue>: Cache<TKey, TValue>
     {
-        public LFUCache(int maxCacheLength)
+        public LFUKeyWeightedCache(int maxCacheLength)
         {
             this.MaxCacheLength = maxCacheLength;
         }
@@ -27,10 +27,12 @@
         {
             while (this.CachedItems.Count > maxLength)
             {
-                var x = this.CachedItems.OrderBy(x => x.Value.FetchCount)
+                var item = this.CachedItems
+                    .OrderBy(x => x.Value.FetchCount)
+                    .ThenBy(x => x.Key)
                     .FirstOrDefault();
-                Log.Add($"Removing key {x.Key} from LFU-cache");
-                this.CachedItems.TryRemove(x);
+                Log.Add($"Removing key {item.Key} from LFU-Key-weighted-cache");
+                this.CachedItems.TryRemove(item);
             }
         }
     }
