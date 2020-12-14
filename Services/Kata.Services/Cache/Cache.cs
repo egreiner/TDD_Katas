@@ -2,7 +2,6 @@
 {
     using System.Collections.Concurrent;
     using System.Collections.Immutable;
-    using System.Threading.Tasks;
 
     public class Cache<TKey, TValue>
     {
@@ -13,20 +12,17 @@
         public ImmutableDictionary<CacheItem<TKey>, TValue> Items =>
             this.cache.ToImmutableDictionary();
 
+        public bool Contains(TKey key) =>
+            this.cache.ContainsKey(CreateCacheItem(key));
 
-        public async Task<bool> ContainsAsync(TKey key) =>
-            await Task.Run(() => this.cache.ContainsKey(CreateCacheItem(key))).ConfigureAwait(false);
+        public TValue Get(TKey key)
+        {
+            _ = this.cache.TryGetValue(CreateCacheItem(key), out TValue result);
+            return result;
+        }
 
-        public async Task<TValue> GetAsync(TKey key) =>
-            await Task.Run(() =>
-            {
-                _ = this.cache.TryGetValue(CreateCacheItem(key), out TValue result);
-                return result;
-            }).ConfigureAwait(false);
-
-        public async Task<bool> SetAsync(TKey key, TValue value) =>
-            await Task.Run(() => this.cache.TryAdd(CreateCacheItem(key), value))
-                .ConfigureAwait(false);
+        public bool Set(TKey key, TValue value) =>
+            this.cache.TryAdd(CreateCacheItem(key), value);
 
 
         private static CacheItem<TKey> CreateCacheItem(TKey key) =>

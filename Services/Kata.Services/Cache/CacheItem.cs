@@ -9,17 +9,26 @@
 
         public CacheItem(TKey key)
         {
-            this.Key = key;
+            this.Key      = key;
             this.hashCode = key.GetHashCode();
+            this.Fetched  = DateTime.Now;
         }
 
 
         public TKey Key { get; }
 
-        // TODO these are properties for the CacheGarbageCollector
-        // The oldest items should be removed over time...
+        /// <summary>
+        /// For LFU cache
+        /// Least frequently used cache
+        /// </summary>
         public int FetchCount { get; set; }
+
+        /// <summary>
+        /// For LRU cache
+        /// Least recently cache
+        /// </summary>
         public DateTime Fetched { get; set; }
+
 
         public override string ToString() =>
             this.Key.ToString();

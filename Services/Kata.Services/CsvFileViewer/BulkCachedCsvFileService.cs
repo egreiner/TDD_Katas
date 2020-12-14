@@ -42,7 +42,7 @@
 
             var bulk = BulkInfo.Create(pageNo, this.Settings);
 
-            if (await this.Cache.ContainsAsync(bulk.BulkId))
+            if (this.Cache.Contains(bulk.BulkId))
             {
                 Log.Add($"Get cached page {pageNo}");
                 this.ReadLocation = "from cache";
@@ -54,7 +54,7 @@
 
                 this.AddPageToQueue(pageNo, 1);
 
-                while (!await this.Cache.ContainsAsync(bulk.BulkId)) 
+                while (!this.Cache.Contains(bulk.BulkId)) 
                     await Task.Delay(50);
 
                 lines = this.GetPageFromCache(pageNo);
@@ -145,7 +145,7 @@
         {
             var bulk = BulkInfo.Create(pageNo, this.Settings);
 
-            if (this.Cache.ContainsAsync(bulk.BulkId).Result)
+            if (this.Cache.Contains(bulk.BulkId))
             {
                 Log.Add($"ReadAheadAsync page {pageNo} was cached before");
                 return false;
@@ -153,7 +153,7 @@
 
             Log.Add($"ReadAheadAsync page {pageNo}");
             var lines = await this.GetPageFromFileAsync(pageNo).ConfigureAwait(false);
-            await this.Cache.SetAsync(bulk.BulkId, lines);
+            this.Cache.Set(bulk.BulkId, lines);
 
             return true;
         }
@@ -209,7 +209,7 @@
         {
             var bulk = BulkInfo.Create(pageNo, this.Settings);
 
-            var records = this.Cache.GetAsync(bulk.BulkId).Result
+            var records = this.Cache.Get(bulk.BulkId)
                 .Skip(bulk.OffsetStart)
                 .Take(this.Settings.RecordsPerPage)
                 .ToList();

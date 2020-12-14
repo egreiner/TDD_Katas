@@ -5,8 +5,11 @@
     https://ccd-school.de/coding-dojo/agility-katas/viewing-csv-files-iii/
 
 - cache purge strategy?
-- make some enhancements
-- get rid of old not used components 
+    LRU
+    LFU
+
+- make some enhancements                    DONE
+- get rid of old not used components        DONE
 
 
 
