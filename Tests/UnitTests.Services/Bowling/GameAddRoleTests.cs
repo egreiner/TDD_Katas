@@ -5,7 +5,7 @@ namespace UnitTests.Services.Bowling
 
     public class GameAddRoleTests
     {
-        private TestTools Tools { get; } = new TestTools();
+        private TestTools Tools { get; } = new();
 
 
         [Fact]

@@ -7,7 +7,7 @@
 
     public partial class WordWrapView : Form
     {
-        private readonly WordWrapService service = new WordWrapService();
+        private readonly WordWrapService service = new();
 
 
         public WordWrapView()

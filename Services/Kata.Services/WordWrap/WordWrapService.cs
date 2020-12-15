@@ -10,7 +10,7 @@
     {
         private const string LineFeedReplacer = " .~-{LiNeFeeEd}-~. ";
 
-        private readonly StringBuilder builder = new StringBuilder();
+        private readonly StringBuilder builder = new();
         
 
         public string WordWrap(string text, int lineLengthLimit)

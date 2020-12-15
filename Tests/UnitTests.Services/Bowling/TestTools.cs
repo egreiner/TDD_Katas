@@ -6,7 +6,7 @@ namespace UnitTests.Services.Bowling
     {
         public Game GetGame()
         {
-            return new Game();
+            return new();
         }
 
         public Frame GetStrikeFrame() =>

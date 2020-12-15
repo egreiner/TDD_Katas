@@ -9,7 +9,7 @@ namespace Kata.Services.Bowling
         private const int MaxFramesPerGame = 10;
 
 
-        public List<Frame> Frames { get; } = new List<Frame>();
+        public List<Frame> Frames { get; } = new();
 
         public Frame CurrentFrame { get; private set; }
 

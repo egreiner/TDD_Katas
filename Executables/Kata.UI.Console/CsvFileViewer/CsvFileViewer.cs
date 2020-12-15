@@ -14,7 +14,7 @@
     {
         private const string Footer = "[F]irst, [L]ast, [N]ext, [P]revious, [G][J]ump to page, e[X]it";
 
-        private readonly CsvTableizerService csvService = new CsvTableizerService(true);
+        private readonly CsvTableizerService csvService = new(true);
 
         private BulkCachedCsvFileService csvFileService;
         private PaginationService pagination;

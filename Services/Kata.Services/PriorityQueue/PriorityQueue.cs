@@ -6,9 +6,9 @@
 
     public class PriorityQueue<T>
     {
-        private readonly object lockObject = new object();
+        private readonly object lockObject = new();
         private readonly List<PriorityItem<T>> queue =
-            new List<PriorityItem<T>>();
+            new();
 
         public int Count => this.queue.Count;
 

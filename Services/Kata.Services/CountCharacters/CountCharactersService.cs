@@ -5,7 +5,7 @@
 
     public class CountCharactersService
     {
-        private readonly Dictionary<char, int> dict = new Dictionary<char, int>();
+        private readonly Dictionary<char, int> dict = new();
         private bool ignoreCase;
 
 

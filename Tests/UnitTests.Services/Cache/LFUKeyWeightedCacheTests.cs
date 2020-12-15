@@ -40,6 +40,6 @@
 
 
         private static LFUKeyWeightedCache<int, int> GetCache(int maxLength) =>
-            new LFUKeyWeightedCache<int, int>(maxLength);
+            new(maxLength);
     }
 }

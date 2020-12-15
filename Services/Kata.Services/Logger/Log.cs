@@ -5,10 +5,10 @@
 
     public static class Log
     {
-        private static readonly object lockObject = new object();
+        private static readonly object lockObject = new();
 
         private static readonly List<LogInfo> logMessages = 
-            new List<LogInfo>();
+            new();
 
         // async ???
         public static void Add(string text)

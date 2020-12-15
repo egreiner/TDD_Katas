@@ -9,7 +9,7 @@
             this.CachedItems.ToImmutableDictionary();
 
         protected ConcurrentDictionary<TKey, CacheItem<TValue>> CachedItems { get; set; } =
-            new ConcurrentDictionary<TKey, CacheItem<TValue>>();
+            new();
 
 
         public virtual bool Contains(TKey key) =>
@@ -45,6 +45,6 @@
         }
         
         private static CacheItem<TValue> CreateCacheItem(TValue value) =>
-            new CacheItem<TValue>(value);
+            new(value);
     }
 }

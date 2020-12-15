@@ -6,7 +6,7 @@ namespace Kata.Services.RomanNumerals
 
     public class RomanNumeralsConverter
     {
-        private readonly Dictionary<int, int> singleCharsList = new Dictionary<int, int>();
+        private readonly Dictionary<int, int> singleCharsList = new();
 
         public int ConvertSubtractionRule(string value)
         {

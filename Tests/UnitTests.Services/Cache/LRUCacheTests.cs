@@ -64,6 +64,6 @@
 
 
         private static LRUCache<int, int> GetCache(int maxLength) =>
-            new LRUCache<int, int>(maxLength);
+            new(maxLength);
     }
 }

@@ -4,7 +4,7 @@ namespace UnitTests.Services.Bowling
 
     public class GameBonusCalculationTests
     {
-        private TestTools Tools { get; } = new TestTools();
+        private TestTools Tools { get; } = new();
 
 
         [Fact]

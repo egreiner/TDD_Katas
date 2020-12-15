@@ -6,7 +6,7 @@ namespace UnitTests.Services.Bowling
 
     public class GameIsOverTests
     {
-        private TestTools Tools { get; } = new TestTools();
+        private TestTools Tools { get; } = new();
 
 
         [Fact]

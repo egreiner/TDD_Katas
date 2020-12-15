@@ -12,9 +12,10 @@
 
     public class BulkCachedCsvFileService
     {
-        private readonly PriorityQueue<int> pageQueue = new PriorityQueue<int>();
         private readonly PaginationService pagination;
-        
+        private readonly CsvFileViewerSettings settings;
+        private readonly PriorityQueue<int> pageQueue = new();
+
         private string cachedTitle;
         private bool dequeuingPoolIsRunning;
         private int lastPage;
@@ -25,23 +26,21 @@
             this.Cache = new LFUKeyWeightedCache<int, IList<string>>(settings.MaxCachedPages);
 
             this.pagination = pagination;
-            this.Settings   = settings;
+            this.settings   = settings;
             this.SetEstimatedFileLength();
         }
 
 
         public LFUKeyWeightedCache<int , IList<string>> Cache { get; }
-        public CsvFileViewerSettings Settings { get; }
 
         public string ReadLocation { get; private set; }
 
 
         public async Task<IList<string>> GetPageAsync(int pageNo)
         {
+            var bulk = BulkInfo.Create(pageNo, this.settings);
+
             IList<string> lines;
-
-            var bulk = BulkInfo.Create(pageNo, this.Settings);
-
             if (this.Cache.Contains(bulk.BulkId))
             {
                 Log.Add($"Get cached page {pageNo}");
@@ -62,7 +61,6 @@
 
             this.AddSurroundingPagesToQueue(pageNo, pageNo > this.lastPage);
             this.lastPage = pageNo;
-
             return lines;
         }
 
@@ -71,14 +69,14 @@
 
         private void AddSurroundingPagesToQueue(int pageNo, bool favorNext)
         {
-            var bulkPages = this.Settings.BulkReadPages;
+            var bulkPages = this.settings.BulkReadPages;
             this.AddPageToQueue(pageNo + bulkPages, favorNext ? 10 : 20);
             this.AddPageToQueue(pageNo - bulkPages, favorNext ? 20 : 10);
         }
 
         private void AddPagesToCache(int startPage, int endPage, int priority)
         {
-            for (int i = startPage; i < endPage; i += this.Settings.BulkReadPages)
+            for (var i = startPage; i < endPage; i += this.settings.BulkReadPages)
                 this.AddPageToQueue(i, priority);
         }
 
@@ -117,46 +115,33 @@
 
         public async Task<int> GetFileLengthAsync() =>
             await Task.Run(() =>
-                File.ReadLines(this.Settings.FileName).Count()
+                File.ReadLines(this.settings.FileName).Count()
             ).ConfigureAwait(false);
 
         public async Task<bool> SetRealFileLength()
         {
             var lines = await this.GetFileLengthAsync().ConfigureAwait(false);
-            this.pagination.SetRealPageRange(lines - 1, this.Settings.RecordsPerPage);
+            this.pagination.SetRealPageRange(lines - 1, this.settings.RecordsPerPage);
 
             var maxPage = this.pagination.PageRange.Max;
             Log.Add($"Initialized MaxPage to {maxPage}");
 
             this.AddPageToQueue(maxPage, 10);
-
-            this.AddPagesToCache(1, maxPage, 100);
-
+            ////this.AddPagesToCache(1, maxPage, 100);
             return true;
         }
 
-
-        // merge this with ReadAheadAsync
-        ////private async Task<IList<string>> GetPageFromFileAsync(int pageNo)
-        ////{
-        ////    Log.Add($"read page {pageNo} from file");
-        ////    var bulk = BulkInfo.Create(pageNo, this.Settings);
-
-        ////    return await this.GetPageFromFileAsync(bulk.FileStartLine, bulk.LinesPerBulk).ConfigureAwait(false);
-        ////}
-
-        // merge this with GetPageFromFileAsync
         private async Task<IList<string>> GetPageFromFileAsync(int pageNo)
         {
-            var bulk = BulkInfo.Create(pageNo, this.Settings);
+            var bulk = BulkInfo.Create(pageNo, this.settings);
 
             if (this.Cache.Contains(bulk.BulkId))
             {
-                Log.Add($"ReadAheadAsync page {pageNo} was cached before");
+                Log.Add($"GetPageFromFileAsync page {pageNo} was cached before");
                 return null;
             }
 
-            Log.Add($"ReadAheadAsync page {pageNo}");
+            Log.Add($"GetPageFromFileAsync page {pageNo}");
             var lines = await this.GetPageFromFileAsync(bulk.FileStartLine, bulk.LinesPerBulk).ConfigureAwait(false);
             this.Cache.Set(bulk.BulkId, lines);
 
@@ -165,7 +150,7 @@
 
         private async Task<IList<string>> GetPageFromFileAsync(int start, int length) =>
             await Task.Run(() =>
-                File.ReadLines(this.Settings.FileName).Skip(start).Take(length).ToList()
+                File.ReadLines(this.settings.FileName).Skip(start).Take(length).ToList()
             ).ConfigureAwait(false);
 
         private async Task<string> GetTitleAsync()
@@ -181,9 +166,9 @@
 
         private void SetEstimatedFileLength()
         {
-            var fileInfo = new FileInfo(this.Settings.FileName);
+            var fileInfo = new FileInfo(this.settings.FileName);
             var lines = fileInfo.Length / 250;
-            this.pagination.SetPageRangeEstimated(lines, this.Settings.RecordsPerPage);
+            this.pagination.SetPageRangeEstimated(lines, this.settings.RecordsPerPage);
             Log.Add($"Initialized MaxPage to estimated {this.pagination.PageRange.Max}");
         }
 
@@ -195,16 +180,16 @@
         public int GetCachedPages() =>
             this.Cache.Items
                 .Select(x => x.Value.CachedItem)
-                .Sum(y => y.Count / this.Settings.RecordsPerPage);
+                .Sum(y => y.Count / this.settings.RecordsPerPage);
 
 
         private IList<string> GetPageFromCache(int pageNo)
         {
-            var bulk = BulkInfo.Create(pageNo, this.Settings);
+            var bulk = BulkInfo.Create(pageNo, this.settings);
 
             var records = this.Cache.Get(bulk.BulkId)
                 .Skip(bulk.OffsetStart)
-                .Take(this.Settings.RecordsPerPage)
+                .Take(this.settings.RecordsPerPage)
                 .ToList();
 
             var title = this.GetTitleAsync().Result;

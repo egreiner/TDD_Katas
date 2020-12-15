@@ -4,7 +4,7 @@
 
     public class ChristmasTree
     {
-        private readonly List<string> tree = new List<string>();
+        private readonly List<string> tree = new();
 
 
         public List<string> Draw(int height, bool withStarOnTop = false)

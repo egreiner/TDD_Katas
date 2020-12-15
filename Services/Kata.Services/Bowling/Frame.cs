@@ -20,7 +20,7 @@ namespace Kata.Services.Bowling
 
         public int FrameScore { get; private set; }
 
-        public List<int> PinsRolled { get; } = new List<int>();
+        public List<int> PinsRolled { get; } = new();
 
         public int MaxRollsPerFrame => MaxRolls + this.bonusRoll;
 

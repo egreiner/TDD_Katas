@@ -196,7 +196,7 @@
         }
 
         private static Element<T> CreateElement(T item) =>
-            new Element<T>(item);
+            new(item);
 
 
         private class Enumerator : IEnumerator<T>

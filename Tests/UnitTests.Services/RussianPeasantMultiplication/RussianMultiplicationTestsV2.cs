@@ -6,7 +6,7 @@
     public class RussianMultiplicationTestsV2
     {
         private readonly RussianPeasantMultiplicationServiceV2 service = 
-            new RussianPeasantMultiplicationServiceV2();
+            new();
 
 
         [Theory]

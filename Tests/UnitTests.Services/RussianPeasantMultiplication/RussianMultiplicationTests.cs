@@ -6,7 +6,7 @@
     public class RussianMultiplicationTests
     {
         private readonly RussianPeasantMultiplicationService service = 
-            new RussianPeasantMultiplicationService();
+            new();
 
         [Theory]
         [InlineData(1, 1, 1)]

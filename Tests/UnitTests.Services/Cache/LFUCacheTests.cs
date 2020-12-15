@@ -41,6 +41,6 @@
 
 
         private static LFUCache<int, int> GetCache(int maxLength) =>
-            new LFUCache<int, int>(maxLength);
+            new(maxLength);
     }
 }
