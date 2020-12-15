@@ -31,7 +31,7 @@
 
         private IEnumerable<string> ToTable(IList<string> csvLines, int start, int end)
         {
-            var lengthIdxColumn = (this.recordNumber + end).ToString().Length;
+            var lengthIdxColumn = (this.recordNumber + end).ToString("N0").Length;
             var widths = this.GetMaxColumnWidths(csvLines, lengthIdxColumn).ToList();
             if (widths.Count == 0) yield break;
 

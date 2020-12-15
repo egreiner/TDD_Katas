@@ -76,6 +76,12 @@
             this.AddPageToQueue(pageNo - bulkPages, favorNext ? 20 : 10);
         }
 
+        private void AddPagesToCache(int startPage, int endPage, int priority)
+        {
+            for (int i = startPage; i < endPage; i += this.Settings.BulkReadPages)
+                this.AddPageToQueue(i, priority);
+        }
+
         private void AddPageToQueue(int pageNo, int priority) =>
             Task.Run(() =>
             {
@@ -96,10 +102,9 @@
                 {
                     if (!this.pageQueue.TryDequeue(out var page)) break;
 
+                    page = page.LimitToMin(1);
                     Log.Add($"Dequeue page {page} from pool for reading from file");
-                    _ = this.ReadAheadAsync(page).Result;
-
-                    ////Console.Write($"\r{page} was read from file     ");
+                    _ = this.GetPageFromFileAsync(page).Result;
                 }
                 this.dequeuingPoolIsRunning = false;
             });
@@ -125,37 +130,37 @@
 
             this.AddPageToQueue(maxPage, 10);
 
-            ////this.AddAllPagesToCache(maxPage, 100);
+            this.AddPagesToCache(1, maxPage, 100);
 
             return true;
         }
 
 
         // merge this with ReadAheadAsync
-        private async Task<IList<string>> GetPageFromFileAsync(int pageNo)
-        {
-            Log.Add($"read page {pageNo} from file");
-            var bulk = BulkInfo.Create(pageNo, this.Settings);
+        ////private async Task<IList<string>> GetPageFromFileAsync(int pageNo)
+        ////{
+        ////    Log.Add($"read page {pageNo} from file");
+        ////    var bulk = BulkInfo.Create(pageNo, this.Settings);
 
-            return await this.GetPageFromFileAsync(bulk.FileStartLine, bulk.LinesPerBulk).ConfigureAwait(false);
-        }
+        ////    return await this.GetPageFromFileAsync(bulk.FileStartLine, bulk.LinesPerBulk).ConfigureAwait(false);
+        ////}
 
         // merge this with GetPageFromFileAsync
-        private async Task<bool> ReadAheadAsync(int pageNo)
+        private async Task<IList<string>> GetPageFromFileAsync(int pageNo)
         {
             var bulk = BulkInfo.Create(pageNo, this.Settings);
 
             if (this.Cache.Contains(bulk.BulkId))
             {
                 Log.Add($"ReadAheadAsync page {pageNo} was cached before");
-                return false;
+                return null;
             }
 
             Log.Add($"ReadAheadAsync page {pageNo}");
-            var lines = await this.GetPageFromFileAsync(pageNo).ConfigureAwait(false);
+            var lines = await this.GetPageFromFileAsync(bulk.FileStartLine, bulk.LinesPerBulk).ConfigureAwait(false);
             this.Cache.Set(bulk.BulkId, lines);
 
-            return true;
+            return lines;
         }
 
         private async Task<IList<string>> GetPageFromFileAsync(int start, int length) =>
@@ -171,17 +176,8 @@
             Log.Add("read title from file");
 
             var titleLine = await this.GetPageFromFileAsync(0, 1);
-            this.cachedTitle = titleLine.FirstOrDefault();
-
-            return this.cachedTitle;
+            return this.cachedTitle = titleLine.FirstOrDefault();
         }
-
-        private void AddAllPagesToCache(int maxPage, int priority)
-        {
-            for (int i = 1; i < maxPage; i += this.Settings.BulkReadPages)
-                this.AddPageToQueue(i, priority);
-        }
-
 
         private void SetEstimatedFileLength()
         {
@@ -195,9 +191,6 @@
 
 
         #region cache
-
-        // when you are using regions your file is to big
-        // so this should be splittend up again
 
         public int GetCachedPages() =>
             this.Cache.Items

@@ -26,7 +26,7 @@
                 ? GetPageLength(args[1])
                 : CsvFileViewerSettings.DefaultPageLength;
 
-            var result = new CsvFileViewerSettings(pageLength, 10)
+            var result = new CsvFileViewerSettings(pageLength, 1000)
             {
                 FileName = args.Length >= 1 ? args[0] : "file-name not found"
             };

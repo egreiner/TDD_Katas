@@ -19,6 +19,6 @@
         public int RecordsPerPage { get; set; } = 10;
 
         public int MaxCachedPages { get; set; }
-        public int BulkReadPages  { get; set; } = 10;
+        public int BulkReadPages  { get; set; } = 50_000;
     }
 }

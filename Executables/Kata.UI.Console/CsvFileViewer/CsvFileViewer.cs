@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
     using Services.CsvFileViewer;
@@ -57,7 +58,7 @@
                 while (lineCount < this.Settings.PageLength-1) 
                     writeLine(string.Empty);
                 
-                writeLine($"{this.pagination.PageInfo} {this.csvFileService.ReadLocation}, {this.csvFileService.GetCachedPages()} pages cached");
+                writeLine($"{this.pagination.PageInfo} {this.csvFileService.ReadLocation}, {this.csvFileService.GetCachedPages().ToString("N0", new CultureInfo("de"))} pages cached");
                 writeLine(Footer);
                 writeLine($"Last key pressed: {key.Key}");
             }
